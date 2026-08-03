@@ -1,0 +1,167 @@
+# 事件分类体系 (A-G 大类 → 30+ 子类)
+# 每个子类定义：方向基线、强度默认值、需要提取的字段
+
+categories:
+  A:  # 财报主事件
+    label: "财报主事件"
+    subcategories:
+      earnings_q1:
+        label: "一季报"
+        direction_baseline: 0.0
+        fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct,
+                 gross_margin, net_margin, eps, roe, operating_cashflow]
+      earnings_h1:
+        label: "半年报"
+        direction_baseline: 0.0
+        fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct,
+                 gross_margin, net_margin, eps, roe, operating_cashflow]
+      earnings_q3:
+        label: "三季报"
+        direction_baseline: 0.0
+        fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct,
+                 gross_margin, net_margin, eps, roe, operating_cashflow]
+      earnings_annual:
+        label: "年报"
+        direction_baseline: 0.0
+        fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct,
+                 gross_margin, net_margin, eps, roe, operating_cashflow,
+                 dividend_plan, audit_opinion]
+
+  B:  # 财报前置事件
+    label: "财报前置事件"
+    subcategories:
+      forecast_performance:
+        label: "业绩预告"
+        direction_baseline: 0.0
+        fields: [forecast_type, forecast_net_profit_min, forecast_net_profit_max,
+                 forecast_yoy_change_pct, previous_net_profit, reason_summary]
+      forecast_express:
+        label: "业绩快报"
+        direction_baseline: 0.0
+        fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct, total_assets, net_assets]
+      forecast_revision:
+        label: "业绩修正"
+        direction_baseline: 0.0
+        fields: [original_forecast, revised_forecast, revision_amount, revision_pct, revision_reason]
+
+  C:  # 股权变动事件
+    label: "股权变动事件"
+    subcategories:
+      equity_increase:
+        label: "增持"
+        direction_baseline: 0.7
+        fields: [shareholder_name, shareholder_type, increase_amount, increase_ratio_pct,
+                 price_range, increase_reason, planned_continue]
+      equity_decrease:
+        label: "减持"
+        direction_baseline: -0.7
+        fields: [shareholder_name, shareholder_type, decrease_amount, decrease_ratio_pct,
+                 price_range, decrease_reason, is_completed]
+      buyback:
+        label: "回购"
+        direction_baseline: 0.8
+        fields: [buyback_amount_max, buyback_ratio_pct, buyback_price_max,
+                 buyback_purpose, funding_source, buyback_period]
+      lockup_expiry:
+        label: "解禁"
+        direction_baseline: -0.5
+        fields: [unlock_shares, unlock_ratio_pct, unlock_market_value, unlock_date, shareholder_list]
+      equity_incentive:
+        label: "股权激励"
+        direction_baseline: 0.5
+        fields: [incentive_shares, incentive_ratio_pct, grant_price, performance_targets,
+                 recipient_count, vesting_schedule]
+
+  D:  # 资本运作事件
+    label: "资本运作事件"
+    subcategories:
+      private_placement:
+        label: "定增"
+        direction_baseline: 0.1  # 不确定
+        fields: [placement_amount, placement_shares, placement_price, placement_purpose,
+                 subscribers, lockup_period, approval_status]
+      merger_acquisition:
+        label: "并购重组"
+        direction_baseline: 0.3  # 短期偏正面，但风险高
+        fields: [target_name, transaction_amount, payment_method, target_industry,
+                 target_revenue, target_net_profit, deal_status, performance_commitment]
+      asset_sale:
+        label: "资产出售"
+        direction_baseline: 0.2
+        fields: [asset_name, sale_amount, book_value, gain_loss_amount, buyer, sale_reason]
+      convertible_bond:
+        label: "可转债/发债"
+        direction_baseline: 0.1
+        fields: [bond_amount, bond_term, coupon_rate, conversion_price, use_of_proceeds, credit_rating]
+
+  E:  # 经营业务事件
+    label: "经营业务事件"
+    subcategories:
+      major_contract:
+        label: "重大合同"
+        direction_baseline: 0.6
+        fields: [contract_amount, counterparty, contract_type, contract_period,
+                 product_service, is_framework_agreement]
+      bid_win:
+        label: "中标"
+        direction_baseline: 0.6
+        fields: [project_name, bid_amount, project_owner, project_period, bid_rank]
+      product_approval:
+        label: "产品获批"
+        direction_baseline: 0.7
+        fields: [product_name, approval_type, regulatory_body, indication, market_size_estimate]
+      project_commissioning:
+        label: "项目投产"
+        direction_baseline: 0.5
+        fields: [project_name, capacity, investment_amount, expected_revenue_contribution, product_type]
+      strategic_cooperation:
+        label: "战略合作"
+        direction_baseline: 0.4
+        fields: [partner_name, cooperation_scope, cooperation_period, partner_type, exclusivity]
+
+  F:  # 风险事件
+    label: "风险事件"
+    subcategories:
+      litigation:
+        label: "诉讼"
+        direction_baseline: -0.6
+        fields: [case_type, involved_amount, plaintiff_defendant, case_status,
+                 potential_loss_estimate, court_level]
+      penalty:
+        label: "处罚"
+        direction_baseline: -0.7
+        fields: [regulatory_body, penalty_type, penalty_amount, violation_type,
+                 rectification_deadline, business_impact]
+      investigation:
+        label: "立案调查"
+        direction_baseline: -0.9
+        fields: [investigation_body, investigation_reason, subjects_involved, stage]
+      debt_default:
+        label: "债务逾期"
+        direction_baseline: -0.9
+        fields: [default_amount, default_ratio_pct, creditor, debt_type, default_reason, negotiation_status]
+      st_delisting_risk:
+        label: "ST/退市风险"
+        direction_baseline: -0.95
+        fields: [risk_type, trigger_condition, deadline, remediation_possible]
+
+  G:  # 治理与交易状态事件
+    label: "治理与交易状态事件"
+    subcategories:
+      executive_change:
+        label: "高管变动"
+        direction_baseline: 0.0
+        fields: [executive_name, position, change_type, reason, successor, background]
+      controller_change:
+        label: "实控人变更"
+        direction_baseline: 0.2
+        fields: [new_controller, old_controller, change_method, transfer_ratio, transfer_price,
+                 new_controller_bg, regulatory_approval_needed]
+      trading_halt_resume:
+        label: "停复牌"
+        direction_baseline: 0.0
+        fields: [halt_reason, halt_date, resume_date, expected_duration]
+      abnormal_volatility:
+        label: "异常波动"
+        direction_baseline: 0.0
+        fields: [volatility_period, volatility_type, company_explanation, regulatory_inquiry]

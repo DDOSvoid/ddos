@@ -1,0 +1,72 @@
+# 主配置文件
+# 所有路径相对于项目根目录
+
+database:
+  # SQLite for MVP; change to postgresql://user:pass@host/db for production
+  url: "sqlite:///data/ddos.db"
+  echo: false  # set true to debug SQL
+
+tushare:
+  # token 从环境变量 TUSHARE_TOKEN 读取
+  rate_limit_per_minute: 200  # 免费用户建议保守
+
+eastmoney:
+  # 东方财富公告接口
+  base_url: "https://np-anotice-stock.eastmoney.com/api/security/ann"
+  rate_limit_per_minute: 30
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+pipeline:
+  # 每次拉取的天数范围（增量模式：仅拉取最近 N 天）
+  fetch_lookback_days: 3
+  # 分类模型批处理大小
+  classifier_batch_size: 16
+  # 提取时跳过置信度低于此值的分类结果
+  extraction_min_confidence: 0.6
+  # 报告中使用的高影响阈值
+  report_high_impact_threshold: 0.5
+  # 每日报告中深度分析的 Top-N 事件数
+  report_deep_analysis_top_n: 10
+  # 报告过滤：仅包含被跟踪的公司
+  report_tracked_only: false
+
+models:
+  # 分类模型
+  classifier:
+    name: "bert-base-chinese"
+    local_path: "models/bert-classifier"
+    max_length: 512
+  # 提取模型（廉价）
+  extraction:
+    model: "gpt-3.5-turbo"
+    temperature: 0.0
+    max_tokens: 1024
+    request_timeout: 60
+  # 分析模型（昂贵，仅用于高影响事件）
+  analysis:
+    model: "gpt-4o"
+    temperature: 0.3
+    max_tokens: 2048
+    request_timeout: 120
+
+scoring:
+  # 乘法公式: composite = direction * magnitude * surprise * credibility
+  # 各维度默认权重（可通过 event_types.yaml 按类别覆盖）
+  defaults:
+    direction: 0.0     # 中性
+    magnitude: 0.5     # 中等
+    surprise: 0.5      # 中等（无预期数据时的默认值）
+    credibility: 0.8   # 公司公告默认可信度较高
+
+  # 来源可信度
+  source_credibility:
+    regulatory_filing: 0.95
+    company_announcement: 0.90
+    media_report: 0.50
+    analyst_report: 0.60
+
+logging:
+  level: "INFO"
+  file: "logs/pipeline.log"
+  rotation: "10 MB"
+  retention: "30 days"

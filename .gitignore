@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (generated at runtime)
+data/raw/
+data/processed/
+data/labeled/
+data/reports/
+data/ddos.db
+data/*.db
+
+# Models (large files)
+models/
+*.pt
+*.bin
+*.safetensors
+*.pth
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+config/secrets.yaml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
