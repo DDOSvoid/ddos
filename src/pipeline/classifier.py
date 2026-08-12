@@ -1,5 +1,7 @@
 """管线分类步骤 — 批量推理，将公告分类为 A-G 大类和 30+ 子类。"""
 
+from pathlib import Path
+
 from loguru import logger
 from sqlalchemy.orm import Session
 
@@ -28,6 +30,16 @@ class ClassificationStep:
     ) -> None:
         model_path = model_path or config.models.classifier.local_path
         batch_size = batch_size or config.pipeline.classifier_batch_size
+
+        # 无微调模型时 fail-fast：直接加载原始 bert-base-chinese 只有 2 个标签，
+        # 会产出 LABEL_0/1 垃圾分类；且会白白下载 ~400MB 权重。
+        if not Path(model_path).exists():
+            raise RuntimeError(
+                f"分类模型未训练: {model_path} 不存在。"
+                "请先运行: python scripts/generate_seed_data.py "
+                "&& python -m src.training.train_classifier "
+                "--data data/labeled/seed.jsonl --output models/bert-classifier"
+            )
 
         self.wrapper = ClassifierWrapper(
             model_path=model_path,

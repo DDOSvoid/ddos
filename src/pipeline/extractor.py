@@ -1,7 +1,7 @@
 """管线字段提取步骤 — 用 LLM 从公告正文中提取结构化字段。
 
 根据分类结果路由到对应的提取提示词。
-廉价模型（GPT-3.5/Qwen）批量处理，昂贵模型仅做深度分析。
+提取与深度分析均使用 DeepSeek 模型。
 """
 
 from loguru import logger
@@ -223,7 +223,7 @@ class ExtractionStep:
 
 
 class DeepAnalysisStep:
-    """深度分析步骤 — 仅对高影响事件使用昂贵模型（GPT-5.5/GPT-4o）。
+    """深度分析步骤 — 对高影响事件使用 DeepSeek 模型。
 
     不在标准管线中自动运行；由 Reporter 按需调用。
     """

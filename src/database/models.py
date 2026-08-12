@@ -235,7 +235,7 @@ class PipelineRun(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     run_id: Mapped[str] = mapped_column(String(36), unique=True, nullable=False, comment="UUID")
-    run_type: Mapped[str] = mapped_column(String(20), nullable=False, comment="运行类型: full/fetch/classify/extract/score")
+    run_type: Mapped[str] = mapped_column(String(20), nullable=False, comment="运行类型: full/fetch/preprocess/classify/extract/score/report")
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="running", comment="running/completed/failed")
     started_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime)
@@ -247,7 +247,7 @@ class PipelineRun(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "run_type IN ('full','fetch','classify','extract','score')",
+            "run_type IN ('full','fetch','preprocess','classify','extract','score','report')",
             name="ck_pipeline_run_type",
         ),
         CheckConstraint(

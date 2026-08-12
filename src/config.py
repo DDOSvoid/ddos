@@ -65,14 +65,14 @@ class ClassifierModelConfig(BaseModel):
 
 
 class ExtractionModelConfig(BaseModel):
-    model: str = "gpt-3.5-turbo"
+    model: str = "deepseek-v4-flash"
     temperature: float = 0.0
     max_tokens: int = 1024
     request_timeout: int = 60
 
 
 class AnalysisModelConfig(BaseModel):
-    model: str = "gpt-4o"
+    model: str = "deepseek-v4-flash"
     temperature: float = 0.3
     max_tokens: int = 2048
     request_timeout: int = 120
@@ -86,6 +86,7 @@ class ModelsConfig(BaseModel):
 
 class PipelineConfig(BaseModel):
     fetch_lookback_days: int = 3
+    fetch_full_text: bool = True  # 抓取公告正文（内容接口）
     classifier_batch_size: int = 16
     extraction_min_confidence: float = 0.6
     report_high_impact_threshold: float = 0.5

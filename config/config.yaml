@@ -19,6 +19,8 @@ eastmoney:
 pipeline:
   # 每次拉取的天数范围（增量模式：仅拉取最近 N 天）
   fetch_lookback_days: 3
+  # 是否抓取公告正文（东方财富内容接口，每条公告一次额外调用）
+  fetch_full_text: true
   # 分类模型批处理大小
   classifier_batch_size: 16
   # 提取时跳过置信度低于此值的分类结果
@@ -36,15 +38,15 @@ models:
     name: "bert-base-chinese"
     local_path: "models/bert-classifier"
     max_length: 512
-  # 提取模型（廉价）
+  # 提取模型（DeepSeek，批量结构化字段提取）
   extraction:
-    model: "gpt-3.5-turbo"
+    model: "deepseek-v4-flash"
     temperature: 0.0
     max_tokens: 1024
     request_timeout: 60
-  # 分析模型（昂贵，仅用于高影响事件）
+  # 分析模型（DeepSeek，深度分析高影响事件）
   analysis:
-    model: "gpt-4o"
+    model: "deepseek-v4-flash"
     temperature: 0.3
     max_tokens: 2048
     request_timeout: 120

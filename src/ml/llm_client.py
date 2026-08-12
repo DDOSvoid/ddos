@@ -1,8 +1,8 @@
 """统一 LLM 客户端 — 支持 OpenAI 及兼容 API（vLLM, Ollama, Qwen API）。
 
 双层策略:
-  - 廉价模型（gpt-3.5-turbo / qwen）: 批量提取字段
-  - 昂贵模型（gpt-4o / gpt-5.5）: 深度分析高影响事件
+  - 提取模型（DeepSeek）: 批量提取字段
+  - 分析模型（DeepSeek）: 深度分析高影响事件
 """
 
 import json
@@ -10,7 +10,7 @@ import os
 import time
 from typing import Optional
 
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 
 
 class LlmClient:
@@ -18,7 +18,7 @@ class LlmClient:
 
     Usage:
         client = LlmClient()
-        text = client.complete("你是AI助手", "请解析以下公告...", model="gpt-3.5-turbo")
+        text = client.complete("你是AI助手", "请解析以下公告...", model="deepseek-v4-flash")
         data = client.complete_json("你是AI助手", "输出JSON...")
     """
 
@@ -35,10 +35,15 @@ class LlmClient:
             default_model: 默认模型名
         """
         api_key = api_key or os.getenv("OPENAI_API_KEY", "")
-        base_url = base_url or os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        base_url = base_url or os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
 
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
-        self.default_model = default_model or "gpt-3.5-turbo"
+        try:
+            self.client = OpenAI(api_key=api_key, base_url=base_url)
+        except OpenAIError:
+            # key 未配置：构造成功，首次实际调用时抛出清晰错误
+            # （保持 .env 中 key 可暂留空、代码可导入/可测试）
+            self.client = None
+        self.default_model = default_model or "deepseek-v4-flash"
 
     def complete(
         self,
@@ -62,6 +67,11 @@ class LlmClient:
         Returns:
             模型返回的文本
         """
+        if self.client is None:
+            raise RuntimeError(
+                "LLM API key 未配置：请在 .env 中设置 OPENAI_API_KEY（DeepSeek key）"
+            )
+
         model = model or self.default_model
         messages = [
             {"role": "system", "content": system_prompt},

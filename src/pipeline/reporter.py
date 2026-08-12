@@ -4,7 +4,7 @@
   1. 执行摘要（关键统计数据）
   2. 高影响事件表格（|composite_score| > 阈值）
   3. 分类分布统计
-  4. 深度分析（GPT-5.5 对 Top-N 事件）
+  4. 深度分析（DeepSeek 对 Top-N 事件）
 """
 
 from datetime import date, datetime
@@ -108,6 +108,14 @@ class Reporter:
                 f.write(report_content)
 
             logger.info(f"Report saved: {filepath}")
+
+            # 9. 标记参与报告的公告为已报告（完成状态机流转）
+            for item in scored_items:
+                AnnouncementRepository.update_status(
+                    session, item["announcement"].id, "reported"
+                )
+            session.commit()
+
             return str(filepath)
 
     def _generate_markdown(

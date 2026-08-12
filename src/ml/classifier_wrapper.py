@@ -69,8 +69,29 @@ class ClassifierWrapper:
         self.id2label: dict[int, str] = {}
         self._load_label_mapping()
 
+        # 温度缩放（校准）— 模型目录下 temperature.json 可选；
+        # 缺失时默认 1.0（不缩放），保持向后兼容。
+        self.temperature = self._load_temperature()
+
         # 子类别 → 大类别的静态映射（后备）
         self._sub_to_major: dict[str, str] = {}
+
+    def _load_temperature(self) -> float:
+        """从模型目录加载校准温度；缺失时返回 1.0。"""
+        if not (self.model_path and Path(self.model_path).exists()):
+            return 1.0
+        temp_file = Path(self.model_path) / "temperature.json"
+        if not temp_file.exists():
+            return 1.0
+        try:
+            with open(temp_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            t = float(data.get("temperature", 1.0))
+            logger.info(f"Loaded calibration temperature: {t}")
+            return t if t > 0 else 1.0
+        except Exception as e:
+            logger.warning(f"Failed to load temperature, defaulting to 1.0: {e}")
+            return 1.0
 
     def _load_label_mapping(self) -> None:
         """从模型目录加载 label 映射。"""
@@ -123,9 +144,9 @@ class ClassifierWrapper:
         )
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
-        # 推理
+        # 推理（应用校准温度：logits / T，T<1 锐化、T>1 平滑，argmax 不变）
         outputs = self.model(**inputs)
-        logits = outputs.logits
+        logits = outputs.logits / self.temperature
         probs = torch.softmax(logits, dim=-1)
         confidences, pred_ids = torch.max(probs, dim=-1)
 

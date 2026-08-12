@@ -24,6 +24,7 @@ from src.config import config
 from src.database.engine import get_engine
 from src.database.models import Announcement, Company
 from src.database.repository import AnnouncementRepository, CompanyRepository
+from src.utils.text_utils import clean_chinese_text
 
 
 # ── 数据模型 ───────────────────────────────────────────────────
@@ -274,6 +275,29 @@ class EastmoneyClient:
             time.sleep(0.3)  # 礼貌爬取
         return all_items
 
+    def fetch_announcement_content(self, art_code: str) -> dict:
+        """获取单条公告内容（正文 + PDF 链接）。
+
+        列表接口只返回元数据（art_code/title/notice_date），正文需按 art_code
+        单独调用内容接口。
+
+        Args:
+            art_code: 公告编号（列表接口返回的 art_code）
+
+        Returns:
+            data dict，含 notice_content / attach_url_web / attach_url；失败返回空 dict
+        """
+        url = "https://np-cnotice-stock.eastmoney.com/api/content/ann"
+        params = {"art_code": art_code, "client_source": "web", "page_index": 1}
+        self._rate_limit()
+        try:
+            resp = self.session.get(url, params=params, timeout=30)
+            resp.raise_for_status()
+            return resp.json().get("data") or {}
+        except Exception as e:
+            logger.warning(f"Eastmoney content API error for {art_code}: {e}")
+            return {}
+
 
 # ── 主数据获取器 ────────────────────────────────────────────────
 
@@ -352,16 +376,31 @@ class Fetcher:
                         max_pages=3,  # 每只股票最多 3 页
                     )
                     for item in items:
-                        all_raw.append(RawAnnouncement(
-                            announcement_id=str(item.get("art_code", "")),
+                        art_code = str(item.get("art_code", ""))
+                        raw = RawAnnouncement(
+                            announcement_id=art_code,
                             stock_code=code,
                             title=item.get("title", ""),
-                            full_text=item.get("notice_content", ""),
+                            full_text=None,
                             pdf_url=None,
                             published_date=self._parse_em_date(item.get("notice_date", "")),
-                            source_url=item.get("art_code", ""),
+                            source_url=art_code,
                             raw_json=None,
-                        ))
+                        )
+                        # 富化：按 art_code 抓取正文与 PDF 链接（失败降级为列表摘要，不中断整批）
+                        if config.pipeline.fetch_full_text and art_code:
+                            content = self.em.fetch_announcement_content(art_code)
+                            raw.full_text = (
+                                clean_chinese_text(content.get("notice_content", ""))
+                                or item.get("notice_content", "")
+                            )
+                            raw.pdf_url = (
+                                content.get("attach_url_web")
+                                or content.get("attach_url")
+                            )
+                        else:
+                            raw.full_text = item.get("notice_content", "")
+                        all_raw.append(raw)
                 except Exception as e:
                     logger.warning(f"Failed to fetch announcements for {code}: {e}")
 

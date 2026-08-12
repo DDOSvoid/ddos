@@ -94,9 +94,11 @@ def train(
 
     # ── 4. 创建 HuggingFace Dataset ─────────────────
     def make_hf_dataset(texts_list, labels_list):
+        # 列名必须用 "labels"：Trainer 的签名列与 compute_metrics 都依赖它，
+        # "label" 会被 _remove_unused_columns 移除导致 loss/metrics 拿不到标签。
         return HFDataset.from_dict({
             "text": texts_list,
-            "label": labels_list,
+            "labels": labels_list,
         })
 
     train_hf = make_hf_dataset(*splits["train"])
@@ -115,14 +117,14 @@ def train(
     val_hf = val_hf.map(tokenize_fn, batched=True, remove_columns=["text"])
     test_hf = test_hf.map(tokenize_fn, batched=True, remove_columns=["text"])
 
-    # 重命名 label 列
-    for ds in [train_hf, val_hf, test_hf]:
-        if "label" in ds.column_names:
-            pass  # Trainer 默认查找 "labels" 列，但我们已经有了
-
     # ── 5. 训练参数 ─────────────────────────────────
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
+
+    # transformers 5.x: warmup_ratio 已移除 → 换算为 warmup_steps；evaluation_strategy → eval_strategy
+    steps_per_epoch = max(1, len(train_hf) // batch_size)
+    total_steps = steps_per_epoch * num_epochs
+    warmup_steps = max(1, int(total_steps * warmup_ratio))
 
     training_args = TrainingArguments(
         output_dir=str(output_path),
@@ -130,19 +132,18 @@ def train(
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size * 2,
         learning_rate=learning_rate,
-        warmup_ratio=warmup_ratio,
+        warmup_steps=warmup_steps,
         weight_decay=weight_decay,
         gradient_accumulation_steps=gradient_accumulation_steps,
         fp16=fp16,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         save_total_limit=save_total_limit,
         load_best_model_at_end=True,
         metric_for_best_model="macro_f1",
         greater_is_better=True,
-        logging_dir=str(output_path / "logs"),
         logging_steps=50,
-        report_to="none",  # 不上报 wandb/tensorboard
+        report_to="none",  # 不上报 wandb/tensorboard（transformers 5.x 已移除 logging_dir）
         dataloader_num_workers=0,  # Windows 多进程可能有问题
         seed=random_state,
     )
@@ -155,7 +156,6 @@ def train(
         args=training_args,
         train_dataset=train_hf,
         eval_dataset=val_hf,
-        tokenizer=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=2)],

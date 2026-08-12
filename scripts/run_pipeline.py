@@ -94,13 +94,10 @@ def main():
         logger.info(f"Pipeline run started: {run_id}")
 
     # ── 执行各阶段 ───────────────────────────────────
-    # TODO: 各阶段将在后续周次中实现
-    # 目前仅验证框架连通性
 
     try:
         from src.pipeline.fetcher import Fetcher
         from src.pipeline.preprocessor import Preprocessor
-        # 后续阶段按需导入
 
         for stage in stages:
             logger.info(f"[{stage}] Starting...")
@@ -116,16 +113,31 @@ def main():
                 logger.info(f"[{stage}] Preprocessed {count} announcements")
 
             elif stage == "classify":
-                logger.info(f"[{stage}] Classifier not yet implemented — skipping")
+                from src.pipeline.classifier import ClassificationStep
+                classifier = ClassificationStep()
+                count = classifier.run()
+                logger.info(f"[{stage}] Classified {count} announcements")
 
             elif stage == "extract":
-                logger.info(f"[{stage}] Extractor not yet implemented — skipping")
+                from src.pipeline.extractor import ExtractionStep
+                extractor = ExtractionStep()
+                count = extractor.run()
+                logger.info(f"[{stage}] Extracted fields from {count} announcements")
 
             elif stage == "score":
-                logger.info(f"[{stage}] Scorer not yet implemented — skipping")
+                from src.pipeline.scorer import ImpactScorer
+                scorer = ImpactScorer()
+                count = scorer.run()
+                logger.info(f"[{stage}] Scored {count} announcements")
 
             elif stage == "report":
-                logger.info(f"[{stage}] Reporter not yet implemented — skipping")
+                from src.pipeline.reporter import Reporter
+                reporter = Reporter()
+                report_path = reporter.run(target_date=target_date)
+                if report_path:
+                    logger.info(f"[{stage}] Report saved: {report_path}")
+                else:
+                    logger.info(f"[{stage}] No scored announcements to report")
 
             else:
                 logger.warning(f"[{stage}] Unknown stage — skipping")
