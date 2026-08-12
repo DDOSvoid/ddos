@@ -36,9 +36,7 @@ class ClassificationStep:
         if not Path(model_path).exists():
             raise RuntimeError(
                 f"分类模型未训练: {model_path} 不存在。"
-                "请先运行: python scripts/generate_seed_data.py "
-                "&& python -m src.training.train_classifier "
-                "--data data/labeled/seed.jsonl --output models/bert-classifier"
+                "请运行一键复现脚本: python scripts/setup_model.py"
             )
 
         self.wrapper = ClassifierWrapper(

@@ -28,7 +28,7 @@ data/reports/
 data/ddos.db
 data/*.db
 
-# Models (large files)
+# Models (large files) — clone 后运行 scripts/setup_model.py 复现
 models/
 *.pt
 *.bin
