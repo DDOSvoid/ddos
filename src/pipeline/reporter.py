@@ -20,10 +20,10 @@ from src.database.models import Announcement, Classification, Company, Score
 from src.database.repository import (
     AnnouncementRepository,
     DailyReportRepository,
-    ExtractedFieldRepository,
     ScoreRepository,
 )
 from src.ml.llm_client import LlmClient
+from src.pipeline.extractor import DeepAnalysisStep
 
 
 class Reporter:
@@ -31,6 +31,7 @@ class Reporter:
 
     def __init__(self, llm_client: LlmClient | None = None) -> None:
         self.llm = llm_client or LlmClient()
+        self.deep_analysis = DeepAnalysisStep(self.llm)
         self.threshold = config.pipeline.report_high_impact_threshold
         self.top_n = config.pipeline.report_deep_analysis_top_n
         self.output_dir = config.resolve_path("data/reports")
@@ -82,7 +83,7 @@ class Reporter:
 
             # 5. 生成 Markdown 报告
             report_content = self._generate_markdown(
-                target_date, scored_items, high_impact, top_n
+                target_date, scored_items, high_impact, top_n, session
             )
 
             # 6. 生成摘要
@@ -124,6 +125,7 @@ class Reporter:
         all_items: list[dict],
         high_impact: list[dict],
         top_n: list[dict],
+        session: Session,
     ) -> str:
         """生成 Markdown 报告全文。"""
         lines = []
@@ -201,9 +203,9 @@ class Reporter:
                 lines.append(f"- **方向**: {score.direction:+.2f} | **强度**: {score.magnitude:.2f} | **意外度**: {score.surprise:.2f} | **可信度**: {score.credibility:.2f}")
                 lines.append(f"")
 
-                # 尝试用 LLM 做深度分析
+                # 用共享的 DeepAnalysisStep 做深度分析（复用调用方 session）
                 try:
-                    analysis = self._deep_analyze(ann, session_for_fields=True)
+                    analysis = self.deep_analysis.analyze(ann, session)
                     lines.append(f"> {analysis}")
                 except Exception as e:
                     logger.warning(f"Deep analysis failed for {ann.announcement_id}: {e}")
@@ -229,43 +231,4 @@ class Reporter:
             f"{report_date} 共处理 {total_count} 条公告，其中 {len(high_impact)} 条高影响事件。"
             f" 最高评分: {top['announcement'].title[:30]}..."
             f" (综合: {top['score'].composite_score:+.3f})"
-        )
-
-    def _deep_analyze(
-        self, ann: Announcement, session_for_fields: bool = False
-    ) -> str:
-        """对单条公告做深度分析。"""
-        score = ann.score
-        classification = ann.classification
-        company = ann.company
-
-        # 获取提取字段
-        fields_str = "N/A"
-        if session_for_fields:
-            engine = get_engine()
-            with Session(engine) as session:
-                fields = ExtractedFieldRepository.to_dict(session, ann.id)
-                fields_str = str(fields)[:1000]
-
-        system_prompt = """你是资深A股投资分析师。请基于公告信息撰写精炼分析(150字内)：
-1. 对股价的短期影响方向及逻辑
-2. 是否已被市场预期
-3. 后续关注时点"""
-
-        user_prompt = f"""公告分析:
-
-公司: {company.stock_name if company else '?'}({company.stock_code if company else '?'})
-分类: {classification.sub_category if classification else '?'}
-标题: {ann.title}
-正文: {(ann.full_text or '')[:2000]}
-
-评分: 方向={score.direction:+.2f} 强度={score.magnitude:.2f} 意外度={score.surprise:.2f}
-提取字段: {fields_str}"""
-
-        return self.llm.complete(
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-            model=config.models.analysis.model,
-            max_tokens=512,
-            temperature=0.3,
         )

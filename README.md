@@ -129,6 +129,29 @@ python scripts/setup_model.py --force
 python scripts/check_confidence.py
 ```
 
+### 用真实公告增强训练（可选）
+
+种子模型用合成数据微调，**标注少量真实公告并入训练集**可显著提升真实场景分类精度：
+
+```powershell
+# 1. 导出真实公告（默认全部状态，优先有正文的；自动跳过已标注过的）
+python scripts/label_data.py --export --output data/labeled/to_label.jsonl --count 200
+
+# 2. 手动编辑 to_label.jsonl，为每行填 sub_category / major_category
+#    （类别选项见 config/event_types.yaml）
+
+# 3. 与种子数据合并（按 announcement_id/text 去重，校验类别合法性）
+python scripts/label_data.py --merge \
+    --inputs data/labeled/seed.jsonl data/labeled/to_label.jsonl \
+    --output data/labeled/combined.jsonl
+
+# 4. 用合并数据重训 + 校准
+python -m src.training.train_classifier --data data/labeled/combined.jsonl --output models/bert-classifier
+python scripts/calibrate_temperature.py --data data/labeled/combined.jsonl --model models/bert-classifier
+```
+
+> `--export` 默认从**全部状态**导出（管线跑完后公告状态已推进到 `reported`，旧的只导 `preprocessed` 会导出 0 条）；`--status preprocessed` 可指定只导某状态。合并阶段会拦截不在 `event_types.yaml` 里的类别值，避免错别字悄悄给模型加一个新类。
+
 ## 公告正文富化
 
 东方财富**列表接口**只返回元数据（标题/日期），正文为空。管线默认调用**内容接口**按 `art_code` 拉取正文与 PDF 链接，落库 `full_text` / `pdf_url`。

@@ -232,16 +232,34 @@ class DeepAnalysisStep:
         self.llm = llm_client or LlmClient()
         self.model = config.models.analysis.model
 
-    def analyze(self, announcement: Announcement) -> str:
-        """对单个公告做深度分析，返回分析文本。"""
+    def analyze(
+        self,
+        announcement: Announcement,
+        session: Session | None = None,
+    ) -> str:
+        """对单个公告做深度分析，返回分析文本。
+
+        `session` 传入调用方已打开的 Session（推荐，避免重复建连）；
+        省略时自建 Session 查询提取字段。
+        """
         classification = announcement.classification
         score = announcement.score
-        fields = ExtractedFieldRepository.to_dict(
-            next(get_engine())._dbapi_connection,  # 简化处理
-            announcement.id,
-        )
-        # TODO: 修正 session 管理
+        fields = self._get_fields(announcement.id, session)
         return self._do_analyze(announcement, classification, score, fields)
+
+    @staticmethod
+    def _get_fields(
+        announcement_id: int, session: Session | None = None
+    ) -> dict:
+        """读取公告的提取字段。
+
+        原实现误用 `next(get_engine())._dbapi_connection`（原始 DBAPI 连接，
+        没有 `.query()`，`to_dict` 一调用即崩溃），已改为规范 Session 访问。
+        """
+        if session is not None:
+            return ExtractedFieldRepository.to_dict(session, announcement_id)
+        with Session(get_engine()) as s:
+            return ExtractedFieldRepository.to_dict(s, announcement_id)
 
     def _do_analyze(
         self,
