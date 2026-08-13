@@ -23,7 +23,7 @@ from src.database.repository import (
     ScoreRepository,
 )
 from src.ml.llm_client import LlmClient
-from src.pipeline.extractor import DeepAnalysisStep
+from src.pipeline.analysis import DeepAnalysisStep
 
 
 class Reporter:
