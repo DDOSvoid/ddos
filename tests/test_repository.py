@@ -4,7 +4,7 @@ from datetime import date
 
 import pytest
 
-from src.database.models import Announcement, Company
+from src.database.models import Announcement, Classification, Company
 from src.database.repository import (
     AnnouncementRepository,
     ClassificationRepository,
@@ -193,6 +193,36 @@ class TestClassificationRepository:
 
         assert cls_result.major_category == "A"
         assert cls_result.sub_category == "earnings_q1"
+
+    def test_upsert_with_industry(self, db_session):
+        """upsert 带行业字段应往返一致，重复调用不丢失。"""
+        ann = self._seed_announcement(db_session)
+
+        ClassificationRepository.upsert(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_q1",
+            confidence=0.92,
+            industry="电气设备",
+            industry_group="新能源与电力",
+        )
+        # 再次 upsert（走更新分支）后仍保留行业字段
+        ClassificationRepository.upsert(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_q1",
+            confidence=0.95,
+            industry="电气设备",
+            industry_group="新能源与电力",
+        )
+        db_session.commit()
+
+        cls = db_session.query(Classification).one()
+        assert cls.industry == "电气设备"
+        assert cls.industry_group == "新能源与电力"
+        assert cls.confidence == pytest.approx(0.95)
 
 
 class TestScoreRepository:

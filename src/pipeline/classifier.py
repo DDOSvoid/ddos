@@ -5,7 +5,7 @@ from pathlib import Path
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from src.config import config, event_registry
+from src.config import config, event_registry, industry_registry
 from src.database.engine import get_engine
 from src.database.models import Announcement
 from src.database.repository import AnnouncementRepository, ClassificationRepository
@@ -81,6 +81,9 @@ class ClassificationStep:
             # 写入结果
             for ann, result in zip(announcements, results):
                 try:
+                    # 行业是公司自带属性，不经模型推理，直接从 company 带过来
+                    industry = ann.company.industry if ann.company else None
+                    industry_group = industry_registry.resolve(industry)
                     ClassificationRepository.upsert(
                         session,
                         announcement_id=ann.id,
@@ -88,6 +91,8 @@ class ClassificationStep:
                         sub_category=result.sub_category,
                         confidence=result.confidence,
                         model_version=config.models.classifier.name,
+                        industry=industry,
+                        industry_group=industry_group,
                     )
                     AnnouncementRepository.update_status(
                         session, ann.id, "classified"

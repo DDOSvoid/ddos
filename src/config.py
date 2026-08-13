@@ -202,5 +202,42 @@ class EventTypeRegistry:
         return dict(self._sub_to_major)
 
 
+# ── 行业划分注册表 ────────────────────────────────────────────
+
+
+class IndustryRegistry:
+    """行业划分注册表 — 从 config/industries.yaml 加载。
+
+    将 Tushare 申万一级行业标签映射到粗分行业域，供 classify 步骤
+    为公告写入 industry_group，便于下游按行业差异化处理。
+    """
+
+    def __init__(self) -> None:
+        raw = _load_yaml("industries.yaml")
+        self.default_group: str = raw.get("default_group", "其他")
+        self.groups: dict[str, list[str]] = raw.get("groups", {})
+        # industry → group 反向映射
+        self._industry_to_group: dict[str, str] = {}
+        for group, industries in self.groups.items():
+            for industry in industries:
+                self._industry_to_group[industry] = group
+
+    def resolve(self, industry: str | None) -> str:
+        """将申万一级行业解析为行业域；空/未命中归 default_group。"""
+        if not industry:
+            return self.default_group
+        return self._industry_to_group.get(industry, self.default_group)
+
+    def get_group_industries(self, group: str) -> list[str]:
+        """获取某行业域下的所有申万一级行业。"""
+        return list(self.groups.get(group, []))
+
+    def group_names(self) -> list[str]:
+        return list(self.groups.keys())
+
+
+# 全局行业划分注册表单例
+industry_registry = IndustryRegistry()
+
 # 全局事件注册表单例
 event_registry = EventTypeRegistry()

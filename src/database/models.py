@@ -112,6 +112,8 @@ class Classification(Base):
     sub_category: Mapped[str] = mapped_column(String(50), nullable=False, comment="子类别代码")
     confidence: Mapped[float] = mapped_column(Float, nullable=False, comment="分类置信度")
     model_version: Mapped[str | None] = mapped_column(String(50), comment="模型版本")
+    industry: Mapped[str | None] = mapped_column(String(50), comment="行业（申万一级，来自公司，非模型产出）")
+    industry_group: Mapped[str | None] = mapped_column(String(20), comment="行业域（粗分，用于差异化处理/专家模型路由）")
     classified_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # 关系

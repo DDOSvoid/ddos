@@ -14,7 +14,7 @@ from typing import Optional
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from src.config import config
+from src.config import config, industry_registry
 from src.database.engine import get_engine
 from src.database.models import Announcement, Classification, Company, Score
 from src.database.repository import (
@@ -152,16 +152,18 @@ class Reporter:
         lines.append("## 二、高影响事件")
         lines.append("")
         if high_impact:
-            lines.append("| 股票 | 公告标题 | 分类 | 方向 | 强度 | 意外度 | 可信度 | 综合评分 |")
-            lines.append("|------|---------|------|------|------|--------|--------|----------|")
+            lines.append("| 股票 | 行业 | 公告标题 | 分类 | 方向 | 强度 | 意外度 | 可信度 | 综合评分 |")
+            lines.append("|------|------|---------|------|------|------|--------|--------|----------|")
             for item in high_impact[:20]:  # 最多 20 行
                 ann = item["announcement"]
                 score = item["score"]
                 cls = item["classification"]
                 comp = item["company"]
                 title_short = (ann.title or "")[:30]
+                industry = comp.industry if comp and comp.industry else "?"
                 lines.append(
                     f"| {comp.stock_name if comp else '?'}({comp.stock_code if comp else '?'}) "
+                    f"| {industry} "
                     f"| {title_short} "
                     f"| {cls.sub_category if cls else '?'} "
                     f"| {score.direction:+.2f} "
@@ -187,9 +189,25 @@ class Reporter:
             lines.append(f"- **{cat}**: {cnt} 条")
         lines.append("")
 
+        # ── 行业分布 ──
+        lines.append("## 四、行业分布")
+        lines.append("")
+        group_counts = {}
+        for item in all_items:
+            cls = item["classification"]
+            comp = item["company"]
+            group = (
+                cls.industry_group if cls and cls.industry_group
+                else industry_registry.resolve(comp.industry if comp else None)
+            )
+            group_counts[group] = group_counts.get(group, 0) + 1
+        for group, cnt in sorted(group_counts.items(), key=lambda x: -x[1]):
+            lines.append(f"- **{group}**: {cnt} 条")
+        lines.append("")
+
         # ── 深度分析 ──
         if top_n:
-            lines.append("## 四、深度分析")
+            lines.append("## 五、深度分析")
             lines.append("")
             for i, item in enumerate(top_n, 1):
                 ann = item["announcement"]

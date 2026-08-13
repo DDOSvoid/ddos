@@ -61,7 +61,8 @@ class TestClassificationStep:
         Base.metadata.create_all(engine)
         with Session(engine) as session:
             company = Company(
-                stock_code="000001.SZ", stock_name="平安银行", exchange="SZSE", is_tracked=True
+                stock_code="000001.SZ", stock_name="平安银行", exchange="SZSE",
+                industry="电气设备", is_tracked=True,
             )
             session.add(company)
             session.flush()
@@ -94,6 +95,9 @@ class TestClassificationStep:
             assert cls.major_category == "C"
             assert cls.sub_category == "buyback"
             assert cls.confidence == pytest.approx(0.95)
+            # 行业从公司自带属性带入，不经模型
+            assert cls.industry == "电气设备"
+            assert cls.industry_group == "新能源与电力"
 
             ann = session.query(Announcement).one()
             assert ann.processing_status == "classified"

@@ -176,6 +176,8 @@ class ClassificationRepository:
         sub_category: str,
         confidence: float,
         model_version: Optional[str] = None,
+        industry: Optional[str] = None,
+        industry_group: Optional[str] = None,
     ) -> Classification:
         existing = (
             session.query(Classification)
@@ -187,6 +189,8 @@ class ClassificationRepository:
             existing.sub_category = sub_category
             existing.confidence = confidence
             existing.model_version = model_version
+            existing.industry = industry
+            existing.industry_group = industry_group
             existing.classified_at = datetime.utcnow()
         else:
             existing = Classification(
@@ -195,6 +199,8 @@ class ClassificationRepository:
                 sub_category=sub_category,
                 confidence=confidence,
                 model_version=model_version,
+                industry=industry,
+                industry_group=industry_group,
             )
             session.add(existing)
         session.flush()
