@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}日报 — DDOS 公告事件分析{% endblock %}
+
+{% block content %}
+<h1 class="page-title">日报</h1>
+
+{% if reports %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>日期</th>
+      <th>标题</th>
+      <th>摘要</th>
+      <th>高影响</th>
+      <th>公告总数</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in reports %}
+    <tr>
+      <td><a href="{{ url_for('report_detail', report_date=r.report_date) }}">{{ r.report_date }}</a></td>
+      <td>{{ r.report_title or '-' }}</td>
+      <td class="muted">{{ (r.summary_text or '')[:60] }}</td>
+      <td>{{ r.high_impact_count }}</td>
+      <td>{{ r.total_announcements }}</td>
+      <td>
+        <a href="{{ url_for('report_file', report_date=r.report_date) }}" target="_blank" rel="noopener">原文 .md</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">暂无日报。运行管线 report 阶段后生成。</p>
+{% endif %}
+{% endblock %}

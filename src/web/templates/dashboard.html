@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "macros.html" import direction_badge, status_badge %}
+
+{% block title %}仪表盘 — DDOS 公告事件分析{% endblock %}
+
+{% block content %}
+<h1 class="page-title">数据概览</h1>
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_announcements }}</div>
+    <div class="stat-label">公告总数</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ high_impact }}</div>
+    <div class="stat-label">高影响事件（|score|≥0.5）</div>
+  </div>
+  <div class="stat-card stat-up">
+    <div class="stat-value">{{ direction_dist['利好'] }}</div>
+    <div class="stat-label">利好</div>
+  </div>
+  <div class="stat-card stat-down">
+    <div class="stat-value">{{ direction_dist['利空'] }}</div>
+    <div class="stat-label">利空</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ direction_dist['中性'] }}</div>
+    <div class="stat-label">中性</div>
+  </div>
+</div>
+
+<div class="status-chips">
+  {% for s in status_options %}
+    <span class="chip"><b>{{ s }}</b> {{ status_counts.get(s, 0) }}</span>
+  {% endfor %}
+</div>
+
+{% if echarts_available %}
+<div class="charts-grid">
+  <div class="chart-box"><div id="chart-category" class="chart"></div></div>
+  <div class="chart-box"><div id="chart-industry" class="chart"></div></div>
+  <div class="chart-box"><div id="chart-direction" class="chart"></div></div>
+</div>
+{% else %}
+<div class="notice">图表库未加载（static/vendor/echarts.min.js 缺失），仅显示表格数据。</div>
+{% endif %}
+
+<div class="two-col">
+  <section class="panel">
+    <h2>最近管线运行</h2>
+    {% if recent_runs %}
+    <table class="table">
+      <thead>
+        <tr><th>时间</th><th>Run ID</th><th>类型</th><th>状态</th><th>处理/失败</th><th>错误</th></tr>
+      </thead>
+      <tbody>
+        {% for run in recent_runs %}
+        <tr>
+          <td>{{ run.started_at.strftime('%m-%d %H:%M') }}</td>
+          <td class="muted">{{ run.run_id }}</td>
+          <td>{{ run.run_type }}</td>
+          <td>{{ status_badge(run.status) }}</td>
+          <td>{{ run.records_processed }} / {{ run.records_failed }}</td>
+          <td class="muted">{{ (run.error_message or '')[:40] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty">暂无管线运行记录</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>可用日报</h2>
+    {% if reports %}
+    <ul class="report-list">
+      {% for r in reports %}
+      <li>
+        <a href="{{ url_for('report_detail', report_date=r.report_date) }}">{{ r.report_date }}</a>
+        <span class="muted">· 高影响 {{ r.high_impact_count }} / 共 {{ r.total_announcements }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">暂无日报</p>
+    {% endif %}
+  </section>
+</div>
+
+<script>
+window.DASHBOARD_DATA = {
+  category: {{ charts.category | tojson }},
+  industry: {{ charts.industry | tojson }},
+  direction: {{ charts.direction | tojson }}
+};
+</script>
+<script src="{{ url_for('static', path='/js/dashboard.js') }}"></script>
+{% endblock %}

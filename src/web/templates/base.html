@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DDOS 公告事件分析{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=2">
+  {% if echarts_available %}
+  <script src="{{ url_for('static', path='vendor/echarts.min.js') }}"></script>
+  {% endif %}
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">DDOS<span>公告事件分析</span></div>
+    <nav class="nav">
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active == 'dashboard' }}">仪表盘</a>
+      <a href="{{ url_for('announcements') }}" class="{{ 'active' if active == 'announcements' }}">公告列表</a>
+      <a href="{{ url_for('reports') }}" class="{{ 'active' if active == 'reports' }}">日报</a>
+    </nav>
+    <div class="sidebar-foot">只读展示 · 本地</div>
+  </aside>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

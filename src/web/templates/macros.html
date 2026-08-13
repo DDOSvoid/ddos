@@ -1,0 +1,24 @@
+{% macro direction_badge(label) -%}
+  {% if label == '利好' %}<span class="badge badge-up">利好</span>
+  {% elif label == '利空' %}<span class="badge badge-down">利空</span>
+  {% else %}<span class="badge badge-neutral">中性</span>{% endif %}
+{%- endmacro %}
+
+{% macro status_badge(status) -%}
+  <span class="badge badge-status">{{ status }}</span>
+{%- endmacro %}
+
+{% macro score_bar(value, max=1.0) -%}
+  {% set pct = ((value|float / max) * 100) | round(0) if max else 0 %}
+  <div class="score-bar"><div class="score-bar-fill" style="width: {{ pct }}%"></div></div>
+{%- endmacro %}
+
+{% macro pagination(pager, page_url) -%}
+  {% if pager.total_pages > 1 %}
+  <div class="pagination">
+    {% if pager.page > 1 %}<a href="{{ page_url(pager.page - 1) }}">‹ 上一页</a>{% endif %}
+    <span>第 {{ pager.page }} / {{ pager.total_pages }} 页 · 共 {{ pager.total }} 条</span>
+    {% if pager.page < pager.total_pages %}<a href="{{ page_url(pager.page + 1) }}">下一页 ›</a>{% endif %}
+  </div>
+  {% endif %}
+{%- endmacro %}

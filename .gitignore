@@ -27,6 +27,8 @@ data/labeled/
 data/reports/
 data/ddos.db
 data/*.db
+data/*.db-shm
+data/*.db-wal
 
 # Models (large files) — clone 后运行 scripts/setup_model.py 复现
 models/

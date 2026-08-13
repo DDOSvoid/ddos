@@ -131,3 +131,13 @@ def dispose_engine() -> None:
         _engine.dispose()
         _engine = None
         _SessionLocal = None
+
+
+def set_database_url(db_url: str) -> None:
+    """重设数据库 URL（需在首次建连前调用）。
+
+    供启动脚本 `--db-url` 或测试在 init_db()/get_session() 之前切换
+    目标数据库。会先释放已存在的单例引擎。
+    """
+    dispose_engine()
+    config.database.url = db_url

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}日报 {{ report.report_date }} — DDOS 公告事件分析{% endblock %}
+
+{% block content %}
+<p class="back-link"><a href="{{ url_for('reports') }}">← 返回日报列表</a></p>
+
+<div class="detail-header">
+  <h1 class="page-title">{{ report.report_title or ('日报 ' ~ report.report_date) }}</h1>
+  <div class="detail-meta">
+    <span>{{ report.report_date }}</span>
+    <span>高影响 {{ report.high_impact_count }} / 共 {{ report.total_announcements }}</span>
+    <a href="{{ url_for('report_file', report_date=report.report_date) }}" target="_blank" rel="noopener">原文 .md</a>
+  </div>
+</div>
+
+{% if report.summary_text %}
+<blockquote class="summary">{{ report.summary_text }}</blockquote>
+{% endif %}
+
+<article class="markdown-body">
+{{ rendered_html | safe }}
+</article>
+{% endblock %}

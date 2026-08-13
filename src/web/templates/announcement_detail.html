@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "macros.html" import direction_badge, status_badge, score_bar %}
+
+{% block title %}{{ ann.title[:30] }} — DDOS 公告事件分析{% endblock %}
+
+{% block content %}
+<p class="back-link"><a href="{{ url_for('announcements') }}">← 返回公告列表</a></p>
+
+<div class="detail-header">
+  <h1 class="page-title">{{ ann.title }}</h1>
+  <div class="detail-meta">
+    {% if ann.company %}
+    <span>{{ ann.company.stock_name }} ({{ ann.company.stock_code }})</span>
+    {% endif %}
+    <span>{{ ann.published_date }}</span>
+    <span>{{ status_badge(ann.processing_status) }}</span>
+    {% if ann.source_url %}<a href="{{ ann.source_url }}" target="_blank" rel="noopener">来源链接</a>{% endif %}
+    {% if ann.pdf_url %}<a href="{{ ann.pdf_url }}" target="_blank" rel="noopener">PDF</a>{% endif %}
+  </div>
+</div>
+
+{% set cls = ann.classification %}
+{% set score = ann.score %}
+<div class="cards">
+  <section class="panel">
+    <h2>分类</h2>
+    {% if cls %}
+    <dl class="kv">
+      <dt>大类</dt><dd>{{ category_label(cls.major_category) }}</dd>
+      <dt>子类</dt><dd>{{ sub_label(cls.major_category, cls.sub_category) }}</dd>
+      <dt>置信度</dt><dd>{{ '%d%%' | format(cls.confidence * 100) }}</dd>
+      <dt>行业（申万一级）</dt><dd>{{ cls.industry or '-' }}</dd>
+      <dt>行业域</dt><dd>{{ cls.industry_group or '-' }}</dd>
+    </dl>
+    {% else %}
+    <p class="empty">未分类</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>评分</h2>
+    {% if score %}
+    <div class="composite">
+      <span class="composite-value {{ 'up' if score.composite_score > 0.1 else ('down' if score.composite_score < -0.1 else '') }}">
+        {{ '%+.3f' | format(score.composite_score) }}
+      </span>
+      {{ direction_badge(score.direction_label) }}
+    </div>
+    <table class="table table-compact">
+      <tbody>
+        <tr><td>方向</td><td>{{ '%+.2f' | format(score.direction) }}</td><td>{{ score_bar(score.direction, 1.0) }}</td></tr>
+        <tr><td>强度</td><td>{{ '%.2f' | format(score.magnitude) }}</td><td>{{ score_bar(score.magnitude, 1.0) }}</td></tr>
+        <tr><td>意外度</td><td>{{ '%.2f' | format(score.surprise) }}</td><td>{{ score_bar(score.surprise, 1.0) }}</td></tr>
+        <tr><td>可信度</td><td>{{ '%.2f' | format(score.credibility) }}</td><td>{{ score_bar(score.credibility, 1.0) }}</td></tr>
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty">暂无评分</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="panel">
+  <h2>提取字段</h2>
+  {% if ann.extracted_fields %}
+  <table class="table">
+    <thead>
+      <tr><th>字段</th><th>值</th><th>类型</th></tr>
+    </thead>
+    <tbody>
+      {% for f in ann.extracted_fields %}
+      <tr>
+        <td>{{ field_label(f.field_name) }}</td>
+        <td>{{ f | fmt_value }}{% if f.unit %}<span class="muted"> {{ unit_label(f.unit) }}</span>{% endif %}</td>
+        <td><span class="tag">{{ f.field_type }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">无提取字段</p>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h2>公告原文</h2>
+  <div class="full-text">{{ ann.full_text or '（无正文）' }}</div>
+</section>
+{% endblock %}

@@ -8,7 +8,7 @@ from datetime import date, datetime
 from typing import Optional
 
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from src.database.models import (
     Announcement,
@@ -19,6 +19,52 @@ from src.database.models import (
     PipelineRun,
     Score,
 )
+
+
+# ── 公告方向阈值 ───────────────────────────────────────────────
+# 与 models.Score.direction_label 的 ±0.1 判定保持同步（利好/利空/中性）。
+# 若改动须两处一起改。
+_ANN_DIRECTION_BOUNDARY = 0.1
+
+
+def _announcement_filter_query(
+    session: Session,
+    *,
+    start_date: date | None = None,
+    end_date: date | None = None,
+    industry_group: str | None = None,
+    major_category: str | None = None,
+    direction: str | None = None,  # "利好" | "利空" | "中性"
+    status: str | None = None,
+    keyword: str | None = None,
+):
+    """公告列表筛选查询（只追加 filter，不排序不分页，供 search/count_search 复用）。"""
+    q = session.query(Announcement)
+    if start_date is not None:
+        q = q.filter(Announcement.published_date >= start_date)
+    if end_date is not None:
+        q = q.filter(Announcement.published_date <= end_date)
+    if status:
+        q = q.filter(Announcement.processing_status == status)
+    if keyword:
+        q = q.filter(Announcement.title.ilike(f"%{keyword}%"))
+    if industry_group or major_category:
+        # 1:1 关联（classification 对 announcement 唯一），join 不产生行膨胀
+        q = q.join(Classification, Announcement.classification)
+        if industry_group:
+            q = q.filter(Classification.industry_group == industry_group)
+        if major_category:
+            q = q.filter(Classification.major_category == major_category)
+    if direction:
+        # 1:1 关联（score 对 announcement 唯一）
+        q = q.join(Score, Announcement.score)
+        if direction == "利好":
+            q = q.filter(Score.composite_score > _ANN_DIRECTION_BOUNDARY)
+        elif direction == "利空":
+            q = q.filter(Score.composite_score < -_ANN_DIRECTION_BOUNDARY)
+        else:  # 中性
+            q = q.filter(func.abs(Score.composite_score) <= _ANN_DIRECTION_BOUNDARY)
+    return q
 
 
 # ── Company Repository ─────────────────────────────────────────
@@ -160,6 +206,99 @@ class AnnouncementRepository:
             .limit(limit)
             .all()
         )
+
+    # ── Web 展示用只读查询 ────────────────────────────────────
+
+    @staticmethod
+    def count(session: Session) -> int:
+        return session.query(func.count(Announcement.id)).scalar() or 0
+
+    @staticmethod
+    def count_group_by_status(session: Session) -> dict[str, int]:
+        """各处理状态计数，返回 {status: count}。"""
+        rows = (
+            session.query(Announcement.processing_status, func.count(Announcement.id))
+            .group_by(Announcement.processing_status)
+            .all()
+        )
+        return {s: c for s, c in rows}
+
+    @staticmethod
+    def get_by_id(session: Session, announcement_id: int) -> Optional[Announcement]:
+        """按主键取公告，预加载全部展示用关系（避免 N+1 / DetachedInstanceError）。"""
+        return (
+            session.query(Announcement)
+            .options(
+                selectinload(Announcement.company),
+                selectinload(Announcement.classification),
+                selectinload(Announcement.score),
+                selectinload(Announcement.extracted_fields),
+            )
+            .filter_by(id=announcement_id)
+            .first()
+        )
+
+    @staticmethod
+    def search(
+        session: Session,
+        *,
+        start_date: date | None = None,
+        end_date: date | None = None,
+        industry_group: str | None = None,
+        major_category: str | None = None,
+        direction: str | None = None,
+        status: str | None = None,
+        keyword: str | None = None,
+        page: int = 1,
+        page_size: int = 20,
+    ) -> list[Announcement]:
+        """分页搜索公告（带筛选），预加载 company/classification/score。"""
+        q = _announcement_filter_query(
+            session,
+            start_date=start_date,
+            end_date=end_date,
+            industry_group=industry_group,
+            major_category=major_category,
+            direction=direction,
+            status=status,
+            keyword=keyword,
+        )
+        return (
+            q.options(
+                selectinload(Announcement.company),
+                selectinload(Announcement.classification),
+                selectinload(Announcement.score),
+            )
+            .order_by(Announcement.published_date.desc(), Announcement.id.desc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
+            .all()
+        )
+
+    @staticmethod
+    def count_search(
+        session: Session,
+        *,
+        start_date: date | None = None,
+        end_date: date | None = None,
+        industry_group: str | None = None,
+        major_category: str | None = None,
+        direction: str | None = None,
+        status: str | None = None,
+        keyword: str | None = None,
+    ) -> int:
+        """search 对应的总数（用于分页）。"""
+        q = _announcement_filter_query(
+            session,
+            start_date=start_date,
+            end_date=end_date,
+            industry_group=industry_group,
+            major_category=major_category,
+            direction=direction,
+            status=status,
+            keyword=keyword,
+        )
+        return q.with_entities(func.count(Announcement.id)).scalar() or 0
 
 
 # ── Classification Repository ──────────────────────────────────
@@ -318,6 +457,67 @@ class ScoreRepository:
         )
 
 
+# ── Stats Repository（仪表盘聚合） ─────────────────────────────
+
+
+class StatsRepository:
+    """只读聚合统计 — 供 Web 仪表盘使用。"""
+
+    @staticmethod
+    def category_distribution(session: Session) -> list[tuple[str, int]]:
+        """按大类 A-G 统计公告分类数。"""
+        return (
+            session.query(Classification.major_category, func.count(Classification.id))
+            .group_by(Classification.major_category)
+            .order_by(func.count(Classification.id).desc())
+            .all()
+        )
+
+    @staticmethod
+    def industry_group_distribution(session: Session) -> list[tuple[str, int]]:
+        """按行业域统计公告分类数（空行业域忽略）。"""
+        return (
+            session.query(Classification.industry_group, func.count(Classification.id))
+            .filter(Classification.industry_group.isnot(None))
+            .group_by(Classification.industry_group)
+            .order_by(func.count(Classification.id).desc())
+            .all()
+        )
+
+    @staticmethod
+    def direction_distribution(session: Session) -> dict[str, int]:
+        """按利好/利空/中性统计评分公告数（阈值与 Score.direction_label 一致）。"""
+        return {
+            "利好": (
+                session.query(func.count(Score.id))
+                .filter(Score.composite_score > _ANN_DIRECTION_BOUNDARY)
+                .scalar()
+                or 0
+            ),
+            "利空": (
+                session.query(func.count(Score.id))
+                .filter(Score.composite_score < -_ANN_DIRECTION_BOUNDARY)
+                .scalar()
+                or 0
+            ),
+            "中性": (
+                session.query(func.count(Score.id))
+                .filter(func.abs(Score.composite_score) <= _ANN_DIRECTION_BOUNDARY)
+                .scalar()
+                or 0
+            ),
+        }
+
+    @staticmethod
+    def high_impact_count(session: Session, threshold: float = 0.5) -> int:
+        return (
+            session.query(func.count(Score.id))
+            .filter(func.abs(Score.composite_score) >= threshold)
+            .scalar()
+            or 0
+        )
+
+
 # ── DailyReport Repository ─────────────────────────────────────
 
 
@@ -349,6 +549,29 @@ class DailyReportRepository:
         session: Session, report_date: date
     ) -> list[DailyReport]:
         return session.query(DailyReport).filter_by(report_date=report_date).all()
+
+    @staticmethod
+    def get_all(session: Session, limit: int = 50) -> list[DailyReport]:
+        """按日期倒序取最近报告。"""
+        return (
+            session.query(DailyReport)
+            .order_by(DailyReport.report_date.desc())
+            .limit(limit)
+            .all()
+        )
+
+    @staticmethod
+    def get_primary(session: Session, report_date: date) -> Optional[DailyReport]:
+        """取某日全市场报告（industry_filter 为空/NULL）。"""
+        return (
+            session.query(DailyReport)
+            .filter_by(report_date=report_date)
+            .filter(
+                (DailyReport.industry_filter.is_(None))
+                | (DailyReport.industry_filter == "")
+            )
+            .first()
+        )
 
 
 # ── PipelineRun Repository ─────────────────────────────────────

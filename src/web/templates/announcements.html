@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% from "macros.html" import direction_badge, status_badge, pagination %}
+
+{% block title %}公告列表 — DDOS 公告事件分析{% endblock %}
+
+{% block content %}
+<h1 class="page-title">公告列表</h1>
+
+<form method="get" action="{{ url_for('announcements') }}" class="filter-bar">
+  <label>日期
+    <input type="date" name="start_date" value="{{ filters.start_date or '' }}">
+    ～ <input type="date" name="end_date" value="{{ filters.end_date or '' }}">
+  </label>
+  <label>行业域
+    <select name="industry_group">
+      <option value="">全部</option>
+      {% for g in industry_groups %}
+      <option value="{{ g }}" {{ 'selected' if filters.industry_group == g }}>{{ g }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>大类
+    <select name="major_category">
+      <option value="">全部</option>
+      {% for code, label in category_options %}
+      <option value="{{ code }}" {{ 'selected' if filters.major_category == code }}>{{ code }} · {{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>方向
+    <select name="direction">
+      <option value="">全部</option>
+      {% for d in direction_options %}
+      <option value="{{ d }}" {{ 'selected' if filters.direction == d }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>状态
+    <select name="processing_status">
+      <option value="">全部</option>
+      {% for s in status_options %}
+      <option value="{{ s }}" {{ 'selected' if filters.status == s }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>标题
+    <input type="text" name="keyword" value="{{ filters.keyword or '' }}" placeholder="关键词…">
+  </label>
+  <button type="submit" class="btn">筛选</button>
+  <a href="{{ url_for('announcements') }}" class="btn btn-ghost">重置</a>
+</form>
+
+{% if items %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>日期</th>
+      <th>股票</th>
+      <th>行业域</th>
+      <th>标题</th>
+      <th>分类</th>
+      <th>置信度</th>
+      <th>方向</th>
+      <th>综合评分</th>
+      <th>状态</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ann in items %}
+    {% set cls = ann.classification %}
+    {% set score = ann.score %}
+    <tr>
+      <td>{{ ann.published_date }}</td>
+      <td>
+        {% if ann.company %}
+        {{ ann.company.stock_name }}<span class="muted">({{ ann.company.stock_code }})</span>
+        {% else %}?{% endif %}
+      </td>
+      <td>{{ cls.industry_group if cls and cls.industry_group else '-' }}</td>
+      <td class="title-cell">
+        <a href="{{ url_for('announcement_detail', announcement_id=ann.id) }}">{{ ann.title }}</a>
+      </td>
+      <td>
+        {% if cls %}
+        {{ category_label(cls.major_category) }}/{{ sub_label(cls.major_category, cls.sub_category) }}
+        {% else %}-{% endif %}
+      </td>
+      <td>{% if cls %}{{ '%d' | format(cls.confidence * 100) }}%{% else %}-{% endif %}</td>
+      <td>{% if score %}{{ direction_badge(score.direction_label) }}{% else %}-{% endif %}</td>
+      <td>{% if score %}<b>{{ '%+.3f' | format(score.composite_score) }}</b>{% else %}-{% endif %}</td>
+      <td>{{ status_badge(ann.processing_status) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pagination(pager, page_url) }}
+{% else %}
+<p class="empty">没有符合筛选条件的公告。</p>
+{% endif %}
+{% endblock %}

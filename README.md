@@ -97,6 +97,26 @@ python scripts/run_pipeline.py --date 2026-08-08 --stages report
 
 报告保存在 `data/reports/report_YYYY-MM-DD.md`。
 
+### 7. 本地 Web 界面
+
+启动只读展示前端（仪表盘 / 公告列表 / 单条详情 / 日报查看器）：
+
+```powershell
+# 首次需安装 Web 依赖（fastapi/uvicorn/jinja2/markdown）
+pip install -r requirements.txt
+
+# 启动（默认 http://127.0.0.1:8000）
+python scripts/run_web.py
+
+# 指定端口或覆盖数据库（如展示空库/其他库）
+python scripts/run_web.py --port 9000
+python scripts/run_web.py --db-url "sqlite:///data/empty.db"
+```
+
+- 界面**只读**，不会改动管线数据。
+- 仪表盘统计卡 + 分类/行业/方向分布图；公告列表支持按日期、行业域、大类、方向、状态、关键词筛选与分页；详情页展示分类置信度、四维评分与 LLM 提取字段；日报查看器把 `data/reports/*.md` 渲染为网页。
+- ECharts 已本地化（`src/web/static/vendor/echarts.min.js`），离线可用；文件缺失时自动降级为纯表格展示。
+
 ## 模型构建与复现
 
 **为什么**：模型权重 391M 不适合进 git（GitHub 单文件上限 100MB、clone 膨胀、曾尝试 Git LFS 但受配额与上传带宽限制），因此 `models/` 整体 gitignore。分类器完全由代码确定性复现——种子标注数据从 `config/event_types.yaml` 模板合成（固定 seed），微调使用固定随机种子。
@@ -205,9 +225,10 @@ ddos/
 ├── config/                      # 配置文件
 │   ├── config.yaml              # 主配置（模型/管线/评分）
 │   ├── event_types.yaml         # A-G 事件分类体系（30 子类）
+│   ├── industries.yaml          # 申万一级行业 → 行业域（18 域）
 │   └── tracked_companies.yaml   # 跟踪公司名单
 ├── src/
-│   ├── config.py                # Pydantic 配置加载 + 事件注册表
+│   ├── config.py                # Pydantic 配置加载 + 事件/行业注册表
 │   ├── database/                # SQLAlchemy ORM + Repository
 │   ├── pipeline/                # 数据处理管线
 │   │   ├── fetcher.py           # Tushare + 东方财富（列表 + 内容接口）
@@ -217,6 +238,12 @@ ddos/
 │   │   ├── scorer.py            # 规则评分引擎
 │   │   ├── reporter.py          # 每日报告 + 深度分析
 │   │   └── orchestrator.py      # 管线编排器
+│   ├── web/                     # 只读展示前端（FastAPI + Jinja2）
+│   │   ├── app.py               # create_app() 工厂
+│   │   ├── routes.py            # 路由（仪表盘/公告/日报）
+│   │   ├── labels.py            # 中文标签映射
+│   │   ├── templates/           # Jinja2 模板
+│   │   └── static/              # CSS / JS / vendor echarts
 │   ├── ml/                      # ML 模块
 │   │   ├── classifier_wrapper.py  # BERT 推理封装（温度校准）
 │   │   └── llm_client.py          # LLM 客户端（OpenAI 兼容/DeepSeek）
@@ -229,13 +256,14 @@ ddos/
 │       └── date_utils.py        # 日期工具
 ├── scripts/                     # 可执行脚本
 │   ├── run_pipeline.py          # 管线入口（--date / --stages）
+│   ├── run_web.py               # Web 界面启动（--host/--port/--db-url）
 │   ├── setup_model.py           # 一键复现分类器（gitignore 方案）
 │   ├── generate_seed_data.py    # 合成种子训练数据
 │   ├── calibrate_temperature.py # 温度校准
 │   ├── check_confidence.py      # 置信度诊断
 │   ├── seed_database.py         # 初始化数据库 + 股票列表
 │   └── label_data.py            # 数据标注助手
-├── tests/                       # 测试（71 passed, 2 skipped）
+├── tests/                       # 测试（97 passed, 2 skipped）
 ├── notebooks/                   # Jupyter 探索
 ├── data/                        # 运行时数据（gitignore）
 └── models/                      # 训练好的模型（gitignore，setup_model.py 复现）
@@ -244,7 +272,7 @@ ddos/
 ## 运行测试
 
 ```powershell
-python -m pytest tests/ -q        # 全部测试（71 passed, 2 skipped）
+python -m pytest tests/ -q        # 全部测试（97 passed, 2 skipped）
 python -m pytest tests/ -v        # 详细输出
 ```
 
