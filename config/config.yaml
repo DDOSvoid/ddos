@@ -19,6 +19,10 @@ eastmoney:
 pipeline:
   # 每次拉取的天数范围（增量模式：仅拉取最近 N 天）
   fetch_lookback_days: 3
+  # 公告抓取后端: http=requests 直接调 API / cdp=Playwright 驱动系统 Chrome
+  fetch_backend: "http"
+  # 每次抓取的跟踪股上限，0=全部（原硬编码 10 已配置化）
+  fetch_max_stocks: 0
   # 是否抓取公告正文（东方财富内容接口，每条公告一次额外调用）
   fetch_full_text: true
   # 分类模型批处理大小

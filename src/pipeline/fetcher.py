@@ -269,7 +269,14 @@ class EastmoneyClient:
             if not items:
                 break
             all_items.extend(items)
-            total_pages = data.get("total_page", 0) if isinstance(data, dict) else 0
+            # 兼容 API 响应字段变更：旧版返回 total_page，新版返回 total_hits。
+            # 缺失时按 total_hits 计算总页数，避免只取第一页。
+            total_pages = 0
+            if isinstance(data, dict):
+                total_pages = data.get("total_page") or 0
+                total_hits = data.get("total_hits") or 0
+                if not total_pages and total_hits:
+                    total_pages = (total_hits + 49) // 50  # 默认 page_size=50
             if page >= total_pages:
                 break
             time.sleep(0.3)  # 礼貌爬取
@@ -336,7 +343,12 @@ class Fetcher:
         tushare_token: str | None = None,
     ) -> None:
         self.ts = TushareClient(token=tushare_token)
-        self.em = EastmoneyClient()
+        # 按配置选择公告抓取后端: http=requests / cdp=Playwright 驱动 Chrome
+        if config.pipeline.fetch_backend == "cdp":
+            from src.pipeline.cdp_fetcher import CdpEastmoneyClient
+            self.em = CdpEastmoneyClient()
+        else:
+            self.em = EastmoneyClient()
 
     def run(
         self,
@@ -361,13 +373,22 @@ class Fetcher:
                 return 0
 
             tracked_codes = [c.stock_code for c in companies]
-            logger.info(f"Processing {len(tracked_codes)} tracked companies")
+            # fetch_max_stocks: 0=全部，>0 则只取前 N 只（配置驱动，替代硬编码 10）
+            max_stocks = config.pipeline.fetch_max_stocks
+            codes = tracked_codes[:max_stocks] if max_stocks > 0 else tracked_codes
+            logger.info(f"Processing {len(codes)} tracked companies (fetch_max_stocks={max_stocks or 'all'})")
 
-            # 2. 从东方财富获取公告
-            all_raw: list[RawAnnouncement] = []
+            # 2. 从东方财富获取公告（边抓边存：每家公司完成后立即提交，
+            #    暂停/中断时已抓部分不丢，重启幂等续跑）
+            company_id_map = {c.stock_code: c.id for c in companies}
+            count = 0
+            seen_ids: set[str] = set()
 
-            for code in tracked_codes[:10]:  # MVP: 限制 10 只试点
+            for idx, code in enumerate(codes, 1):
                 short_code = _stock_code_short(code)
+                if idx % 25 == 0 or idx == len(codes):
+                    logger.info(f"  fetch 进度 {idx}/{len(codes)} ...")
+                stock_records: list[dict] = []
                 try:
                     items = self.em.fetch_all_announcements(
                         stock_code=short_code,
@@ -377,6 +398,9 @@ class Fetcher:
                     )
                     for item in items:
                         art_code = str(item.get("art_code", ""))
+                        if not art_code or art_code in seen_ids:
+                            continue
+                        seen_ids.add(art_code)
                         raw = RawAnnouncement(
                             announcement_id=art_code,
                             stock_code=code,
@@ -400,39 +424,28 @@ class Fetcher:
                             )
                         else:
                             raw.full_text = item.get("notice_content", "")
-                        all_raw.append(raw)
+
+                        company_id = company_id_map.get(raw.stock_code)
+                        if company_id is None:
+                            continue
+                        stock_records.append({
+                            "company_id": company_id,
+                            "announcement_id": raw.announcement_id,
+                            "title": raw.title,
+                            "full_text": raw.full_text,
+                            "pdf_url": raw.pdf_url,
+                            "published_date": raw.published_date or target_date,
+                            "source_url": raw.source_url,
+                            "processing_status": "fetched",
+                        })
+                    # 边抓边存：每家公司立即入库并提交
+                    if stock_records:
+                        count += AnnouncementRepository.bulk_upsert(session, stock_records)
+                        session.commit()
+                    logger.debug(f"  {code}: {len(stock_records)} 条已入库")
                 except Exception as e:
                     logger.warning(f"Failed to fetch announcements for {code}: {e}")
 
-            logger.info(f"Fetched {len(all_raw)} raw announcements from Eastmoney")
-
-            # 3. 去重并写入数据库
-            records = []
-            seen_ids: set[str] = set()
-            for raw in all_raw:
-                if not raw.announcement_id or raw.announcement_id in seen_ids:
-                    continue
-                seen_ids.add(raw.announcement_id)
-                company_id = None
-                for c in companies:
-                    if c.stock_code == raw.stock_code:
-                        company_id = c.id
-                        break
-                if company_id is None:
-                    continue
-                records.append({
-                    "company_id": company_id,
-                    "announcement_id": raw.announcement_id,
-                    "title": raw.title,
-                    "full_text": raw.full_text,
-                    "pdf_url": raw.pdf_url,
-                    "published_date": raw.published_date or target_date,
-                    "source_url": raw.source_url,
-                    "processing_status": "fetched",
-                })
-
-            count = AnnouncementRepository.bulk_upsert(session, records)
-            session.commit()
             logger.info(f"Fetcher done: {count} new announcements stored")
 
         return count

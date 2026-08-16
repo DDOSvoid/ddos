@@ -34,6 +34,7 @@ uvicorn>=0.27
 requests>=2.31
 beautifulsoup4>=4.12
 lxml>=5.0
+playwright>=1.62  # CDP 公告抓取后端（驱动系统 Chrome）
 
 # Scheduling
 APScheduler>=3.10

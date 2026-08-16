@@ -160,7 +160,10 @@ python scripts/calibrate_temperature.py --data data/labeled/combined.jsonl --mod
 # config/config.yaml
 pipeline:
   fetch_full_text: true   # false 则只用列表摘要（更快但提取效果差）
+  fetch_backend: "http"   # 公告抓取后端: http=requests / cdp=Playwright 驱动系统 Chrome
 ```
+
+`fetch_backend` 切换抓取方式：`http`（默认，轻量快）直接用 `requests` 调东方财富 API；`cdp` 用 Playwright 驱动系统已装 Chrome，在浏览器内请求（真实 UA/会话，更稳但更慢）。CDP 后端需先 `pip install playwright`（用系统 Chrome，无需 `playwright install` 下载浏览器）。
 
 正文缺失时（历史上曾发生）LLM 提取全空 → `data_completeness=0` → `credibility=0` → 乘法评分一票否决，所有公告恒为中性。务必保持开启。
 

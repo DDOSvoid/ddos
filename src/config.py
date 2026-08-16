@@ -5,7 +5,7 @@
 
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 import yaml
 from dotenv import load_dotenv
@@ -86,6 +86,8 @@ class ModelsConfig(BaseModel):
 
 class PipelineConfig(BaseModel):
     fetch_lookback_days: int = 3
+    fetch_backend: Literal["http", "cdp"] = "http"  # 公告抓取后端: http=requests / cdp=Playwright驱动Chrome
+    fetch_max_stocks: int = 0  # 每次抓取的跟踪股上限，0=全部（原硬编码 10 已配置化）
     fetch_full_text: bool = True  # 抓取公告正文（内容接口）
     classifier_batch_size: int = 16
     extraction_min_confidence: float = 0.6
