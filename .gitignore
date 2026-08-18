@@ -30,9 +30,6 @@ data/*.db
 data/*.db-shm
 data/*.db-wal
 
-# AmazingData 拉取的数据（可脚本再生成）与 HDF 本地缓存
-data/amazingdata/
-
 # Models (large files) — clone 后运行 scripts/setup_model.py 复现
 models/
 *.pt
