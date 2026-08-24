@@ -8,7 +8,6 @@
 import json
 import os
 import time
-from typing import Optional
 
 from openai import OpenAI, OpenAIError
 
@@ -27,6 +26,8 @@ class LlmClient:
         api_key: str | None = None,
         base_url: str | None = None,
         default_model: str | None = None,
+        timeout: float | None = None,
+        max_retries: int | None = None,
     ) -> None:
         """
         Args:
@@ -38,7 +39,14 @@ class LlmClient:
         base_url = base_url or os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
 
         try:
-            self.client = OpenAI(api_key=api_key, base_url=base_url)
+            client_options = {
+                "api_key": api_key,
+                "base_url": base_url,
+                "timeout": timeout,
+            }
+            if max_retries is not None:
+                client_options["max_retries"] = max_retries
+            self.client = OpenAI(**client_options)
         except OpenAIError:
             # key 未配置：构造成功，首次实际调用时抛出清晰错误
             # （保持 .env 中 key 可暂留空、代码可导入/可测试）
@@ -129,6 +137,50 @@ class LlmClient:
                     raise ValueError(f"Failed to parse JSON after {retries} attempts: {e}") from e
         return {}
 
+    def complete_json_audited(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        model: str,
+        max_tokens: int,
+        temperature: float = 0.0,
+        thinking: str = "disabled",
+    ) -> tuple[dict, dict]:
+        """Make one stateless JSON request and return reproducibility metadata."""
+        if self.client is None:
+            raise RuntimeError(
+                "LLM API key 未配置：请在 .env 中设置 OPENAI_API_KEY（DeepSeek key）"
+            )
+        response = self.client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=max_tokens,
+            temperature=temperature,
+            response_format={"type": "json_object"},
+            extra_body={"thinking": {"type": thinking}},
+        )
+        choice = response.choices[0]
+        if choice.finish_reason != "stop":
+            raise ValueError(f"LLM response did not finish normally: {choice.finish_reason}")
+        content = choice.message.content or ""
+        parsed = json.loads(content)
+        usage = response.usage.model_dump() if response.usage is not None else None
+        metadata = {
+            "response_id": response.id,
+            "model_returned": response.model,
+            "system_fingerprint": getattr(response, "system_fingerprint", None),
+            "finish_reason": choice.finish_reason,
+            "usage": usage,
+            "raw_response_sha256": __import__("hashlib").sha256(
+                content.encode()
+            ).hexdigest(),
+        }
+        return parsed, metadata
+
     def complete_with_retry(
         self,
         system_prompt: str,
@@ -148,7 +200,7 @@ class LlmClient:
                     max_tokens=max_tokens,
                     temperature=temperature,
                 )
-            except Exception as e:
+            except Exception:
                 if attempt < max_retries - 1:
                     wait = 2 ** attempt
                     time.sleep(wait)

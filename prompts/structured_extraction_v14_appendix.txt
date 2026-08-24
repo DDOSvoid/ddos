@@ -1,0 +1,5 @@
+以下规则补充并覆盖前述规则：
+1. equity_incentive为股票期权时，incentive_share_count可使用COUNT单位并把“份”换算为纯数字；grant_price_cny_per_share可使用CNY_PER_SHARE单位，原文“元/份”视为每一份对应标的股票权利的价格证据。不得把期权份数伪写为原文披露的股票股数。
+2. incentive_share_ratio_pct统一提取本次动作涉及权益数量占上市公司总股本的比例，不使用“占本批次授予总量”等内部构成比例。
+3. equity_incentive为员工持股计划出售、终止或注销时，各字段以当前出售、终止或注销动作明确涉及的权益为准；正文只重述历史授予值而未说明当前动作涉及值时返回absent。
+4. executive_change同时涉及多个并列人员或多个不同职位时，单值的executive_name、position或successor字段按多值规则返回ambiguous，不得只选择董事长或第一位人员。

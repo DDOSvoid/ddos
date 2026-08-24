@@ -1,0 +1,101 @@
+{
+  "contract": "llm-extraction-model-selection-review-v1",
+  "reviewed_at": "2026-08-21T16:00:34+08:00",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "prompt_version": "structured-extraction-prompt-v15",
+  "prompt_sha256": "65c67a5ef693b64cd498992cfb1fc29b6eacc29f51b90456b0c5392f5adbce76",
+  "validator_contract_version": "evidence-validator-v6",
+  "gold_draft_sha256": "776611581b44f971a477d2613c30ec1d8394199097d254ebe443ae6b23b53f2c",
+  "gold_lock_sha256": "e55713f7b43d81770ab1ebf15e875426079aa611c72d914ab97870c8a33974e7",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_65c67a5ef693_evidence-validator-v6.jsonl",
+  "candidate_sha256": "7ba0d0552c8287ed125e85fd7e8997619b5e52ef4e1e8e6e76470ef573dc62a8",
+  "documents": 10,
+  "fields": 108,
+  "gold_counts": {"supported": 59, "absent": 31, "ambiguous": 18},
+  "candidate_counts": {"supported": 64, "absent": 28, "ambiguous": 16},
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 6,
+  "usage": {"prompt_tokens": 50229, "completion_tokens": 11354, "total_tokens": 61583},
+  "metrics": {
+    "status_exact_accuracy": 0.8519,
+    "support_vs_abstain_accuracy": 0.8796,
+    "strict_field_accuracy": 0.6667,
+    "post_lock_human_semantic_field_accuracy": 0.8148,
+    "supported_semantic_precision": 0.7969,
+    "supported_semantic_recall": 0.8644,
+    "abstention_precision": 0.9091,
+    "abstention_recall": 0.8163,
+    "numeric_date_boolean_exact_accuracy": 0.8235
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 72,
+    "semantically_equivalent_non_exact_fields": 16,
+    "incorrect_fields": 20,
+    "equivalent": [
+      "e2971519:uncertainty",
+      "20cc2be7:event_stage",
+      "72634e3b:event_stage",
+      "a5128c4a:event_stage",
+      "4847f629:event_stage",
+      "4847f629:uncertainty",
+      "4847f629:yoy_upper_pct",
+      "369b0eef:counterparty",
+      "369b0eef:related_party",
+      "369b0eef:relationship",
+      "369b0eef:pricing_basis",
+      "369b0eef:approval_status",
+      "01284c3d:event_stage",
+      "01284c3d:uncertainty",
+      "01284c3d:volatility_period",
+      "01284c3d:company_explanation"
+    ],
+    "incorrect": [
+      {"field": "112e1869:event_stage", "reason": "Selected a contingent future effective-date clause instead of the current act of formulating the policy."},
+      {"field": "e2971519:event_stage", "reason": "The frozen taxonomy incorrectly rejected the current financial-data update action because its evidence mentioned the prospectus."},
+      {"field": "e2971519:approval_status", "reason": "Abstained despite the current Shanghai Stock Exchange review stage being explicit."},
+      {"field": "09690c71:event_stage", "reason": "Returned the issuer's historical board action instead of the current independent financial-adviser conclusion."},
+      {"field": "09690c71:event_date", "reason": "Used the issuer's historical grant-action date for the current adviser report."},
+      {"field": "09690c71:counterparty", "reason": "Omitted the independent financial adviser that issued the current supporting document."},
+      {"field": "09690c71:performance_targets", "reason": "Selected only the first of three distinct annual target schedules."},
+      {"field": "09690c71:vesting_schedule", "reason": "Selected only the first of three distinct vesting periods."},
+      {"field": "72634e3b:event_date", "reason": "Selected the board meeting date although the current document also covered a separate supervisory-board action on another date."},
+      {"field": "a5128c4a:event_date", "reason": "Abstained despite the business-license establishment date directly identifying the completed registration event date."},
+      {"field": "4847f629:net_profit_lower_cny", "reason": "Reversed the signed numeric lower bound for a loss forecast."},
+      {"field": "4847f629:net_profit_upper_cny", "reason": "Reversed the signed numeric upper bound for a loss forecast."},
+      {"field": "4847f629:change_reason", "reason": "Collapsed several parallel causes into a single supported TEXT value instead of abstaining on the scalar conflict."},
+      {"field": "71b8c4cb:counterparty", "reason": "Selected one company although the litigation had multiple defendants, appellants and guarantors."},
+      {"field": "71b8c4cb:claim_amount_cny", "reason": "Selected principal only although the claim also contained interest and fees without one aggregate."},
+      {"field": "71b8c4cb:judgment_amount_cny", "reason": "Returned ambiguous instead of absent where the current document did not restate a unique judgment amount."},
+      {"field": "71b8c4cb:provision_amount_cny", "reason": "Returned ambiguous instead of absent where no exact provision amount was disclosed."},
+      {"field": "71b8c4cb:enforceability_uncertainty", "reason": "Returned ambiguous instead of absent where only profit impact, not execution or recovery, was explicitly uncertain."},
+      {"field": "369b0eef:uncertainty", "reason": "Misclassified routine pending shareholder approval as material uncertainty."},
+      {"field": "01284c3d:event_date", "reason": "Selected the last day of a two-day volatility period as a single current event date without an explicit date designation."}
+    ]
+  },
+  "frozen_taxonomy_audit": {
+    "gold_supported_fields_rejected": 1,
+    "fields": ["e2971519:event_stage"],
+    "changed_after_candidate_review": false
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "supported_semantic_precision_min",
+      "abstention_recall_min",
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not open the 2024 extraction holdout and do not promote v15 to downstream prediction features."
+  }
+}

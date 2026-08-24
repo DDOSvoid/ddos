@@ -96,6 +96,67 @@ class TestEastmoneyContentApi:
         result = client.fetch_announcement_content("AN123")
         assert result["notice_content"] == "公告正文内容"
         assert result["attach_url_web"] == "https://pdf.example.com/a.pdf"
+        assert result["_content_complete"] is True
+
+    def test_fetch_announcement_content_assembles_all_pages(self, monkeypatch):
+        from src.pipeline.fetcher import EastmoneyClient
+        client = EastmoneyClient()
+
+        class FakeResp:
+            def __init__(self, page):
+                self.page = page
+
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {
+                    "data": {
+                        "art_code": "AN123",
+                        "page_size": 2,
+                        "notice_content": f"page-{self.page}",
+                    }
+                }
+
+        def fake_get(*args, **kwargs):
+            return FakeResp(kwargs["params"]["page_index"])
+
+        monkeypatch.setattr(client, "_rate_limit", lambda: None)
+        monkeypatch.setattr(client.session, "get", fake_get)
+        result = client.fetch_announcement_content("AN123")
+        assert result["notice_content"] == "page-1page-2"
+        assert result["_content_pages_expected"] == 2
+        assert result["_content_pages_fetched"] == 2
+        assert result["_content_complete"] is True
+
+    def test_fetch_announcement_content_retries_a_failed_page(self, monkeypatch):
+        from src.pipeline.fetcher import EastmoneyClient
+        client = EastmoneyClient(
+            content_max_retries=2,
+            content_retry_backoff_seconds=0,
+        )
+        calls = 0
+
+        class FakeResp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"data": {"notice_content": "complete"}}
+
+        def fake_get(*args, **kwargs):
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                raise ConnectionError("temporary")
+            return FakeResp()
+
+        monkeypatch.setattr(client, "_rate_limit", lambda: None)
+        monkeypatch.setattr(client.session, "get", fake_get)
+        result = client.fetch_announcement_content("AN123")
+        assert calls == 2
+        assert result["notice_content"] == "complete"
+        assert result["_content_complete"] is True
 
     def test_fetch_announcement_content_error_returns_empty(self, monkeypatch):
         from src.pipeline.fetcher import EastmoneyClient

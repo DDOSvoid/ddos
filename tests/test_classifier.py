@@ -79,7 +79,7 @@ class TestClassificationStep:
         return engine
 
     def test_run_classifies_and_persists(self, tmp_path, monkeypatch):
-        """run() 对 preprocessed 公告推理，落库 classifications 并更新状态。"""
+        """规则命中时跳过模型，落库 classifications 并更新状态。"""
         engine = self._make_db()
 
         monkeypatch.setattr("src.pipeline.classifier.get_engine", lambda: engine)
@@ -94,7 +94,9 @@ class TestClassificationStep:
             cls = session.query(Classification).one()
             assert cls.major_category == "C"
             assert cls.sub_category == "buyback"
-            assert cls.confidence == pytest.approx(0.95)
+            assert cls.confidence == pytest.approx(0.995)
+            assert cls.classification_source == "rule"
+            assert cls.rule_id == "buyback"
             # 行业从公司自带属性带入，不经模型
             assert cls.industry == "电气设备"
             assert cls.industry_group == "新能源与电力"

@@ -1,0 +1,184 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-21T19:36:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v17
+prompt_sha256: 9fd6053975ec614ade931db4e3c3427a70fba0fee39a2a612674c9b203a39895
+validator_contract_version: evidence-validator-v8
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: bf02f7ec26cba3f9ece77d8284fea19fe9f5a2c20222e19a26f9e13174ca6016
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过回购注销限制性股票并通知债权人", unit: TEXT, evidence_quotes: ["通过了《关于回购注销部分限制性股票的议案》", "公司特此通知债权人"]}
+      event_date: {status: ambiguous, reason: "正文仅披露2022年12月26日董事会审议日、债权申报区间和落款日，未明确当前通知动作发生日。"}
+      counterparty: {status: absent, reason: "减资通知面向不特定债权人，不构成唯一双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "深圳欧陆通电子股份有限公司", unit: TEXT, evidence_quotes: ["深圳欧陆通电子股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未明确披露回购注销能否完成存在重大不确定性。"}
+      cancelled_share_count: {status: supported, normalized_value: "18000", unit: SHARES, evidence_quotes: ["计持有的 18,000 股已获授的尚未解除限售的限制性股票"]}
+      cancelled_share_ratio_pct: {status: absent, reason: "正文披露回购注销股数和前后总股本，但未直接披露注销比例。"}
+      cancellation_reason: {status: supported, normalized_value: "7名激励对象因个人原因离职，已不符合激励条件", unit: TEXT, evidence_quotes: ["7 名激励对象因个人", "原因离职", "上述人员已不符合激励条件"]}
+      original_grant_price_cny_per_share: {status: absent, reason: "正文未披露回购注销价格或原授予价格。"}
+      affected_people_count: {status: supported, normalized_value: "7", unit: COUNT, evidence_quotes: ["7 名激励对象"]}
+      registration_date: {status: absent, reason: "回购注销尚按法定程序实施，正文未披露注销登记完成日期。"}
+
+  - audit_item_id: 6db76133f600bb4e1d575f086fb2a9611fbb96580a2b5fee7a3bfa03d4decc02
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "控股股东所持可转换公司债券办理解除质押", unit: TEXT, evidence_quotes: ["办理了解除质", "押业务"]}
+      event_date:
+        status: supported
+        normalized_value: "2023-01-05"
+        unit: DATE
+        evidence_quotes: ["质押解除", "到期日", "吴强", "2023.1.5"]
+      counterparty: {status: supported, normalized_value: "兴银理财有限责任公司", unit: TEXT, evidence_quotes: ["兴银理财有限", "责任公司"]}
+      subject_name: {status: supported, normalized_value: "上能电气股份有限公司", unit: TEXT, evidence_quotes: ["上能电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文仅作一般风险提示，并明确解除质押不会产生不利影响，未披露当前事项重大不确定性。"}
+      bond_amount_cny: {status: absent, reason: "336,000为解除质押的可转债张数，不是债券发行金额；正文未披露发行金额。"}
+      bond_term_years: {status: absent, reason: "正文未披露可转债期限。"}
+      coupon_rate_pct: {status: absent, reason: "正文未披露票面利率。"}
+      conversion_price_cny_per_share: {status: absent, reason: "正文未披露转股价格。"}
+      use_of_proceeds: {status: absent, reason: "正文未披露募集资金用途。"}
+      credit_rating: {status: absent, reason: "正文未披露债项信用评级。"}
+
+  - audit_item_id: c724ac5aa786c07459df2766abed605a7a5d83a2f8801c64521027f85dec3ce6
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "签署股份转让协议，拟协议转让上市公司17.94%股份", unit: TEXT, evidence_quotes: ["四方签订《股\n份转让协议》", "广东恒锐同意将其持有的易事特 417,568,600 股股份", "17.94%以 6 元/股的价格转让给广物集团"]}
+      event_date: {status: supported, normalized_value: "2023-01-08", unit: DATE, evidence_quotes: ["2023 年 1 月 8 日"]}
+      counterparty: {status: supported, normalized_value: "广东省广物控股集团有限公司", unit: TEXT, evidence_quotes: ["广东省广物控股集团有限公司"]}
+      subject_name: {status: supported, normalized_value: "易事特集团股份有限公司", unit: TEXT, evidence_quotes: ["易事特集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "协议尚待国资监管批准且存在无法完成过户或交易终止条件", unit: TEXT, evidence_quotes: ["甲方就本次股份转让取得有权国有资产监管部门的批准之日", "出现其他无法将标的股份过户至甲方名下的情形"]}
+      holder_name: {status: supported, normalized_value: "广东恒锐股权投资合伙企业（有限合伙）", unit: TEXT, evidence_quotes: ["信息披露义务人：广东恒锐股权投资合伙企业（有限合伙）"]}
+      change_type: {status: supported, normalized_value: "股份减少（协议转让）", unit: TEXT, evidence_quotes: ["权益变动性质：股份减少（协议转让）"]}
+      changed_share_count: {status: supported, normalized_value: "417568600", unit: SHARES, evidence_quotes: ["易事特 417,568,600 股股份"]}
+      changed_share_ratio_pct: {status: supported, normalized_value: "17.94", unit: PCT, evidence_quotes: ["占公司截\n至 2022 年 9 月 30 日总股本的 17.94%"]}
+      resulting_holding_ratio_pct: {status: supported, normalized_value: "0", unit: PCT, evidence_quotes: ["本次权益变动后，广东恒锐不再持有易事特股权"]}
+      control_changed: {status: supported, normalized_value: "true", unit: BOOLEAN, evidence_quotes: ["广物集团将成为易事特控股股东"]}
+
+  - audit_item_id: cd903082a34efff83dcd6ada701c6dac1d5934ae28b6e30d4381213423addd0b
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "控股股东、实际控制人、董事长披露股份增持计划", unit: TEXT, evidence_quotes: ["裴振华先生计划以自有或自筹资金出资设立的资产管理产品", "增持公司股份"]}
+      event_date: {status: supported, normalized_value: "2023-01-09", unit: DATE, evidence_quotes: ["于 2023 年 1 月 9 日收", "到公司控股股东"]}
+      counterparty: {status: absent, reason: "计划通过集中竞价或大宗交易增持，未确定唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "苏州天华超净科技股份有限公司", unit: TEXT, evidence_quotes: ["苏州天华超净科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "资本市场变化或资金未筹措到位可能导致计划延迟或无法实施", unit: TEXT, evidence_quotes: ["可能存在因资本市场情况发生变化或资金未能筹措到位等因素", "导致增持计划延迟实施或无法实施的风险"]}
+      holder_name: {status: supported, normalized_value: "裴振华", unit: TEXT, evidence_quotes: ["增持主体：公司控股股东、实际控制人、董事长裴振华"]}
+      planned_share_lower: {status: absent, reason: "正文只披露增持金额区间和价格上限，未披露计划增持股数下限。"}
+      planned_share_upper: {status: absent, reason: "正文只披露增持金额区间和价格上限，未披露计划增持股数上限。"}
+      planned_amount_lower_cny: {status: supported, normalized_value: "100000000", unit: CNY, evidence_quotes: ["人民币不低于 10,000.00 万元且不超过 20,000.00\n万元"]}
+      planned_amount_upper_cny: {status: supported, normalized_value: "200000000", unit: CNY, evidence_quotes: ["人民币不低于 10,000.00 万元且不超过 20,000.00\n万元"]}
+      progress: {status: supported, normalized_value: "计划自公告披露之日起6个月内实施", unit: TEXT, evidence_quotes: ["自本公告披露之日起 6 个月内", "择机实施增持计划"]}
+
+  - audit_item_id: 579ff5f1b2266e0f2f2e5b199cf213facf3d149f00611311a39d923afb7513c9
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过增加综合授信额度，尚待股东大会审议", unit: TEXT, evidence_quotes: ["审议通过了《关于向银行申请增加综合授信额度的议案》", "本事项尚需提交公司股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-01-03", unit: DATE, evidence_quotes: ["于 2023 年 1 月 3 日", "召开第四届董事会第三十二次会议"]}
+      counterparty: {status: absent, reason: "正文仅泛称向银行申请，未披露唯一或已确定的交易对手。"}
+      subject_name: {status: supported, normalized_value: "湖南华民控股集团股份有限公司", unit: TEXT, evidence_quotes: ["湖南华民控股集团股份有限公司"]}
+      uncertainty: {status: absent, reason: "尚待股东大会审议属于审批状态；正文未明确披露本次授信事项的重大不确定性。"}
+      financial_institution: {status: ambiguous, reason: "正文仅披露向银行申请，未列明具体金融机构。"}
+      credit_amount_cny: {status: supported, normalized_value: "200000000", unit: CNY, evidence_quotes: ["申请增加不超过人民币 2亿元的综合授信额度"]}
+      financing_type: {status: supported, normalized_value: "银行承兑汇票、短期流动资金贷款、电子商票保贴、法人账户透支等", unit: TEXT, evidence_quotes: ["银行承兑汇票、短期流动资金贷款", "电子商票保贴、法人账户透支等业务"]}
+      term: {status: supported, normalized_value: "自股东大会审议通过之日起至2022年度股东大会召开之日止", unit: TEXT, evidence_quotes: ["有效期自股东大会审议通过之日起至 2022 年度股东大会召开之日止"]}
+      interest_rate_pct: {status: absent, reason: "正文未披露实际融资利率。"}
+      collateral: {status: absent, reason: "正文未披露授信抵押或质押安排。"}
+
+  - audit_item_id: dbdc73f89153cc94ba611d58364bc448b0bcb4f3db42097eb49da050089dabf1
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露2022年度业绩快报初步核算数据", unit: TEXT, evidence_quotes: ["思源电气股份有限公司2022年度业绩快报", "财务数据仅为初步核算数据"]}
+      event_date: {status: ambiguous, reason: "正文未披露初步核算或快报形成日期，只有董事会落款日。"}
+      counterparty: {status: absent, reason: "业绩快报不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "思源电气股份有限公司", unit: TEXT, evidence_quotes: ["思源电气股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "数据未经会计师事务所审计，与年度报告最终数据可能存在差异", unit: TEXT, evidence_quotes: ["未经会计师事务所审计", "与2022年度报告中披露的最终数据可能存在差异"]}
+      revenue_cny:
+        status: supported
+        normalized_value: "10468983108.89"
+        unit: CNY
+        evidence_quotes: ["（单位：元）", "营业总收入", "10,468,983,108.89"]
+      revenue_yoy_pct: {status: supported, normalized_value: "20.40", unit: PCT, evidence_quotes: ["增减变动幅度（％）", "营业总收入", "20.40%"]}
+      net_profit_cny:
+        status: supported
+        normalized_value: "1218078461.18"
+        unit: CNY
+        evidence_quotes: ["（单位：元）", "归属上市公司股东的净利润", "1,218,078,461.18"]
+      net_profit_yoy_pct: {status: supported, normalized_value: "1.70", unit: PCT, evidence_quotes: ["增减变动幅度（％）", "归属上市公司股东的净利润", "1.70%"]}
+      total_assets_cny:
+        status: supported
+        normalized_value: "15985359169.74"
+        unit: CNY
+        evidence_quotes: ["（单位：元）", "总资产", "15,985,359,169.74"]
+      net_assets_cny:
+        status: supported
+        normalized_value: "9377468541.27"
+        unit: CNY
+        evidence_quotes: ["（单位：元）", "归属上市公司股东的股东权", "9,377,468,541.27"]
+
+  - audit_item_id: 193bfd56ec08bf9db15354ba74d85a0f0394eeefa20b5638f9720a8f3ad57e56
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "下属孙公司收到与资产相关的政府补助并确认为递延收益", unit: TEXT, evidence_quotes: ["滁州捷泰已实际收到上述款项并确认为递延收益"]}
+      event_date: {status: supported, normalized_value: "2023-01-19", unit: DATE, evidence_quotes: ["于 2023 年 1 月 19 日收到"]}
+      counterparty: {status: supported, normalized_value: "安徽来安汊河经济开发区管理委员会", unit: TEXT, evidence_quotes: ["安徽来安汊河经济开发区管理委员会"]}
+      subject_name: {status: supported, normalized_value: "滁州捷泰新能源科技有限公司", unit: TEXT, evidence_quotes: ["滁州捷泰\n新能源科技有限公司"]}
+      uncertainty: {status: supported, normalized_value: "补助不具有可持续性，数据未经审计且会计影响以年度审计为准", unit: TEXT, evidence_quotes: ["上述政府补助不具有可持续性", "以上数据未经审计", "对公司相关财务数据的影响以会计师事务所年度审计确认后的结果为准"]}
+      subsidy_amount_cny: {status: supported, normalized_value: "240000000", unit: CNY, evidence_quotes: ["设备补贴款人民币 24,000 万元"]}
+      income_related_amount_cny: {status: absent, reason: "本次补助明确为与资产相关，正文未披露与收益相关的补助金额。"}
+      asset_related_amount_cny: {status: supported, normalized_value: "240000000", unit: CNY, evidence_quotes: ["设备补贴款人民币 24,000 万元", "上述补贴款系与资产相关的政府补助"]}
+      accounting_period: {status: supported, normalized_value: "在相关资产使用寿命内分期计入损益，主要机器设备使用期为10年", unit: TEXT, evidence_quotes: ["将在相关资产使用寿命内分期计入\n损益", "滁州捷泰主要机器设备的使用期为 10 年"]}
+
+  - audit_item_id: 49503a0efc1de935589ce4e78dd0a8ae70ada0dba4913645349714fa9a2013d3
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "与多家银行签署对子公司融资授信的担保合同", unit: TEXT, evidence_quotes: ["与银行等于\n\n  近日签署相关对外担保合同", "为公司全资或控股子公司融资授信等提供对外担保"]}
+      event_date: {status: ambiguous, reason: "正文仅称近日签署，累计数据截至2023年2月10日，落款为2月14日，无法确定合同签署日。"}
+      counterparty: {status: ambiguous, reason: "本次同时涉及华夏银行、渤海银行、东亚银行、沧州银行、工商银行、邮储银行和光大银行等多个债权人。"}
+      subject_name: {status: supported, normalized_value: "国轩高科股份有限公司", unit: TEXT, evidence_quotes: ["国轩高科股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未明确披露本次担保合同存在重大不确定性，并称风险可控、无逾期及涉诉担保。"}
+      guarantor: {status: supported, normalized_value: "国轩高科股份有限公司", unit: TEXT, evidence_quotes: ["保证人：国轩高科股份有限公司"]}
+      guaranteed_party: {status: ambiguous, reason: "本次担保同时覆盖合肥国轩、唐山国轩、宜丰国轩锂业、东源电器和南通国轩等多个被担保方。"}
+      guarantee_amount_cny: {status: ambiguous, reason: "公告列示八笔不同担保额度，但未直接披露可归一为单值的本次新增担保总额。"}
+      guarantee_type: {status: supported, normalized_value: "连带责任保证", unit: TEXT, evidence_quotes: ["保证方式：连带责任保证"]}
+      guarantee_term: {status: supported, normalized_value: "债务履行期限届满之日起三年", unit: TEXT, evidence_quotes: ["主合同项下债务履行期限届满之日起三年"]}
+      cumulative_guarantee_ratio_pct: {status: supported, normalized_value: "149.78", unit: PCT, evidence_quotes: ["占公司 2021\n年度经审计归母净资产的 149.78%"]}
+      overdue_guarantee_amount_cny: {status: supported, normalized_value: "0", unit: CNY, evidence_quotes: ["无逾期担保事项"]}
+
+  - audit_item_id: 64b10401170a068bd0f7f58b21ee4a8d273b973a5ecac2461dc282ac6e3f6467
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过子公司开展2023年度外汇套期保值业务", unit: TEXT, evidence_quotes: ["司开展 2023 年度外汇套期保值业务的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-02-09", unit: DATE, evidence_quotes: ["年 2 月 9 日召开"]}
+      counterparty: {status: absent, reason: "方案公告未披露已确定的金融机构或交易对手。"}
+      subject_name: {status: supported, normalized_value: "江苏中利集团股份有限公司", unit: TEXT, evidence_quotes: ["江苏中利集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "汇率方向判断偏差及客户违约可能造成损失", unit: TEXT, evidence_quotes: ["对人民币汇率升跌走势的错误判断同样会给公司带来损失", "客户支付能力发生变化不能按时支付时，公司不能按时结汇，造成公司损失"]}
+      business_type: {status: supported, normalized_value: "外汇套期保值业务", unit: TEXT, evidence_quotes: ["子公司拟开展外汇套期保值业务"]}
+      instrument: {status: supported, normalized_value: "外汇远期合约", unit: TEXT, evidence_quotes: ["外汇远期合约"]}
+      maximum_amount_cny: {status: supported, normalized_value: "700000000", unit: CNY, evidence_quotes: ["累计金额不超过 7 亿元人民", "币或等值外币"]}
+      hedged_exposure: {status: supported, normalized_value: "美元、欧元、日元结算的外币收入", unit: TEXT, evidence_quotes: ["海外业务涉及到美元、欧元、日元结算", "只限于外币收入的外汇套期保值"]}
+      business_period: {status: supported, normalized_value: "12个月", unit: MONTHS, evidence_quotes: ["自董事会审议通过后十二个月内"]}
+      risk_controls: {status: supported, normalized_value: "仅限外币收入套保、禁止投机套利、执行分级授权和内部审核、交易规模不超过出口业务预测量", unit: TEXT, evidence_quotes: ["仅限于对公司外币收入进行外汇套期保值业务", "禁止投机和套利交易", "分级授权制度、内部审核流程", "限制在公司出口业务预测量之内"]}
+
+  - audit_item_id: 1125271a2d49821d1540f30e1f88b54a5506237303e7121e8c21aa54f0b152f5
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "控股子公司签署污水处理工程EPC总包合同", unit: TEXT, evidence_quotes: ["签署了《华士镇中心污水处理厂及治设施提升工程项目（一期二阶段及二", "期）（EPC）》"]}
+      event_date: {status: ambiguous, reason: "正文仅称近日签署，2022年12月16日是历史中标公告日，落款日不能替代合同签署日。"}
+      counterparty: {status: supported, normalized_value: "江阴市凝秀建设投资发展有限公司", unit: TEXT, evidence_quotes: ["江阴市凝秀建设投资发展有限公司"]}
+      subject_name: {status: supported, normalized_value: "华昕设计集团有限公司", unit: TEXT, evidence_quotes: ["华昕设计集团有限公司"]}
+      uncertainty: {status: supported, normalized_value: "履约存在政策法规、市场、技术和不可抗力风险", unit: TEXT, evidence_quotes: ["存在相关政策法规、市场、技术等方面的不确定性风险", "存在受不可抗力影响的风险"]}
+      contract_amount_cny: {status: supported, normalized_value: "373818500", unit: CNY, evidence_quotes: ["合同金额：人民币 373,818,500 元"]}
+      annual_revenue_ratio_pct: {status: absent, reason: "正文未披露合同金额占公司年度营业收入比例。"}
+      contract_period: {status: supported, normalized_value: "600", unit: DAYS, evidence_quotes: ["合同履行期限：600 日历天"]}
+      performance_uncertainty: {status: supported, normalized_value: "履约存在政策法规、市场、技术和不可抗力风险", unit: TEXT, evidence_quotes: ["存在相关政策法规、市场、技术等方面", "的不确定性风险", "存在受不可抗力影响的风险"]}

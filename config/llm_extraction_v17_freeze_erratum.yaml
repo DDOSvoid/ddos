@@ -1,0 +1,14 @@
+contract: llm-extraction-freeze-metadata-erratum-v1
+recorded_at: "2026-08-21T19:40:14+08:00"
+freeze_file: config/llm_extraction_v17_frozen.yaml
+freeze_file_sha256: 113c4b2e89485f7c309c20d1e0b0bc4e5934cde63f43a530e4f8c71c766430f6
+candidate_implementation_changed: false
+prompt_changed: false
+validator_changed: false
+candidate_outputs_seen: false
+model_requests_sent_for_batch_8: false
+correction:
+  field: blind_gold_batch_8.target_fields
+  frozen_estimate: 106
+  validated_requested_field_count: 107
+  reason: "The metadata-only pre-annotation sum understated the selected guarantee document by one field. The selected IDs and all candidate code remain unchanged."

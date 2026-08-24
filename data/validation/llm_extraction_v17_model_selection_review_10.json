@@ -1,0 +1,160 @@
+{
+  "contract": "llm-extraction-model-selection-review-v1",
+  "reviewed_at": "2026-08-21T19:46:17+08:00",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "prompt_version": "structured-extraction-prompt-v17",
+  "prompt_sha256": "9fd6053975ec614ade931db4e3c3427a70fba0fee39a2a612674c9b203a39895",
+  "validator_contract_version": "evidence-validator-v8",
+  "pre_annotation_freeze_sha256": "113c4b2e89485f7c309c20d1e0b0bc4e5934cde63f43a530e4f8c71c766430f6",
+  "freeze_metadata_erratum_sha256": "f9e7a660666b7ee2fa41ef6e01e2f353800bdc9bdb6974ed688389587b0e34c1",
+  "gold_draft_sha256": "d69ed0d53ea8eba4037f8e4038f97023a0dd457622fd8d74569cccea279014ea",
+  "gold_lock_sha256": "b2d46e9aa1c6571187e84b492a90fa3622a1298e05322491362575616055d39e",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_9fd6053975ec_evidence-validator-v8.jsonl",
+  "candidate_sha256": "808fbf0b6c86bf8cf4e70da21d1fdce57f926956c1592ee3ffb61368390fc594",
+  "candidate_file_contains_prompt_development_records": true,
+  "model_selection_records_selected_by_locked_ids": 10,
+  "documents": 10,
+  "fields": 107,
+  "gold_counts": {"supported": 75, "absent": 24, "ambiguous": 8},
+  "candidate_counts": {"supported": 67, "absent": 26, "ambiguous": 14},
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 7,
+  "usage": {
+    "prompt_tokens": 72990,
+    "prompt_cache_hit_tokens": 47360,
+    "prompt_cache_miss_tokens": 25630,
+    "completion_tokens": 10485,
+    "total_tokens": 83475
+  },
+  "metrics": {
+    "status_exact_accuracy": 0.8972,
+    "support_vs_abstain_accuracy": 0.9065,
+    "strict_field_accuracy": 0.6542,
+    "post_lock_human_semantic_field_accuracy": 0.8505,
+    "supported_semantic_precision": 0.9104,
+    "supported_semantic_recall": 0.8133,
+    "abstention_precision": 0.775,
+    "abstention_recall": 0.9688,
+    "numeric_date_boolean_exact_accuracy": 0.7586
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 70,
+    "semantically_equivalent_non_exact_fields": 21,
+    "incorrect_fields": 16,
+    "equivalent": [
+      "bf02f7ec:cancellation_reason",
+      "6db76133:event_stage",
+      "c724ac5a:event_stage",
+      "cd903082:event_stage",
+      "cd903082:uncertainty",
+      "cd903082:progress",
+      "579ff5f1:event_stage",
+      "579ff5f1:financing_type",
+      "579ff5f1:term",
+      "dbdc73f8:event_stage",
+      "dbdc73f8:uncertainty",
+      "dbdc73f8:revenue_yoy_pct",
+      "dbdc73f8:net_profit_yoy_pct",
+      "193bfd56:event_stage",
+      "193bfd56:uncertainty",
+      "49503a0e:event_stage",
+      "64b10401:event_stage",
+      "64b10401:hedged_exposure",
+      "64b10401:business_period",
+      "1125271a:uncertainty",
+      "1125271a:performance_uncertainty"
+    ],
+    "incorrect": [
+      {
+        "field": "bf02f7ec:event_stage",
+        "reason": "Selected the historical board approval but omitted the current creditor-notification stage of this announcement."
+      },
+      {
+        "field": "bf02f7ec:event_date",
+        "reason": "Mapped the historical 2022-12-26 board meeting date to the current creditor-notification event, whose action date is not explicit."
+      },
+      {
+        "field": "6db76133:event_date",
+        "reason": "Abstained although the current release-of-pledge table identifies 2023-01-05."
+      },
+      {
+        "field": "6db76133:counterparty",
+        "reason": "The pledgee is identifiable as Xingyin Wealth Management, but the reconstructed non-contiguous quote was rejected by the frozen validator."
+      },
+      {
+        "field": "c724ac5a:uncertainty",
+        "reason": "Returned absent despite explicit state-asset approval and transfer-completion conditions in the locked source-only gold."
+      },
+      {
+        "field": "c724ac5a:resulting_holding_ratio_pct",
+        "reason": "The seller's resulting holding is zero because it no longer holds the issuer, but lexical-zero percentage evidence is unsupported by the frozen validator."
+      },
+      {
+        "field": "579ff5f1:financial_institution",
+        "reason": "Returned absent rather than ambiguous for an application to unspecified banks."
+      },
+      {
+        "field": "dbdc73f8:revenue_cny",
+        "reason": "The correct table value was returned raw but rejected because the model omitted separate unit/header/row evidence."
+      },
+      {
+        "field": "dbdc73f8:net_profit_cny",
+        "reason": "The correct table value was returned raw but rejected because the model omitted separate unit/header/row evidence."
+      },
+      {
+        "field": "dbdc73f8:total_assets_cny",
+        "reason": "The correct table value was returned raw but rejected because the model omitted separate unit/header/row evidence."
+      },
+      {
+        "field": "dbdc73f8:net_assets_cny",
+        "reason": "The correct value was returned raw, but the model reconstructed a non-contiguous table-row quote and was rejected."
+      },
+      {
+        "field": "193bfd56:accounting_period",
+        "reason": "Returned the subsidy receipt date instead of the disclosed recognition over the related asset life, with major equipment stated as ten years."
+      },
+      {
+        "field": "49503a0e:guarantee_term",
+        "reason": "Abstained despite the common three-year duration disclosed across the current guarantee contracts."
+      },
+      {
+        "field": "64b10401:uncertainty",
+        "reason": "Captured exchange-rate risk but omitted the separately disclosed customer-default risk."
+      },
+      {
+        "field": "64b10401:risk_controls",
+        "reason": "Returned only that a management policy exists, omitting the actual limits, authorization, review and anti-speculation controls."
+      },
+      {
+        "field": "1125271a:event_stage",
+        "reason": "Returned only the verb 'signed', without identifying the EPC contract or the signing subsidiary."
+      }
+    ]
+  },
+  "frozen_validator_audit": {
+    "gold_supported_fields_rejected_before_candidate_requests": 2,
+    "fields": ["6db76133:counterparty", "c724ac5a:resulting_holding_ratio_pct"],
+    "changed_after_candidate_review": false,
+    "period_scalar_note": "The locked MONTHS label for 64b10401:business_period canonicalizes semantically to 12; the candidate returned equivalent TEXT, so it is semantic-equivalent but not numeric/unit exact.",
+    "note": "Both predeclared rejections remain supported in human gold because the table identifies the pledgee and the zero post-transfer holding is explicit in words."
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not open the 2024 extraction holdout and do not promote v17 to downstream prediction features."
+  }
+}

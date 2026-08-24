@@ -1,22 +1,24 @@
-"""只读路由 — 全部 GET，读取管线产出数据并渲染模板。"""
+"""公告展示与本地人工复核路由。"""
 
 import math
 from datetime import date, datetime
 from typing import Optional
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlencode
 
 import markdown as markdown_lib
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from src.config import config, event_registry, industry_registry
 from src.database.repository import (
     AnnouncementRepository,
+    ClassificationRepository,
     DailyReportRepository,
     PipelineRunRepository,
     StatsRepository,
 )
+from src.pipeline.classification_rules import default_relevance
 from src.web.deps import get_db
 from src.web.labels import category_label
 
@@ -31,6 +33,11 @@ STATUS_OPTIONS = [
     "scored",
     "reported",
     "failed",
+]
+
+REVIEW_STATUS_OPTIONS = ["pending", "auto_accepted", "reviewed"]
+CLASSIFICATION_SOURCE_OPTIONS = [
+    "legacy", "rule", "rule+model", "model", "abstained", "manual"
 ]
 
 
@@ -94,6 +101,9 @@ def announcements(
     end_date: Optional[str] = None,
     industry_group: Optional[str] = None,
     major_category: Optional[str] = None,
+    sub_category: Optional[str] = None,
+    review_status: Optional[str] = None,
+    classification_source: Optional[str] = None,
     direction: Optional[str] = None,
     processing_status: Optional[str] = None,
     keyword: Optional[str] = None,
@@ -108,6 +118,9 @@ def announcements(
         end_date=_parse_optional_date(end_date),
         industry_group=industry_group or None,
         major_category=major_category or None,
+        sub_category=sub_category or None,
+        review_status=review_status or None,
+        classification_source=classification_source or None,
         direction=direction or None,
         status=processing_status or None,
         keyword=keyword or None,
@@ -123,9 +136,14 @@ def announcements(
             params["start_date"] = filters["start_date"].isoformat()
         if filters["end_date"]:
             params["end_date"] = filters["end_date"].isoformat()
-        for key in ("industry_group", "major_category", "direction", "status", "keyword"):
+        for key in (
+            "industry_group", "major_category", "sub_category", "review_status",
+            "classification_source", "direction", "keyword",
+        ):
             if filters.get(key):
                 params[key] = filters[key]
+        if filters.get("status"):
+            params["processing_status"] = filters["status"]
         return str(request.url_for("announcements")) + "?" + urlencode(params)
 
     ctx = {
@@ -144,8 +162,15 @@ def announcements(
         "category_options": [
             (code, category_label(code)) for code in event_registry.categories
         ],
+        "subcategory_options": [
+            (sub_code, sub_def.label)
+            for category in event_registry.categories.values()
+            for sub_code, sub_def in category.subcategories.items()
+        ],
         "direction_options": ["利好", "利空", "中性"],
         "status_options": STATUS_OPTIONS,
+        "review_status_options": REVIEW_STATUS_OPTIONS,
+        "classification_source_options": CLASSIFICATION_SOURCE_OPTIONS,
     }
     return _templates(request).TemplateResponse(request, "announcements.html", ctx)
 
@@ -166,8 +191,64 @@ def announcement_detail(
     ctx = {
         "active": "announcements",
         "ann": ann,
+        "classification_groups": [
+            (code, category.label, list(category.subcategories.items()))
+            for code, category in event_registry.categories.items()
+        ],
+        "revisions": ClassificationRepository.get_revisions(session, announcement_id),
+        "saved": request.query_params.get("saved") == "1",
     }
     return _templates(request).TemplateResponse(request, "announcement_detail.html", ctx)
+
+
+@router.post(
+    "/announcements/{announcement_id}/classification",
+    name="review_announcement_classification",
+)
+async def review_announcement_classification(
+    request: Request,
+    announcement_id: int,
+    session: Session = Depends(get_db),
+):
+    """人工确认/修正分类；手工解析 urlencoded，避免引入额外表单依赖。"""
+    ann = AnnouncementRepository.get_by_id(session, announcement_id)
+    if ann is None or ann.classification is None:
+        raise HTTPException(status_code=404, detail="公告或分类不存在")
+
+    raw = (await request.body()).decode("utf-8", errors="replace")
+    form = {key: values[-1] for key, values in parse_qs(raw).items() if values}
+    choice = form.get("classification_choice", "").strip()
+    try:
+        major_category, sub_category = choice.split(":", 1)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="缺少有效的分类值")
+    category = event_registry.categories.get(major_category)
+    if category is None or sub_category not in category.subcategories:
+        raise HTTPException(status_code=400, detail="分类值不在当前分类体系中")
+
+    try:
+        expected_id = int(form["classification_id"])
+    except (KeyError, TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="缺少有效的分类版本标识")
+
+    try:
+        ClassificationRepository.manual_review(
+            session,
+            announcement_id=announcement_id,
+            major_category=major_category,
+            sub_category=sub_category,
+            reviewed_by=form.get("reviewed_by", "local-user").strip() or "local-user",
+            note=form.get("review_note", "").strip() or None,
+            relevance=default_relevance(major_category, sub_category),
+            expected_classification_id=expected_id,
+        )
+        session.commit()
+    except ValueError as exc:
+        session.rollback()
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    target = request.url_for("announcement_detail", announcement_id=announcement_id)
+    return RedirectResponse(f"{target}?saved=1", status_code=303)
 
 
 # ── 日报 ───────────────────────────────────────────────────────

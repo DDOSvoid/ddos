@@ -6,11 +6,12 @@
 
 import json
 from pathlib import Path
-from typing import Optional
 
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
+
+from src.training.label_contract import VerifiedLabel, validate_label_item
 
 
 class AnnouncementDataset(Dataset):
@@ -57,6 +58,23 @@ class AnnouncementDataset(Dataset):
         }
 
 
+def load_verified_labels(data_path: str | Path) -> list[VerifiedLabel]:
+    """加载真实、已验证的生产标注。候选、AI 和合成标签会被拒绝。"""
+    samples: list[VerifiedLabel] = []
+    with open(data_path, encoding="utf-8") as f:
+        for line_number, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                samples.append(validate_label_item(json.loads(line), production=True))
+            except (json.JSONDecodeError, ValueError) as exc:
+                raise ValueError(f"{data_path}:{line_number}: {exc}") from exc
+    if not samples:
+        raise ValueError(f"没有可用于生产训练的真实已验证标注: {data_path}")
+    return samples
+
+
 def load_labeled_data(data_path: str | Path) -> tuple[list[str], list[str], list[str]]:
     """从 JSONL 加载标注数据。
 
@@ -66,20 +84,27 @@ def load_labeled_data(data_path: str | Path) -> tuple[list[str], list[str], list
     Returns:
         (texts, sub_category_labels, major_category_labels)
     """
-    texts = []
-    sub_labels = []
-    major_labels = []
-    with open(data_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            item = json.loads(line)
-            texts.append(item["text"])
-            sub_labels.append(item["sub_category"])
-            major_labels.append(item.get("major_category", item["sub_category"][0]))
+    samples = load_verified_labels(data_path)
+    return (
+        [sample.text for sample in samples],
+        [sample.sub_category for sample in samples],
+        [sample.major_category for sample in samples],
+    )
 
-    return texts, sub_labels, major_labels
+
+def create_declared_splits(
+    samples: list[VerifiedLabel], label2id: dict[str, int]
+) -> dict[str, tuple[list[str], list[int]]]:
+    """使用标注中声明的严格时间分区，不进行随机拆分。"""
+    role_map = {"train": "train", "validation": "val", "test": "test"}
+    result: dict[str, tuple[list[str], list[int]]] = {}
+    for source_role, output_role in role_map.items():
+        selected = [sample for sample in samples if sample.dataset_role == source_role]
+        result[output_role] = (
+            [sample.text for sample in selected],
+            [label2id[sample.sub_category] for sample in selected],
+        )
+    return result
 
 
 def build_label_mappings(

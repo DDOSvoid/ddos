@@ -1,0 +1,264 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "started_at": "2026-08-21T03:50:30.305362+00:00",
+  "completed_at": "2026-08-21T03:52:43.105340+00:00",
+  "dataset_role": "train",
+  "development_contract": "causal-multimodel-development-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "announcements_selected": 3,
+  "pdf_mode": "none",
+  "only_accepted": true,
+  "relevances": [
+    "core_event"
+  ],
+  "rate_limit_per_minute": 30,
+  "refresh": false,
+  "counts": {
+    "created": 3,
+    "identical_existing": 0,
+    "content_chars": 296808,
+    "content_pages": 62,
+    "pdf_archived": 0,
+    "processed": 3
+  },
+  "unresolved_failures": [
+    {
+      "announcement_db_id": 47139,
+      "announcement_id": "AN202301051581733121",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47140,
+      "announcement_id": "AN202301051581733126",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47151,
+      "announcement_id": "AN202301051581729794",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47152,
+      "announcement_id": "AN202301051581729792",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47153,
+      "announcement_id": "AN202301051581729123",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47154,
+      "announcement_id": "AN202301051581728240",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47156,
+      "announcement_id": "AN202301051581726314",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47160,
+      "announcement_id": "AN202301041581696406",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47165,
+      "announcement_id": "AN202301041581695950",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47168,
+      "announcement_id": "AN202301031581657731",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47169,
+      "announcement_id": "AN202301031581655874",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47171,
+      "announcement_id": "AN202301021581628626",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47173,
+      "announcement_id": "AN202301311582557164",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47176,
+      "announcement_id": "AN202301301582515066",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47182,
+      "announcement_id": "AN202301301582515043",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47183,
+      "announcement_id": "AN202301301582515042",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47184,
+      "announcement_id": "AN202301301582512643",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47185,
+      "announcement_id": "AN202301301582510851",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47191,
+      "announcement_id": "AN202301301582508773",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47192,
+      "announcement_id": "AN202301301582508781",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47194,
+      "announcement_id": "AN202301301582505914",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47195,
+      "announcement_id": "AN202301301582504460",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47196,
+      "announcement_id": "AN202301301582504262",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47197,
+      "announcement_id": "AN202301301582502357",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47198,
+      "announcement_id": "AN202301301582501994",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47199,
+      "announcement_id": "AN202301301582511781",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47200,
+      "announcement_id": "AN202301301582511768",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47201,
+      "announcement_id": "AN202301301582508461",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47202,
+      "announcement_id": "AN202301301582508377",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47203,
+      "announcement_id": "AN202301301582508211",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47204,
+      "announcement_id": "AN202301301582508219",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47206,
+      "announcement_id": "AN202301301582507157",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47209,
+      "announcement_id": "AN202301301582505168",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47210,
+      "announcement_id": "AN202301301582505167",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47212,
+      "announcement_id": "AN202301301582496519",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47214,
+      "announcement_id": "AN202301301582488597",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47215,
+      "announcement_id": "AN202301291582479671",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47217,
+      "announcement_id": "AN202301291582479178",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 47219,
+      "announcement_id": "AN202301291582478193",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "contract": "train-only-market-feature-diagnostic-v1",
+  "status": "REJECT_DIAGNOSTIC_ONLY",
+  "dataset_role": "train",
+  "test_labels_read": false,
+  "quarantine_labels_read": false,
+  "forward_validation_labels_read": false,
+  "features": [
+    "stock and CSI300 returns through the last trading session strictly before publication",
+    "5/20/60-session volatility",
+    "20/60-session price position",
+    "amount ratio",
+    "accepted event-category indicators"
+  ],
+  "model_family": "ExtraTrees exploratory grid",
+  "result": {
+    "1d_best_accuracy": 0.5006,
+    "3d_best_accuracy": 0.4939,
+    "5d_best_accuracy": 0.5251,
+    "best_bullish_wilson_lower_by_horizon": {
+      "1": 0.4477,
+      "3": 0.4464,
+      "5": 0.4484
+    }
+  },
+  "decision_reason": "No bullish subset had a Wilson lower bound above 0.50; this diagnostic is not eligible for the official test."
+}

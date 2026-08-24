@@ -1,0 +1,36 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "last_announcement_db_id": 91139,
+  "processed": 3,
+  "failures": [
+    {
+      "announcement_db_id": 84958,
+      "announcement_id": "AN202310231602718242",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    },
+    {
+      "announcement_db_id": 89327,
+      "announcement_id": "AN202311291612752817",
+      "error_type": "ValueError",
+      "error": "static attachment response is not a PDF"
+    },
+    {
+      "announcement_db_id": 91139,
+      "announcement_id": "AN202312221614831776",
+      "error_type": "ValueError",
+      "error": "PDF page 15 has no extractable text"
+    }
+  ],
+  "selection": {
+    "dataset_role": "train",
+    "only_accepted": true,
+    "relevances": [
+      "core_event"
+    ],
+    "explicit_announcement_ids_sha256": "6ee75ebeb794c5ba6b0fca59b7b0fb20737d76649bba20cce709539e3e91e7c1",
+    "content_source": "pdf"
+  },
+  "updated_at": "2026-08-21T04:24:06.639853+00:00"
+}

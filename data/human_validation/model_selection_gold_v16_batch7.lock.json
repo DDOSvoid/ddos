@@ -1,0 +1,52 @@
+{
+  "contract": "blind-model-selection-gold-lock-v1",
+  "frozen_at": "2026-08-21T17:00:10+08:00",
+  "eligible_for_model_selection_score": true,
+  "candidate_outputs_seen": false,
+  "model_requests_sent_before_gold_freeze": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "dataset_role": "train",
+  "evaluation_role": "model_selection_validation",
+  "document_count": 10,
+  "field_count": 110,
+  "supported_field_count": 70,
+  "absent_field_count": 33,
+  "ambiguous_field_count": 7,
+  "audit_item_ids": [
+    "1df251c42addbd52c981abfff627bd2bcbd0aad13402a965a10f163f26925c5b",
+    "fe17f190707341277b786125e00e06b6255d42437f2791abff7e44c5613ee843",
+    "e7c6eff96ca2c5e2c4eae036425fda18908f2eb78f2d795ca0ab1e039bc934ef",
+    "2974183d0b0953e8928186d98704c6b714abefaab5beaf75913dc645db999f82",
+    "17619cedcf69eb5e286f0ce4b9e9644373603c34f20b57ac52a0314165db0565",
+    "a116ddfbd2c461eb42cb5b5303da997e02d93bf15c7bcd5c8fb5ecf4113559ff",
+    "56f9fe61492db3ab38a70ff7b28be8522d3bd9e90f2c5b57ec0ee9f548668f0b",
+    "1a4a305cb00f1cfb32b98c440a49cf82ccb9fd530bbd1793950c8c2a8c5d0f4b",
+    "9a184df57b69ea9083dfc22bd846f4d682894a7c9c38b8c922afc7208034033e",
+    "1310a9f3e5332415d37b00033e7439c3b9424d6c74ef41302107fb666f561fe4"
+  ],
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "prompt_version": "structured-extraction-prompt-v16",
+  "prompt_sha256": "4d6a21b4288c7b3dfa6e935b2058bd8ce127f35e9fbb4200e9b3ca6eecc60b5f",
+  "validator_contract_version": "evidence-validator-v7",
+  "gold_draft_path": "data/human_validation/model_selection_gold_batch7_draft.yaml",
+  "gold_draft_sha256": "05776812908c57d6d6bb24046553af489224b7f3e07d2654267c4e0d4d89d857",
+  "pre_annotation_freeze_path": "config/llm_extraction_v16_frozen.yaml",
+  "pre_annotation_freeze_sha256": "3067b963332aee337bcd0e4fef1cc166a43ebc52e9a002a29028fea8f8cac3ad",
+  "gold_validation": {
+    "requested_field_sets_complete": true,
+    "all_supported_quotes_exact": true,
+    "all_supported_facts_pass_evidence_validator": false,
+    "evidence_validator_rejection_count": 1,
+    "evidence_validator_rejections": [
+      {
+        "audit_item_id": "fe17f190707341277b786125e00e06b6255d42437f2791abff7e44c5613ee843",
+        "field_name": "book_value_cny",
+        "reason": "numeric evidence is not self-contained for field book_value_cny"
+      }
+    ],
+    "all_supported_facts_pass_frozen_taxonomy": true,
+    "frozen_taxonomy_rejection_count": 0,
+    "maximum_quote_length": 40
+  }
+}

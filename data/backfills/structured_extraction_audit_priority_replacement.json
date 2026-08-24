@@ -1,0 +1,29 @@
+{
+  "announcement_count": 7,
+  "announcement_ids": [
+    "AN202310231602718242",
+    "AN202311291612752817",
+    "AN202312221614831776",
+    "AN202404261631444417",
+    "AN202407011637135123",
+    "AN202409091639801806",
+    "AN202412261641440775"
+  ],
+  "announcement_ids_sha256": "6ee75ebeb794c5ba6b0fca59b7b0fb20737d76649bba20cce709539e3e91e7c1",
+  "contract": "structured-extraction-audit-source-plan-v1",
+  "dataset_role": "train",
+  "existing_archived_counts": {
+    "2023-H1": 348,
+    "2023-H2": 47,
+    "2024-H1": 49,
+    "2024-H2": 47
+  },
+  "market_targets_queried": false,
+  "minimum_per_half_year": 50,
+  "planned_counts": {
+    "2023-H1": 0,
+    "2023-H2": 3,
+    "2024-H1": 1,
+    "2024-H2": 3
+  }
+}

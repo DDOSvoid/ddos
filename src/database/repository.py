@@ -7,19 +7,19 @@ import json
 from datetime import date, datetime
 from typing import Optional
 
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, selectinload
 
 from src.database.models import (
     Announcement,
     Classification,
+    ClassificationRevision,
     Company,
     DailyReport,
     ExtractedField,
     PipelineRun,
     Score,
 )
-
 
 # ── 公告方向阈值 ───────────────────────────────────────────────
 # 与 models.Score.direction_label 的 ±0.1 判定保持同步（利好/利空/中性）。
@@ -34,6 +34,9 @@ def _announcement_filter_query(
     end_date: date | None = None,
     industry_group: str | None = None,
     major_category: str | None = None,
+    sub_category: str | None = None,
+    review_status: str | None = None,
+    classification_source: str | None = None,
     direction: str | None = None,  # "利好" | "利空" | "中性"
     status: str | None = None,
     keyword: str | None = None,
@@ -48,13 +51,24 @@ def _announcement_filter_query(
         q = q.filter(Announcement.processing_status == status)
     if keyword:
         q = q.filter(Announcement.title.ilike(f"%{keyword}%"))
-    if industry_group or major_category:
+    if any((industry_group, major_category, sub_category, review_status, classification_source)):
         # 1:1 关联（classification 对 announcement 唯一），join 不产生行膨胀
         q = q.join(Classification, Announcement.classification)
         if industry_group:
             q = q.filter(Classification.industry_group == industry_group)
         if major_category:
             q = q.filter(Classification.major_category == major_category)
+        if sub_category:
+            q = q.filter(Classification.sub_category == sub_category)
+        if review_status == "pending":
+            q = q.filter(or_(
+                Classification.needs_review.is_(True),
+                Classification.review_status == "pending",
+            ))
+        elif review_status:
+            q = q.filter(Classification.review_status == review_status)
+        if classification_source:
+            q = q.filter(Classification.classification_source == classification_source)
     if direction:
         # 1:1 关联（score 对 announcement 唯一）
         q = q.join(Score, Announcement.score)
@@ -141,6 +155,12 @@ class AnnouncementRepository:
             if existing:
                 # 更新已有记录（但不覆盖已处理的状态）
                 for key, value in rec.items():
+                    if (
+                        key == "full_text"
+                        and not value
+                        and existing.full_text
+                    ):
+                        continue
                     if key != "processing_status" and hasattr(existing, key) and value is not None:
                         setattr(existing, key, value)
             else:
@@ -197,15 +217,20 @@ class AnnouncementRepository:
 
     @staticmethod
     def get_with_classification(
-        session: Session, status: str = "classified", limit: int = 500
+        session: Session,
+        status: str = "classified",
+        limit: int = 500,
+        ready_for_extraction: bool = False,
     ) -> list[Announcement]:
         """获取已分类的公告（带预加载的关系）。"""
-        return (
-            session.query(Announcement)
-            .filter_by(processing_status=status)
-            .limit(limit)
-            .all()
-        )
+        q = session.query(Announcement).filter_by(processing_status=status)
+        if ready_for_extraction:
+            q = q.join(Classification, Announcement.classification).filter(
+                Classification.relevance == "core_event",
+                Classification.needs_review.is_(False),
+                Classification.review_status.in_(("auto_accepted", "reviewed")),
+            )
+        return q.limit(limit).all()
 
     # ── Web 展示用只读查询 ────────────────────────────────────
 
@@ -246,6 +271,9 @@ class AnnouncementRepository:
         end_date: date | None = None,
         industry_group: str | None = None,
         major_category: str | None = None,
+        sub_category: str | None = None,
+        review_status: str | None = None,
+        classification_source: str | None = None,
         direction: str | None = None,
         status: str | None = None,
         keyword: str | None = None,
@@ -259,6 +287,9 @@ class AnnouncementRepository:
             end_date=end_date,
             industry_group=industry_group,
             major_category=major_category,
+            sub_category=sub_category,
+            review_status=review_status,
+            classification_source=classification_source,
             direction=direction,
             status=status,
             keyword=keyword,
@@ -283,6 +314,9 @@ class AnnouncementRepository:
         end_date: date | None = None,
         industry_group: str | None = None,
         major_category: str | None = None,
+        sub_category: str | None = None,
+        review_status: str | None = None,
+        classification_source: str | None = None,
         direction: str | None = None,
         status: str | None = None,
         keyword: str | None = None,
@@ -294,6 +328,9 @@ class AnnouncementRepository:
             end_date=end_date,
             industry_group=industry_group,
             major_category=major_category,
+            sub_category=sub_category,
+            review_status=review_status,
+            classification_source=classification_source,
             direction=direction,
             status=status,
             keyword=keyword,
@@ -317,19 +354,56 @@ class ClassificationRepository:
         model_version: Optional[str] = None,
         industry: Optional[str] = None,
         industry_group: Optional[str] = None,
+        classification_source: str = "model",
+        rule_id: Optional[str] = None,
+        document_type: Optional[str] = None,
+        relevance: Optional[str] = None,
+        secondary_tags: Optional[list[str]] = None,
+        model_sub_category: Optional[str] = None,
+        model_confidence: Optional[float] = None,
+        model_margin: Optional[float] = None,
+        needs_review: bool = False,
+        review_reason: Optional[str] = None,
+        taxonomy_version: str = "v2",
+        preserve_manual: bool = True,
     ) -> Classification:
+        """写入自动分类结果。
+
+        默认保留已经人工确认的结果，避免管线重跑或规则审计覆盖人工结论。
+        只有显式传入 ``preserve_manual=False`` 时才允许自动结果替换人工分类。
+        """
+        tags_json = (
+            json.dumps(secondary_tags, ensure_ascii=False)
+            if secondary_tags is not None
+            else None
+        )
+        review_status = "pending" if needs_review else "auto_accepted"
         existing = (
             session.query(Classification)
             .filter_by(announcement_id=announcement_id)
             .first()
         )
         if existing:
+            if preserve_manual and existing.classification_source == "manual":
+                return existing
             existing.major_category = major_category
             existing.sub_category = sub_category
             existing.confidence = confidence
             existing.model_version = model_version
             existing.industry = industry
             existing.industry_group = industry_group
+            existing.classification_source = classification_source
+            existing.rule_id = rule_id
+            existing.document_type = document_type
+            existing.relevance = relevance
+            existing.secondary_tags = tags_json
+            existing.model_sub_category = model_sub_category
+            existing.model_confidence = model_confidence
+            existing.model_margin = model_margin
+            existing.needs_review = needs_review
+            existing.review_status = review_status
+            existing.review_reason = review_reason
+            existing.taxonomy_version = taxonomy_version
             existing.classified_at = datetime.utcnow()
         else:
             existing = Classification(
@@ -340,10 +414,90 @@ class ClassificationRepository:
                 model_version=model_version,
                 industry=industry,
                 industry_group=industry_group,
+                classification_source=classification_source,
+                rule_id=rule_id,
+                document_type=document_type,
+                relevance=relevance,
+                secondary_tags=tags_json,
+                model_sub_category=model_sub_category,
+                model_confidence=model_confidence,
+                model_margin=model_margin,
+                needs_review=needs_review,
+                review_status=review_status,
+                review_reason=review_reason,
+                taxonomy_version=taxonomy_version,
             )
             session.add(existing)
         session.flush()
         return existing
+
+    @staticmethod
+    def manual_review(
+        session: Session,
+        *,
+        announcement_id: int,
+        major_category: str,
+        sub_category: str,
+        reviewed_by: str = "local-user",
+        note: Optional[str] = None,
+        relevance: Optional[str] = None,
+        expected_classification_id: Optional[int] = None,
+    ) -> Classification:
+        """人工确认或修正分类，并写入不可丢失的审计记录。"""
+        existing = (
+            session.query(Classification)
+            .filter_by(announcement_id=announcement_id)
+            .first()
+        )
+        if existing is None:
+            raise ValueError("公告尚无分类结果")
+        if (
+            expected_classification_id is not None
+            and existing.id != expected_classification_id
+        ):
+            raise ValueError("分类结果已被其他操作更新，请刷新后重试")
+
+        revision = ClassificationRevision(
+            announcement_id=announcement_id,
+            previous_major_category=existing.major_category,
+            previous_sub_category=existing.sub_category,
+            previous_confidence=existing.confidence,
+            new_major_category=major_category,
+            new_sub_category=sub_category,
+            new_confidence=1.0,
+            change_source="manual",
+            changed_by=reviewed_by,
+            note=note,
+        )
+        session.add(revision)
+
+        existing.major_category = major_category
+        existing.sub_category = sub_category
+        existing.confidence = 1.0
+        existing.classification_source = "manual"
+        existing.rule_id = None
+        existing.relevance = relevance
+        existing.needs_review = False
+        existing.review_status = "reviewed"
+        existing.review_reason = None
+        existing.review_note = note
+        existing.reviewed_by = reviewed_by
+        existing.reviewed_at = datetime.utcnow()
+        existing.taxonomy_version = "v2"
+        existing.classified_at = datetime.utcnow()
+        session.flush()
+        return existing
+
+    @staticmethod
+    def get_revisions(
+        session: Session, announcement_id: int
+    ) -> list[ClassificationRevision]:
+        return (
+            session.query(ClassificationRevision)
+            .filter_by(announcement_id=announcement_id)
+            .order_by(ClassificationRevision.changed_at.desc())
+            .all()
+        )
 
 
 # ── ExtractedField Repository ──────────────────────────────────

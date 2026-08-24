@@ -1,0 +1,67 @@
+contract: llm-extraction-frozen-candidate-v1
+frozen_at: "2026-08-21T15:34:00+08:00"
+status: superseded_after_four_source_only_annotations
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed: false
+  market_targets_allowed: false
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v13
+  prompt_sha256: b74ceea63003a107eb971403775f36f349aefd69ed483e131094b7c566bfab3e
+  validator_contract_version: evidence-validator-v3
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: b8b572e83fab21e9f2f205f9451830752d525e470aae7f3f09067183f14cd70a
+  src/ml/llm_client.py: 6d433a7d39ffbf6a17f841926dbfbe99a007fc91c4e0d44cbb6ea5413f01378d
+  scripts/run_llm_extraction_candidates.py: ab344bdcebfa9968043f53f84409b114015a22ad10bae667f1124e669e7ffa48
+
+blind_gold_batch_4:
+  role: model_selection_validation
+  model_requests_allowed_before_gold_freeze: false
+  source_bodies_read_before_freeze: 0
+  target_documents: 10
+  selection_rule: "model_selection_validation items at zero-based positions 21 through 30"
+  audit_item_ids:
+    - d27b79e556c059042c7ba3395b96f8c46ecebdf919592eda8e4ee1f507474364
+    - 39a6c408c0fed4d14e382d27a57ef3078ee5cbb0270226b0f7a5c496f94e1845
+    - 2a59d7d2a21dcf6ce3b64c88141be59a396d8f61aa8a1e4d3a5b9ee676444caa
+    - f84e662aaa851af37a932e3e98b9fdd7fa3f8c5dbb5cf7287af748ed27c4cc81
+    - 1b2a080b3590be13a7cded06f6a3a50a8aba11e24a3bc16894db2f4b97984dbc
+    - 750981417dcb1afac2fcfa4f076c862f4008a93b53971225e214e0f7d6343d13
+    - 0a20de11115aff144f8c2ca66c5a8b8c36070ce6e46116b05f50e7d7bce5aeac
+    - 716eee3fba7b1723354d159a00abac9d8470c0d31c25341f5c16c0d20c8c4fd5
+    - 896c22a40e9f1ba57910814b81185e9fc8439fb7294f94a686c799462f0a9c77
+    - feb60d47a0463b70db768eb53f3ffe64f8424b02376fad0cd9fdf2464b77895f
+  consumed_for_protocol_clarification:
+    - d27b79e556c059042c7ba3395b96f8c46ecebdf919592eda8e4ee1f507474364
+    - 39a6c408c0fed4d14e382d27a57ef3078ee5cbb0270226b0f7a5c496f94e1845
+    - 2a59d7d2a21dcf6ce3b64c88141be59a396d8f61aa8a1e4d3a5b9ee676444caa
+    - f84e662aaa851af37a932e3e98b9fdd7fa3f8c5dbb5cf7287af748ed27c4cc81
+  retained_unread_for_next_batch: 6
+  model_requests_sent: false
+  reason_ineligible: "Stock-option units use 份 and 元/份; validator v3 only accepted 股 and 元/股. v14/v4 was defined after source review."
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_batch4_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_tuning_after_model_selection_read: false

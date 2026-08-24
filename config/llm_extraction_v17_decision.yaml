@@ -1,0 +1,49 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-21T19:46:17+08:00"
+candidate: structured-extraction-prompt-v17
+validator_contract_version: evidence-validator-v8
+decision: FAIL
+promotion_allowed: false
+extraction_holdout_read_allowed: false
+downstream_feature_use_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  prompt_tuned_after_candidate_read: false
+  official_test_read_count: 0
+  future_data_read: false
+  market_targets_read: false
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v17_frozen.yaml
+  pre_annotation_freeze_sha256: 113c4b2e89485f7c309c20d1e0b0bc4e5934cde63f43a530e4f8c71c766430f6
+  freeze_metadata_erratum: config/llm_extraction_v17_freeze_erratum.yaml
+  freeze_metadata_erratum_sha256: f9e7a660666b7ee2fa41ef6e01e2f353800bdc9bdb6974ed688389587b0e34c1
+  archived_previous_lock: data/human_validation/model_selection_gold_v16_batch7.lock.json
+  archived_previous_lock_sha256: 1ae4461345c4a537bb6cc5d9143e10f09cb1f42423d42634291243aefa76c45d
+  gold_lock: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_lock_sha256: b2d46e9aa1c6571187e84b492a90fa3622a1298e05322491362575616055d39e
+  gold_draft: data/human_validation/model_selection_gold_batch8_draft.yaml
+  gold_draft_sha256: d69ed0d53ea8eba4037f8e4038f97023a0dd457622fd8d74569cccea279014ea
+  candidate: data/llm_extraction/deepseek-v4-flash_9fd6053975ec_evidence-validator-v8.jsonl
+  candidate_sha256: 808fbf0b6c86bf8cf4e70da21d1fdce57f926956c1592ee3ffb61368390fc594
+  review: data/validation/llm_extraction_v17_model_selection_review_10.json
+  review_sha256: 8c0e0db1f9512e8dab3d2eafdc9cdb33ef7cb815aca9f22e336493c465c9566a
+  final_runner_sha256: 17e699924ddaa1195f85d57f99dff7c02c46c165ed1979a0f976e6d9aa8c79a7
+
+passed_gates:
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+
+failed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+next_action: >-
+  Retire batch 8 from independent scoring. Develop v18 only with
+  prompt-development data and consumed v17 feedback. Focus on deterministic
+  table reconstruction, current-event date versus historical approval date,
+  entity reconstruction across table columns, lexical zero percentages,
+  field-specific period/accounting semantics, and completeness for multi-part
+  uncertainty and risk-control fields. Keep 2024, 2025, and 2026 data closed.

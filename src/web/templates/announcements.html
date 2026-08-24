@@ -27,6 +27,30 @@
       {% endfor %}
     </select>
   </label>
+  <label>子类
+    <select name="sub_category">
+      <option value="">全部</option>
+      {% for code, label in subcategory_options %}
+      <option value="{{ code }}" {{ 'selected' if filters.sub_category == code }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>复核
+    <select name="review_status">
+      <option value="">全部</option>
+      {% for s in review_status_options %}
+      <option value="{{ s }}" {{ 'selected' if filters.review_status == s }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>来源
+    <select name="classification_source">
+      <option value="">全部</option>
+      {% for s in classification_source_options %}
+      <option value="{{ s }}" {{ 'selected' if filters.classification_source == s }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </label>
   <label>方向
     <select name="direction">
       <option value="">全部</option>
@@ -60,6 +84,7 @@
       <th>标题</th>
       <th>分类</th>
       <th>置信度</th>
+      <th>文档/复核</th>
       <th>方向</th>
       <th>综合评分</th>
       <th>状态</th>
@@ -86,6 +111,14 @@
         {% else %}-{% endif %}
       </td>
       <td>{% if cls %}{{ '%d' | format(cls.confidence * 100) }}%{% else %}-{% endif %}</td>
+      <td>
+        {% if cls %}
+        <span class="tag">{{ cls.document_type or 'legacy' }}</span>
+        {% if cls.needs_review or cls.review_status == 'pending' %}<span class="badge badge-review">待复核</span>
+        {% elif cls.review_status == 'reviewed' %}<span class="badge badge-up">已复核</span>
+        {% else %}<span class="muted">{{ cls.classification_source or 'legacy' }}</span>{% endif %}
+        {% else %}-{% endif %}
+      </td>
       <td>{% if score %}{{ direction_badge(score.direction_label) }}{% else %}-{% endif %}</td>
       <td>{% if score %}<b>{{ '%+.3f' | format(score.composite_score) }}</b>{% else %}-{% endif %}</td>
       <td>{{ status_badge(ann.processing_status) }}</td>

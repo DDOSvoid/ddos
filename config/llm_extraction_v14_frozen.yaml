@@ -1,0 +1,59 @@
+contract: llm-extraction-frozen-candidate-v1
+frozen_at: "2026-08-21T15:44:00+08:00"
+status: awaiting_blind_gold_freeze
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed: false
+  market_targets_allowed: false
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v14
+  prompt_sha256: 776e4ec8f3fc2bde1ee92d71de298654759b8926d5fbfc11017fd473c9b6aa90
+  validator_contract_version: evidence-validator-v4
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: 8625c22a41bfe4526ef8cb031562cc61f19a116495a40295ba414edf24f24634
+  src/ml/llm_client.py: 6d433a7d39ffbf6a17f841926dbfbe99a007fc91c4e0d44cbb6ea5413f01378d
+  scripts/run_llm_extraction_candidates.py: ab344bdcebfa9968043f53f84409b114015a22ad10bae667f1124e669e7ffa48
+
+blind_gold_batch_5:
+  role: model_selection_validation
+  model_requests_allowed_before_gold_freeze: false
+  source_bodies_read_before_freeze: 0
+  target_documents: 10
+  selection_note: "Six unread bodies retained from positions 25-30 and four unseen replacements from positions 31-34."
+  audit_item_ids:
+    - 1b2a080b3590be13a7cded06f6a3a50a8aba11e24a3bc16894db2f4b97984dbc
+    - 750981417dcb1afac2fcfa4f076c862f4008a93b53971225e214e0f7d6343d13
+    - 0a20de11115aff144f8c2ca66c5a8b8c36070ce6e46116b05f50e7d7bce5aeac
+    - 716eee3fba7b1723354d159a00abac9d8470c0d31c25341f5c16c0d20c8c4fd5
+    - 896c22a40e9f1ba57910814b81185e9fc8439fb7294f94a686c799462f0a9c77
+    - feb60d47a0463b70db768eb53f3ffe64f8424b02376fad0cd9fdf2464b77895f
+    - a26917e46fd4895cfb55d792f0dcb6e6b7d61e23d5a5c29d05570f97d9d64d12
+    - dc1ecf8fe287c251016fe160f11cd8221ac5c8319c19091c8e4b0dbee8090d02
+    - 6f4e1f912d58640bc7575851f9c690d9711344876c4f954c2ac87e7f49542dcd
+    - 6c1eafcc73578469e64c8d2c726300b27dbe0d009163c11ad51885d8648f04c4
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_batch5_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_tuning_after_model_selection_read: false

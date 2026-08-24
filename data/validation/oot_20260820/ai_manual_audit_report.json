@@ -1,0 +1,57 @@
+{
+  "contract": "temporal-classification-v1",
+  "batch_id": "oot_20260820",
+  "audit_type": "ai_manual_semantic_audit_not_human_ground_truth",
+  "audited_population": "deterministic accepted-prediction accuracy sample",
+  "sample_size": 120,
+  "prediction_blind_selection": true,
+  "ai_agreed": 118,
+  "ai_flagged_for_human_decision": 2,
+  "raw_ai_agreement_rate": 0.9833333333333333,
+  "raw_ai_agreement_wilson_95pct": [
+    0.9412628731870861,
+    0.9954175314588486
+  ],
+  "warning": "This is AI-to-rule agreement after semantic inspection, not classifier accuracy. Do not use it for production ranking, training, calibration, or model release.",
+  "flags": [
+    {
+      "announcement_id": "AN202608191828160580",
+      "predicted_major_category": "E",
+      "predicted_sub_category": "major_contract",
+      "title": "科泰电源:关于全资子公司签订生产经营场所租赁合同的公告",
+      "ai_assessment": "needs_human_decision",
+      "candidate_sub_category": "other",
+      "reason": "标题只能确认普通经营场所租赁合同，不能确认达到重大合同标准；当前重大合同规则疑似过宽。"
+    },
+    {
+      "announcement_id": "AN202608191828156285",
+      "predicted_major_category": "D",
+      "predicted_sub_category": "legal_opinion",
+      "title": "威尔泰:国浩律师(上海)事务所关于上海威尔泰工业自动化股份有限公司2026年第1次临时股东会的法律意见书",
+      "ai_assessment": "needs_taxonomy_decision",
+      "candidate_major_category": "G",
+      "candidate_sub_category": "meeting_resolution",
+      "candidate_document_type": "legal_opinion",
+      "reason": "标注规范要求主标签描述底层事件、文档形式另存；当前规则对股东会法律意见书的处理与该规范冲突。"
+    }
+  ],
+  "coverage_gap_ai_review": {
+    "items": 33,
+    "candidate_distribution": {
+      "routine_disclosure": 17,
+      "earnings_h1": 2,
+      "tax_matter": 2,
+      "supporting_document": 2,
+      "judicial_equity_action": 2,
+      "asset_sale": 1,
+      "other": 1,
+      "hedging_derivatives": 1,
+      "executive_change": 1,
+      "equity_financing": 1,
+      "corporate_admin": 1,
+      "investor_relations": 1,
+      "meeting_resolution": 1
+    },
+    "new_taxonomy_gap": "ordinary overseas bond financing is not convertible_bond"
+  }
+}

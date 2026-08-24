@@ -1,0 +1,28 @@
+contract: causal-impact-split-v2
+
+# 训练期可在内部做 expanding-window CV，但最终模型只能读取该区间。
+train:
+  start: "2023-01-01"
+  end: "2024-12-31"
+
+# 这部分此前未被 shadow-v1 读取，可作为一次性正式测试。
+test:
+  start: "2025-01-01"
+  end: "2025-08-19"
+
+# shadow-v1 曾把该区间用于训练，永久隔离，不能重新命名为盲测。
+quarantine:
+  start: "2025-08-20"
+  end: "2025-12-31"
+  reason: "used by rejected impact-shadow-v1"
+
+# 用户指定：2025年之后的数据全部只做验证，不回流训练或调参。
+forward_validation:
+  start: "2026-01-01"
+
+rules:
+  test_must_not_extend_beyond: "2025-12-31"
+  outcome_must_mature_by_partition_end: true
+  forward_validation_can_train: false
+  random_split_allowed: false
+  test_read_limit: 1

@@ -1,0 +1,35 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-21T16:16:00+08:00"
+candidate: structured-extraction-prompt-v14
+decision: FAIL
+promotion_allowed: false
+extraction_holdout_read_allowed: false
+downstream_feature_use_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  official_test_read_count: 0
+  future_data_read: false
+  market_targets_read: false
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v14_frozen.yaml
+  gold_lock: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_lock_sha256: 38397ec0a7a952544cb873b2def848e7e8b48c80eb5b79a8fb82551088bafa31
+  candidate: data/llm_extraction/deepseek-v4-flash_776e4ec8f3fc_evidence-validator-v4.jsonl
+  candidate_sha256: ea56ff4c8ddfbc861a5178845e0f078df3bdfae2591e484af523b5c383d0dee4
+  review: data/validation/llm_extraction_v14_model_selection_review_10.json
+  review_sha256: 6d70c4e06be0a7b37ae359d1da81f9371b3c3d5df39c22a64261f05a06095535
+  final_runner_sha256: 21545706440bf9c1486610ccd7d40c5e703113f6969078c5fd64f44f81eca7fe
+
+failed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+
+next_action: >-
+  Retire this model-selection batch, improve a new candidate using development
+  data plus the consumed validation feedback, freeze it, and score it only on
+  a fresh unread 2023 model-selection batch. Keep the 2024 extraction holdout,
+  2025 official test, and 2026 forward validation closed.

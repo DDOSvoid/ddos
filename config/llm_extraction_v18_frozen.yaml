@@ -1,0 +1,78 @@
+contract: llm-extraction-frozen-candidate-v1
+frozen_at: "2026-08-22T21:36:21+08:00"
+status: awaiting_blind_gold_freeze
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed: false
+  market_targets_allowed: false
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v18
+  prompt_sha256: b2f47d6fcafd3e004b92e07cd15626909125636cf8301ef50e9bde265e670805
+  prompt_appendix_sha256: 74c6f03a6f8d2456c0e3fcc17acb6d77aa5bf904cf8bc38aa2232b529d5df272
+  validator_contract_version: evidence-validator-v10
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: e5ae1be5fca71bd24a10f8accd6549d26a03259bc0c7d1606c575c7675edd230
+  src/ml/llm_client.py: 6d433a7d39ffbf6a17f841926dbfbe99a007fc91c4e0d44cbb6ea5413f01378d
+  scripts/run_llm_extraction_candidates.py: 3cd75482040071c34ef7865429994a4b01854899493848039279858c110d7b1f
+  scripts/validate_llm_extraction_gold.py: 89c4d0ec969de10cab60a3137dcffff929cfb06af0656c38637c6a09c1adebb8
+  tests/test_llm_extraction.py: 10981e6c7ae6d786c420d968aad40ef52fb3eacecac51f1013ec77d6dc0db1ed
+
+development_validation:
+  final_prompt_output: data/llm_extraction/deepseek-v4-flash_b2f47d6fcafd_evidence-validator-v10.jsonl
+  final_prompt_output_sha256: fad839e684e2642b8614b630f6add964be3f4fd658ba6f00d96400b9e95496a0
+  documents: 4
+  roles:
+    - prompt_development
+  raw_model_responses_reused_from_validator_v9: 4
+  new_api_requests_after_final_validator_change: 0
+  conversation_history_included: false
+  memory_included: false
+  market_targets_queried: false
+  future_data_read: false
+  full_test_result: "312 passed, 2 skipped"
+
+blind_gold_batch_9:
+  role: model_selection_validation
+  model_requests_allowed_before_gold_freeze: false
+  source_bodies_read_before_freeze: 0
+  target_documents: 10
+  target_fields: 105
+  selection_note: "Metadata-only stratified selection from unconsumed 2023 model-selection items; ten distinct categories. No selected source body was semantically read before this freeze."
+  audit_item_ids:
+    - af1adc3a6f697578d3d94c9794e0bbc599b9bb4e66643a998d8c5e74c93398aa
+    - 81e46b827b6f070f4fe2a77c7a3dd9a1d80c8cad3ce3562e848d7f8520799e99
+    - 4e410ac5d73d60b8cc96f3b35d43e0c1a1311632af09629cae3d21eda1c3ebff
+    - 64b737b07e5b86da3b0842e161a04a9716b45c63d01141b99b10a60965745ebd
+    - ca53b9fe18d1c613280ba46f1ebdb42d5d42bdd5d98dd85ddc3f65c1acef5f8d
+    - 19cd5b49b1813ea2510e265c1cbd0a11657cac44101febac46ec73272dd097af
+    - db226ddf12c892f537fbb969d63a3bc7236b1c966cd908a81b7050bb6c8bc75a
+    - 153b73561b265e4792d85422f47d7b3164b8c18d689672ae3aeb1a8919aa3013
+    - ba142d8122fd4b25ed034f7ccb6043d3ddca89f213aa42940dffe854e7d98686
+    - d494e58c5d5a29b53b1543f70b7e755e51403f884c27ba58e25a1a1744af98a7
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_batch9_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_batch1.lock.json
+  archived_previous_lock_file: data/human_validation/model_selection_gold_v17_batch8.lock.json
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_tuning_after_model_selection_read: false

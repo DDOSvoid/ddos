@@ -11,7 +11,6 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-
 # ── 项目根目录 ──────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = PROJECT_ROOT / "config"
@@ -90,6 +89,9 @@ class PipelineConfig(BaseModel):
     fetch_max_stocks: int = 0  # 每次抓取的跟踪股上限，0=全部（原硬编码 10 已配置化）
     fetch_full_text: bool = True  # 抓取公告正文（内容接口）
     classifier_batch_size: int = 16
+    classifier_accept_confidence: float = 0.85
+    classifier_min_margin: float = 0.20
+    model_only_requires_review: bool = True
     extraction_min_confidence: float = 0.6
     report_high_impact_threshold: float = 0.5
     report_deep_analysis_top_n: int = 10

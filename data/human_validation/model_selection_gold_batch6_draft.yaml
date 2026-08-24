@@ -1,0 +1,179 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-21T15:54:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v15
+prompt_sha256: 65c67a5ef693b64cd498992cfb1fc29b6eacc29f51b90456b0c5392f5adbce76
+validator_contract_version: evidence-validator-v6
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 112e1869de8d263eae3611c8c32644b41c0bad1453205facfcfa68db073a4211
+    review_status: complete
+    upstream_document_role: policy_document
+    fields:
+      event_stage: {status: supported, normalized_value: "制定本制度", unit: TEXT, evidence_quotes: ["制定本制度"]}
+      event_date: {status: ambiguous, reason: "制度正文仅披露2023年12月，没有与制定或生效动作相连的完整日期。"}
+      counterparty: {status: absent, reason: "内部募集资金管理制度不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "天际新能源科技股份有限公司", unit: TEXT, evidence_quotes: ["天际新能源科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "制度条文未披露某一当前事项的重大不确定性。"}
+      project_name: {status: absent, reason: "制度未披露具体募集资金投资项目。"}
+      fund_source: {status: absent, reason: "制度仅定义募集资金，未披露某一当前事项的实际资金来源。"}
+      fund_amount_cny: {status: absent, reason: "制度中的金额均为管理阈值，不是当前募集资金金额。"}
+      project_status: {status: absent, reason: "制度未披露具体项目状态。"}
+      expected_benefit: {status: absent, reason: "制度未披露具体项目的预期收益。"}
+      subsidiary_target: {status: absent, reason: "制度泛指可能的子公司实施主体，未指定当前项目主体。"}
+
+  - audit_item_id: e29715197d39f9d5d15c364d88f452b7516fdb68dbb2430c7c51af91ed09ce7f
+    review_status: complete
+    upstream_document_role: supporting_document_update_notice
+    fields:
+      event_stage: {status: supported, normalized_value: "对募集说明书等申请文件的财务数据及其他变动事项进行内容更新", unit: TEXT, evidence_quotes: ["对募集说明书等申请文件的财务数据及其他变动事项进行内容更新"]}
+      event_date: {status: ambiguous, reason: "正文未披露内容更新动作的日期；落款日不能替代动作发生日。"}
+      counterparty: {status: absent, reason: "申请文件更新不是双边交易，上交所和证监会是审核监管机构。"}
+      subject_name: {status: supported, normalized_value: "远东智慧能源股份有限公司", unit: TEXT, evidence_quotes: ["远东智慧能源股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "最终能否通过上交所审核", unit: TEXT, evidence_quotes: ["最终能否\n通过上交所审核", "获得中国证监会同意注册的决定及其时间尚存在不确定性"]}
+      placement_amount_cny: {status: absent, reason: "当前提示性公告未披露发行募集金额。"}
+      placement_share_count: {status: absent, reason: "当前提示性公告未披露发行股数。"}
+      placement_price_cny_per_share: {status: absent, reason: "当前提示性公告未披露发行价格。"}
+      purpose: {status: absent, reason: "当前提示性公告未披露募集资金具体用途。"}
+      subscribers: {status: absent, reason: "当前提示性公告未披露发行对象。"}
+      lockup_period: {status: absent, reason: "当前提示性公告未披露限售期。"}
+      approval_status: {status: supported, normalized_value: "处于上海证券交易所（以下简称“上交所”）审核环节", unit: TEXT, evidence_quotes: ["处于上海证券交易所（以下简称“上交所”）审核环节"]}
+
+  - audit_item_id: 20cc2be7efe16a80486527715df6d93f98e83320ba92fba76389b0e29c085780
+    review_status: complete
+    upstream_document_role: financial_report_summary
+    fields:
+      event_stage: {status: supported, normalized_value: "2023 年半年度报告摘要", unit: TEXT, evidence_quotes: ["2023 年半年度报告摘要"]}
+      event_date: {status: ambiguous, reason: "摘要未披露董事会批准日或报告报出日。"}
+      counterparty: {status: absent, reason: "财务报告不存在双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "天津凯发电气股份有限公司", unit: TEXT, evidence_quotes: ["天津凯发电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "非标准审计意见明确为不适用，摘要未披露未经审计或其他重大不确定性。"}
+      revenue_cny: {status: supported, normalized_value: "767817649.88", unit: CNY, evidence_quotes: ["营业收入（元） 767,817,649.88"]}
+      revenue_yoy_pct: {status: supported, normalized_value: "12.93", unit: PCT, evidence_quotes: ["767,817,649.88 679,935,723.37 12.93%"]}
+      net_profit_cny: {status: supported, normalized_value: "33922399.53", unit: CNY, evidence_quotes: ["归属于上市公司股东的净利润（元） 33,922,399.53"]}
+      net_profit_yoy_pct: {status: supported, normalized_value: "355.37", unit: PCT, evidence_quotes: ["33,922,399.53 -13,283,880.26 355.37%"]}
+      non_gaap_profit_cny: {status: supported, normalized_value: "30977622.81", unit: CNY, evidence_quotes: ["利润（元） 30,977,622.81"]}
+      operating_cashflow_cny: {status: supported, normalized_value: "-22645091.65", unit: CNY, evidence_quotes: ["经营活动产生的现金流量净额（元） -22,645,091.65"]}
+
+  - audit_item_id: 09690c7121d9a4d6a5ee1e3a70d965bd1876bcebcc733a772d13f8a549a36384
+    review_status: complete
+    upstream_document_role: independent_financial_adviser_report
+    fields:
+      event_stage: {status: supported, normalized_value: "本次授予条件已经成就", unit: TEXT, evidence_quotes: ["本次授予条件已经成就"]}
+      event_date: {status: ambiguous, reason: "当前财务顾问意见仅在签署页落款2023年7月4日，正文没有意见出具日。"}
+      counterparty: {status: supported, normalized_value: "深圳市他山企业管理咨询有限公司", unit: TEXT, evidence_quotes: ["深圳市他山企业管理咨询有限公司"]}
+      subject_name: {status: supported, normalized_value: "中伟新材料股份有限公司", unit: TEXT, evidence_quotes: ["中伟新材料股份有限公司"]}
+      uncertainty: {status: absent, reason: "报告中的假设与免责声明不是对本次授予结果的明确重大不确定性。"}
+      incentive_share_count: {status: supported, normalized_value: "7863240", unit: SHARES, evidence_quotes: ["首次授予数量：786.3240 万股"]}
+      incentive_share_ratio_pct: {status: supported, normalized_value: "1.1725", unit: PCT, evidence_quotes: ["占本计划公\n告日公司股\n本总额的比\n例", "合计 786.3240 100% 1.1725%"]}
+      grant_price_cny_per_share: {status: supported, normalized_value: "30.78", unit: CNY_PER_SHARE, evidence_quotes: ["授予价格：30.78 元/股"]}
+      performance_targets: {status: ambiguous, reason: "三个归属期分别对应不同年度、触发值和目标值，单值字段无唯一答案。"}
+      recipient_count: {status: supported, normalized_value: "1478", unit: COUNT, evidence_quotes: ["首次授予人数：1,478 人"]}
+      vesting_schedule: {status: ambiguous, reason: "存在三个不同归属期和30%、30%、40%三档安排，单值字段无唯一答案。"}
+
+  - audit_item_id: 72634e3b5b87c86a4913e13035aacb7107365ac10fdfc890acf217d336146a9f
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "开展董事会、监事会的换届选举工作", unit: TEXT, evidence_quotes: ["开展董事会、监\n事会的换届选举工作"]}
+      event_date: {status: ambiguous, reason: "董事会候选人和监事会候选人分别于2023年12月1日及11月30日审议，无唯一当前事件日。"}
+      counterparty: {status: absent, reason: "董监事换届选举不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "江苏吉鑫风能科技股份有限公司", unit: TEXT, evidence_quotes: ["江苏吉鑫风能科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "独立董事候选人已获交易所审核无异议；待股东大会审议属于审批状态。"}
+      executive_name: {status: ambiguous, reason: "正文提名七名董事候选人及一名非职工监事候选人，无唯一人员。"}
+      position: {status: ambiguous, reason: "同时涉及非独立董事、独立董事及非职工代表监事等职位。"}
+      change_type: {status: supported, normalized_value: "换届选举", unit: TEXT, evidence_quotes: ["换届选举"]}
+      reason: {status: supported, normalized_value: "任期已届满", unit: TEXT, evidence_quotes: ["任期已届满"]}
+      successor: {status: ambiguous, reason: "存在多名并列候选人，且尚待股东大会选举，无唯一继任者。"}
+
+  - audit_item_id: a5128c4a51c02f7cc02462f931b4bd2d54debcfdaaf1ee53ce16189cf3a4ff63
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "完成了工商注册登记手续", unit: TEXT, evidence_quotes: ["完成了工商注册登记手续"]}
+      event_date: {status: supported, normalized_value: "2023-01-13", unit: DATE, evidence_quotes: ["成立日期：2023 年 1 月 13 日"]}
+      counterparty: {status: absent, reason: "工商登记是行政手续，市场监督管理局不是交易对手方。"}
+      subject_name: {status: supported, normalized_value: "上饶震裕汽车部件有限公司", unit: TEXT, evidence_quotes: ["上饶震裕汽车部件有限公司"]}
+      uncertainty: {status: absent, reason: "工商注册已经完成，正文未披露项目结果或实施的重大不确定性。"}
+      project_name: {status: supported, normalized_value: "锂电池铝壳生产项目", unit: TEXT, evidence_quotes: ["锂电池铝壳生产项目"]}
+      investment_amount_cny: {status: supported, normalized_value: "300000000", unit: CNY, evidence_quotes: ["投资总额为人民币 3 亿元"]}
+      ownership_ratio_pct: {status: ambiguous, reason: "正文仅表述为全资子公司，未以数值比例披露持股比例。"}
+      funding_source: {status: absent, reason: "正文未披露自有资金、募集资金或贷款等来源。"}
+      construction_period: {status: absent, reason: "正文未披露项目建设期。"}
+
+  - audit_item_id: 4847f629c70923967a5f1ee1c1713b6b4b24904da697e99a4e7e3280532a7e2c
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "本次业绩预告是根据公司财务部初步核算得出", unit: TEXT, evidence_quotes: ["本次业绩预告是根据公司财务部初步核算得出"]}
+      event_date: {status: ambiguous, reason: "正文未披露初步核算或预告形成日期；董事会落款日不能替代。"}
+      counterparty: {status: absent, reason: "业绩预告不存在双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "金利华电气股份有限公司", unit: TEXT, evidence_quotes: ["金利华电气股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "本次业绩预告未经注册会计师审计", unit: TEXT, evidence_quotes: ["本次业绩预告未经注册会计师审计"]}
+      forecast_period: {status: supported, normalized_value: "2022年1月1日—2022年12月31日", unit: TEXT, evidence_quotes: ["2022年1月1日—2022年12月31日"]}
+      forecast_type: {status: supported, normalized_value: "亏损", unit: TEXT, evidence_quotes: ["预计的业绩：√亏损"]}
+      net_profit_lower_cny: {status: supported, normalized_value: "-22500000", unit: CNY, evidence_quotes: ["亏损：1,500万元-2,250万元"]}
+      net_profit_upper_cny: {status: supported, normalized_value: "-15000000", unit: CNY, evidence_quotes: ["亏损：1,500万元-2,250万元"]}
+      yoy_lower_pct: {status: supported, normalized_value: "43.91", unit: PCT, evidence_quotes: ["比上年同期上升：43.91%-62.60%"]}
+      yoy_upper_pct: {status: supported, normalized_value: "62.60", unit: PCT, evidence_quotes: ["比上年同期上升：43.91%-62.60%"]}
+      change_reason: {status: ambiguous, reason: "亏损改善同时涉及处置绝缘子主体、投资收益、政府补贴及商誉减值变化等多个并列原因。"}
+
+  - audit_item_id: 71b8c4cbff728ce19fdc9890bd6aaa73c955aafa4739211d4890db3b80b0ba73
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "收到二审判决书，判决已生效", unit: TEXT, evidence_quotes: ["收到二审判决书，判决已生效"]}
+      event_date: {status: ambiguous, reason: "正文仅称近日收到判决书，落款日不能替代收件日。"}
+      counterparty: {status: ambiguous, reason: "诉讼涉及中清源及多名自然人被告、上诉人和保证人，无唯一相对方。"}
+      subject_name: {status: supported, normalized_value: "无锡华光环保能源集团股份有限公司", unit: TEXT, evidence_quotes: ["无锡华光环保能源集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "本次诉讼事项对公司本期利润及期后利润的影响仍具有不确定性", unit: TEXT, evidence_quotes: ["本次诉讼事项对公司本期利润及期后利润的影响仍具有不确定性"]}
+      case_role: {status: supported, normalized_value: "被上诉人（一审原告）", unit: TEXT, evidence_quotes: ["被上诉人（一审原告）"]}
+      case_stage: {status: supported, normalized_value: "收到二审判决书，判决已生效", unit: TEXT, evidence_quotes: ["收到二审判决书，判决已生效"]}
+      claim_amount_cny: {status: ambiguous, reason: "诉请为本金6000万元及利息、费用，正文未给出唯一诉请合计金额。"}
+      judgment_amount_cny: {status: absent, reason: "二审仅披露驳回上诉、维持原判，未重述原判的唯一判决金额。"}
+      provision_amount_cny: {status: absent, reason: "正文称相关应收款项全部计提坏账准备，但未披露本次计提的精确金额。"}
+      enforceability_uncertainty: {status: absent, reason: "正文仅明确利润影响不确定，未明确表示判决执行或回款存在不确定性。"}
+
+  - audit_item_id: 369b0eef30205808c482a733b7b145d3a725cb648b0c0a33083a039b80ebad80
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "审议通过了《关于公司2023年度在关联公司存贷款的议案》", unit: TEXT, evidence_quotes: ["审议通过了《关于公司2023年度在关联公司存贷款的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-01-16", unit: DATE, evidence_quotes: ["于2023年1月16日召开"]}
+      counterparty: {status: supported, normalized_value: "兵器装备集团财务有限责任公司", unit: TEXT, evidence_quotes: ["兵器装备集团财务有限责任公司"]}
+      subject_name: {status: supported, normalized_value: "保定天威保变电气股份有限公司", unit: TEXT, evidence_quotes: ["保定天威保变电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "待股东大会审议属于审批状态，正文未披露交易结果的重大不确定性。"}
+      related_party: {status: supported, normalized_value: "兵器装备集团财务有限责任公司", unit: TEXT, evidence_quotes: ["兵器装备集团财务有限责任公司"]}
+      relationship: {status: supported, normalized_value: "为本公司控股股东中国兵器装备集团有限公司的子公司", unit: TEXT, evidence_quotes: ["为本公司控股股东中国兵器装备集团有限公司的子公司", "是本公司的关联法人"]}
+      transaction_type: {status: supported, normalized_value: "存贷款业务", unit: TEXT, evidence_quotes: ["存贷款业务"]}
+      transaction_amount_cny: {status: ambiguous, reason: "存款、贷款和委托贷款分别披露10亿、30亿及20亿元上限，性质方向不同且无唯一总额。"}
+      pricing_basis: {status: supported, normalized_value: "人民银行规定的存贷款基准利率", unit: TEXT, evidence_quotes: ["人民银行规定的存贷款基准利率"]}
+      approval_status: {status: supported, normalized_value: "尚需提交公司2023年第一次临时股东大会审议通过", unit: TEXT, evidence_quotes: ["尚需提交公司2023年第一次临时股东大会审议通过"]}
+
+  - audit_item_id: 01284c3dee1c79fccd69699e5aa3f1d11c80979f1d480ba02143df58fdd66ba7
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "经公司自查并向控股股东及实际控制人发函核实", unit: TEXT, evidence_quotes: ["经公司自查并向控股股东及实际控制人发函核实"]}
+      event_date: {status: ambiguous, reason: "正文未披露核查完成日期，董事会落款日不能替代。"}
+      counterparty: {status: absent, reason: "异常波动自查不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "石家庄尚太科技股份有限公司", unit: TEXT, evidence_quotes: ["石家庄尚太科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "该项目具体方案仍处于论证阶段，尚未具体实施", unit: TEXT, evidence_quotes: ["该项目具体方案仍处于论证阶段，尚未具体实施"]}
+      volatility_period: {status: supported, normalized_value: "2022年12月29日、12月30日", unit: TEXT, evidence_quotes: ["2022年12月29日、12月30日"]}
+      volatility_type: {status: supported, normalized_value: "收盘价格涨幅偏离值累计达到20%", unit: TEXT, evidence_quotes: ["收盘价格涨幅偏离值累计达到20%"]}
+      company_explanation:
+        status: supported
+        normalized_value: "前期披露的信息不存在需要更正、补充之处"
+        unit: TEXT
+        evidence_quotes:
+          - "前期披露的信息不存在需要更正、补充之处"
+          - "未发现近期公共传媒报道了"
+          - "可能或已经对本公司股票交易价格产生较大影响的未公开重大信息"
+          - "近期公司经营情况及内外部经营环境不存在或预计将要发生重大变化"
+          - "不存在关于本公司的应披露而未披露的重大事项"
+          - "股票异常波动期间控股股东、实际控制人不存在买卖公司股票的行为"
+      regulatory_inquiry: {status: absent, reason: "公告为公司自查并向股东发函核实，未披露监管机构问询。"}

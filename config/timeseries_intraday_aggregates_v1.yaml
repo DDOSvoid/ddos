@@ -1,0 +1,119 @@
+contract: causal-timeseries-intraday-aggregates-v1
+parent_contract: causal-timeseries-daily-v1
+parent_contract_sha256: 0536f34c00d0e6a1ce375d31996af7f00cf9bb3dc179ab206e69141ad76d2f0c
+split_contract: causal-impact-split-v2
+development_contract: causal-multimodel-development-v1
+
+directories:
+  source: src/prediction/timeseries
+  data: data/timeseries
+  models: models/timeseries
+  approved_read_only_intraday_source: data/tabular/intraday_15m
+
+source_snapshot:
+  audit_file: data/tabular/intraday_15m/audit.report.json
+  aggregate_state_file: data/tabular/intraday_15m/state.aggregates.json
+  required_audit_contract: tabular-intraday-audit-v1
+  required_audit_pass: true
+  required_official_test_queried: false
+  required_dataset_role: train
+  source_frequency: 15min
+  source_bar_semantics: bar_start
+  source_aggregation_version: intraday-daily-aggregates-v1
+  source_feature_schema_sha256: 7c2474e8594468bb8c3067ecf86c08c3cb2cbd5f1e29cc8f4fbcecdf58839b76
+
+sampling:
+  feature_frequency: daily_from_complete_15min_days
+  decision_point: daily_preopen
+  historical_announcement_time_precision: date_only
+  market_rule: observation_date must be strictly earlier than announcement published_date
+  lookbacks_complete_days: [1, 5, 20]
+  minimum_complete_intraday_days: 20
+  publication_day_intraday_allowed: false
+  minute_level_decision_status: blocked_pending_authoritative_announcement_timestamp
+
+feature_sets:
+  candidates:
+    - daily_only_matched
+    - intraday_only
+    - daily_plus_intraday
+  primary_incremental_comparison: daily_plus_intraday_vs_daily_only_matched
+  stability_rule: pooled_brier_lower_and_at_least_two_of_three_folds_lower
+
+model_families:
+  baseline: logistic_regression
+  diagnostic_fixed_parameters:
+    c: 0.1
+    class_weight: none
+  tcn_status: blocked_until_stable_intraday_oof_increment
+
+features:
+  required_availability_metadata: true
+  normalization:
+    fold_train_fitted_allowed: true
+    full_sample_fitted_allowed: false
+  forbidden_exact:
+    - target
+    - actual_direction
+    - entry_date
+    - exit_date
+    - entry_price
+    - exit_price
+    - stock_return
+    - benchmark_return
+    - excess_return
+    - outcome_available_at
+    - future_return
+    - future_excess_return
+    - future_high
+    - future_low
+    - future_realized_volatility
+    - future_downside_return
+  forbidden_prefixes:
+    - target_
+    - label_
+    - future_
+    - outcome_
+    - post_announcement_
+
+labels:
+  stored_separately_from_features: true
+  reuse_parent_train_labels_by_sample_id: true
+
+training:
+  eligible_role: train
+  date_start: "2023-01-01"
+  date_end: "2024-12-31"
+  split_strategy: expanding_window
+  random_split_allowed: false
+  fit_preprocessors_on_fold_train_only: true
+  outcome_must_mature_by_fold_end: true
+
+evaluation:
+  horizons_sessions: [1, 3, 5]
+  minimum_oof_bullish_signals_per_horizon: 300
+  bullish_wilson_lower_must_exceed: 0.50
+  minimum_folds_with_bullish_hit_rate_above_half: 2
+  minimum_worst_fold_bullish_hit_rate: 0.48
+  cost_adjusted_mean_excess_return_ci_lower_must_exceed: 0.0
+  brier_score_must_beat_constant_base_rate: true
+  incremental_oof_improvement_over_table_required: true
+  identical_samples_and_folds_required: true
+
+official_test:
+  date_start: "2025-01-01"
+  date_end: "2025-08-19"
+  requires_frozen_model_features_preprocessors_thresholds: true
+  read_limit: 1
+  tuning_after_read_allowed: false
+
+quarantine:
+  date_start: "2025-08-20"
+  date_end: "2025-12-31"
+  fitting_allowed: false
+  model_selection_allowed: false
+
+forward_validation:
+  date_start: "2026-01-01"
+  training_allowed: false
+  model_selection_allowed: false

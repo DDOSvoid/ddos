@@ -1,0 +1,13 @@
+以下规则补充并覆盖前述规则。document_role_hint只用于选择阅读方式，不是事实证据；所有supported仍须由DOCUMENT逐字证据支持。
+1. 先判断当前文档角色，再定位当前动作。core_event_announcement提取本公告新增事件；policy_document提取制度的制定、修订或通过，不得把“自股东大会通过之日起生效”这类条件条款当成已经发生的动作；external_adviser_report提取顾问、保荐人或律师在当前报告作出的核查结论、意见或推荐，不得退回发行人历史董事会动作；supporting_update_notice提取本次更新、修订、补充或披露动作。
+2. external_adviser_report必须服从以下硬规则：event_stage只能引用“本独立财务顾问认为”“经核查”“结论性意见”“同意推荐”等当前报告结论；发行人历史董事会或监事会“审议通过”绝不是当前event_stage。报告出具机构作为当前文档相对于发行人的counterparty，发行人或激励计划主体为subject_name，不得以“没有双边交易”为由把counterparty填absent。只有签署页或封面月份而正文没有明确报告出具日时，event_date返回ambiguous；发行人历史会议日期不能作为当前报告日期。
+3. 文档名称不是event_stage，但“对募集说明书等申请文件进行内容更新”“回复审核问询”“修订并披露”等含明确动词的句子是当前动作，不能因为同时出现“募集说明书”“保荐书”等名称而拒判。
+4. 单值字段必须先检查全文冲突。performance_targets、vesting_schedule、executive_name、position、successor、subscribers等若存在多个并列年度、归属期、人员、职位或对象且没有唯一总括值，返回ambiguous；禁止选择第一项。文档级明确总人数、总股数或总金额仍可supported。
+5. absent表示正文没有与字段语义匹配的明确候选值；ambiguous只用于正文存在候选值但多值冲突、主体不明、表格错位或无法唯一解释。判决书未重述判决金额、仅称“全部计提”但无计提金额、未说明执行或回款不确定性时，对相应数值或不确定性字段返回absent。
+6. 数值区间必须满足lower小于或等于upper。亏损区间先转成有符号利润数值再排序，例如“亏损1,500万元至2,250万元”的lower为-22,500,000，upper为-15,000,000。禁止按亏损绝对值顺序填写。
+7. “尚需提交股东大会审议”仅属于approval_status，不属于uncertainty。除非同一证据还明确说明能否获批、结果、时间或实施存在不确定性，否则uncertainty返回absent。
+8. 多日异常波动区间填入volatility_period；不得把区间最后一天擅自作为event_date。工商注册完成公告中，营业执照明确披露的成立日期可作为该注册完成事件的event_date。
+9. 当前报告包含董事会与监事会等多个同级动作且日期不同，则单值event_date返回ambiguous；不得只选第一场会议日期。
+10. policy_document只描述规则权限时，金额、产品、机构、期限、资金来源、收益率、具体项目和具体执行状态均为absent；不得把制度允许未来使用“自有资金”或设定额度上限误当成当前交易事实。
+11. “股票交易异常波动公告”“关于某事项的公告”等纯标题不能作为event_stage。异常波动应提取“属于股票异常波动情况”等当前状态，或“经公司自查并发函核实”等当前核查动作。
+12. compliance_self_check_supporting_document提取当前自查结论，不得把激励计划历史审批当成当前动作；valuation_report_supporting_document提取当前评估报告的评估对象、基准日或结论，不得把拟收购事项本身当成已经完成的交易。

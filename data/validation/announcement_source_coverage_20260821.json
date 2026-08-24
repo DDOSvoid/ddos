@@ -1,0 +1,81 @@
+{
+  "contract": "announcement-source-coverage-audit-v1",
+  "created_at": "2026-08-21T02:49:42.232811+00:00",
+  "development_contract": "causal-multimodel-development-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "by_dataset_role": {
+    "forward_validation": {
+      "total": 27453,
+      "full_text_nonempty": 2361,
+      "full_text_at_least_200_chars": 1892,
+      "pdf_url_nonempty": 1971,
+      "raw_response_nonempty": 25092,
+      "source_is_http_url": 0
+    },
+    "quarantine": {
+      "total": 19456,
+      "full_text_nonempty": 0,
+      "full_text_at_least_200_chars": 0,
+      "pdf_url_nonempty": 0,
+      "raw_response_nonempty": 19456,
+      "source_is_http_url": 0
+    },
+    "test": {
+      "total": 29504,
+      "full_text_nonempty": 0,
+      "full_text_at_least_200_chars": 0,
+      "pdf_url_nonempty": 0,
+      "raw_response_nonempty": 29504,
+      "source_is_http_url": 0
+    },
+    "train": {
+      "total": 89485,
+      "full_text_nonempty": 0,
+      "full_text_at_least_200_chars": 0,
+      "pdf_url_nonempty": 0,
+      "raw_response_nonempty": 89485,
+      "source_is_http_url": 0
+    }
+  },
+  "timestamp_candidate_audit": {
+    "eitime_at_or_after_15_local": 160364,
+    "eitime_before_09_30_local": 1934,
+    "eitime_date_delta_-1": 128415,
+    "eitime_date_delta_0": 34897,
+    "eitime_date_delta_1": 131,
+    "eitime_date_delta_11": 1,
+    "eitime_date_delta_12": 2,
+    "eitime_date_delta_13": 3,
+    "eitime_date_delta_144": 1,
+    "eitime_date_delta_15": 2,
+    "eitime_date_delta_2": 20,
+    "eitime_date_delta_21": 1,
+    "eitime_date_delta_25": 3,
+    "eitime_date_delta_26": 1,
+    "eitime_date_delta_3": 21,
+    "eitime_date_delta_30": 1,
+    "eitime_date_delta_4": 19,
+    "eitime_date_delta_5": 6,
+    "eitime_date_delta_6": 3,
+    "eitime_date_delta_69": 1,
+    "eitime_date_delta_7": 7,
+    "eitime_date_delta_8": 1,
+    "eitime_date_delta_97": 1,
+    "eitime_missing_or_unparseable": 2361,
+    "eitime_parseable": 163537,
+    "eitime_present": 163537,
+    "notice_date_has_non_midnight_time": 0
+  },
+  "duplicate_company_date_title_groups": 192,
+  "duplicate_rows_beyond_first": 202,
+  "important_limitations": [
+    "eiTime is only a candidate source timestamp and is not yet trusted as exchange publication time",
+    "notice_date is generally date-level and must not be treated as a precise timestamp",
+    "empty full_text and PDF fields require a separate immutable-content backfill",
+    "no timestamp column will be populated until source semantics are validated"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "started_at": "2026-08-21T08:06:17.201414+00:00",
+  "completed_at": "2026-08-21T08:19:57.647139+00:00",
+  "dataset_role": "train",
+  "development_contract": "causal-multimodel-development-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "announcements_selected": 31691,
+  "pdf_mode": "none",
+  "content_source": "api",
+  "only_accepted": true,
+  "relevances": [
+    "core_event"
+  ],
+  "rate_limit_per_minute": 30,
+  "refresh": false,
+  "counts": {
+    "created": 179,
+    "identical_existing": 0,
+    "content_chars": 1153750,
+    "content_pages": 316,
+    "pdf_archived": 0,
+    "processed": 182,
+    "failed": 3,
+    "circuit_breaker_tripped": 1
+  },
+  "unresolved_failures": [
+    {
+      "announcement_db_id": 49640,
+      "announcement_id": "AN202302011582614779",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 49641,
+      "announcement_id": "AN202302011582614778",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 49642,
+      "announcement_id": "AN202302011582612375",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-21T16:00:34+08:00"
+candidate: structured-extraction-prompt-v15
+validator_contract_version: evidence-validator-v6
+decision: FAIL
+promotion_allowed: false
+extraction_holdout_read_allowed: false
+downstream_feature_use_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  prompt_tuned_after_candidate_read: false
+  official_test_read_count: 0
+  future_data_read: false
+  market_targets_read: false
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v15_frozen.yaml
+  pre_annotation_freeze_sha256: 65f4b622f04a1997dacb07e14d22f8a4bf7b85e95917dc6da23eb86671bfca5e
+  archived_previous_lock: data/human_validation/model_selection_gold_v14_batch5.lock.json
+  gold_lock: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_lock_sha256: e55713f7b43d81770ab1ebf15e875426079aa611c72d914ab97870c8a33974e7
+  gold_draft: data/human_validation/model_selection_gold_batch6_draft.yaml
+  gold_draft_sha256: 776611581b44f971a477d2613c30ec1d8394199097d254ebe443ae6b23b53f2c
+  candidate: data/llm_extraction/deepseek-v4-flash_65c67a5ef693_evidence-validator-v6.jsonl
+  candidate_sha256: 7ba0d0552c8287ed125e85fd7e8997619b5e52ef4e1e8e6e76470ef573dc62a8
+  review: data/validation/llm_extraction_v15_model_selection_review_10.json
+  review_sha256: 815efd9f1a31262f9bbc3d727ce2978ad9c0a7a242fbdb0ee6f990f52f047c60
+  final_runner_sha256: a74f181d534735c735b18f626a62a6848280b11f9c4c522e34bb08f774ed61ed
+
+failed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+next_action: >-
+  Retire batch 6 from independent scoring. Develop a new candidate only on
+  prompt-development data plus this now-consumed feedback, with explicit
+  document-role handling, scalar-conflict detection, signed loss-bound
+  ordering, and absent-versus-ambiguous rules. Freeze before selecting another
+  unread 2023 batch. Keep 2024, 2025, and 2026 evaluation data closed.

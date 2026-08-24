@@ -1,0 +1,43 @@
+contract: tabular-internal-experiment-v1
+dataset_contract: causal-tabular-train-dataset-v1
+tabular_contract: causal-tabular-model-v1
+development_contract: causal-multimodel-development-v1
+dataset_role: train
+official_test_allowed: false
+
+seed: 20260821
+classifier_threshold: 0.50
+round_trip_cost_bps: 20
+
+tasks:
+  return_target: future_excess_return
+  direction_target: actual_direction
+  risk_target: future_realized_volatility
+  return_horizons: [1, 3, 5]
+  risk_horizons: [3, 5]
+
+candidates:
+  linear:
+    ridge_alpha: 1.0
+    logistic_c: 1.0
+    logistic_max_iter: 1000
+  lightgbm:
+    n_estimators: 240
+    learning_rate: 0.03
+    num_leaves: 31
+    max_depth: -1
+    min_child_samples: 40
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_lambda: 1.0
+  catboost:
+    iterations: 240
+    learning_rate: 0.03
+    depth: 6
+    l2_leaf_reg: 3.0
+
+selection_policy:
+  random_split_allowed: false
+  fit_preprocessors_on_fold_train_only: true
+  choose_on_internal_oof_only: true
+  official_test_read_before_freeze: false

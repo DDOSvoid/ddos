@@ -18,7 +18,7 @@
       <a href="{{ url_for('announcements') }}" class="{{ 'active' if active == 'announcements' }}">公告列表</a>
       <a href="{{ url_for('reports') }}" class="{{ 'active' if active == 'reports' }}">日报</a>
     </nav>
-    <div class="sidebar-foot">只读展示 · 本地</div>
+    <div class="sidebar-foot">本地分析与复核</div>
   </aside>
   <main class="content">
     {% block content %}{% endblock %}

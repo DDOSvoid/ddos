@@ -13,7 +13,6 @@ from src.database.models import Announcement
 from src.database.repository import AnnouncementRepository, ExtractedFieldRepository
 from src.ml.llm_client import LlmClient
 
-
 # ── 提取提示词模板 ──────────────────────────────────────────────
 
 
@@ -112,7 +111,10 @@ class ExtractionStep:
         with Session(engine) as session:
             # 获取已分类的公告（带预加载）
             announcements = AnnouncementRepository.get_with_classification(
-                session, status="classified", limit=limit
+                session,
+                status="classified",
+                limit=limit,
+                ready_for_extraction=True,
             )
 
             if not announcements:
@@ -130,10 +132,18 @@ class ExtractionStep:
                     failed += 1
                     continue
 
+                # 精度优先：待复核结果绝不进入字段提取和利多评分。
+                if classification.needs_review or classification.review_status == "pending":
+                    logger.debug(
+                        f"Skipping {ann.announcement_id}: classification requires review"
+                    )
+                    continue
+
                 # 跳过低置信度分类
                 if classification.confidence < self.min_confidence:
                     logger.debug(
-                        f"Skipping {ann.announcement_id}: confidence={classification.confidence:.2f}"
+                        f"Skipping {ann.announcement_id}: "
+                        f"confidence={classification.confidence:.2f}"
                     )
                     continue
 

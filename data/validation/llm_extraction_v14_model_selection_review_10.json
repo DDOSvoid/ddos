@@ -1,0 +1,90 @@
+{
+  "contract": "llm-extraction-model-selection-review-v1",
+  "reviewed_at": "2026-08-21T16:12:00+08:00",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "prompt_version": "structured-extraction-prompt-v14",
+  "prompt_sha256": "776e4ec8f3fc2bde1ee92d71de298654759b8926d5fbfc11017fd473c9b6aa90",
+  "validator_contract_version": "evidence-validator-v4",
+  "gold_draft_sha256": "bff1a095385a27631fbea4684e84b728214e8792cd654333e05d87faac57549b",
+  "gold_lock_sha256": "38397ec0a7a952544cb873b2def848e7e8b48c80eb5b79a8fb82551088bafa31",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_776e4ec8f3fc_evidence-validator-v4.jsonl",
+  "candidate_sha256": "ea56ff4c8ddfbc861a5178845e0f078df3bdfae2591e484af523b5c383d0dee4",
+  "documents": 10,
+  "fields": 107,
+  "gold_counts": {"supported": 67, "absent": 27, "ambiguous": 13},
+  "candidate_counts": {"supported": 73, "absent": 24, "ambiguous": 10},
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 4,
+  "metrics": {
+    "status_exact_accuracy": 0.8972,
+    "support_vs_abstain_accuracy": 0.9065,
+    "strict_field_accuracy": 0.7009,
+    "post_lock_human_semantic_field_accuracy": 0.8598,
+    "supported_semantic_precision": 0.8356,
+    "supported_semantic_recall": 0.9104,
+    "abstention_precision": 0.9412,
+    "abstention_recall": 0.8,
+    "numeric_date_boolean_exact_accuracy": 0.9583
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 75,
+    "semantically_equivalent_non_exact_fields": 17,
+    "incorrect_fields": 15,
+    "equivalent": [
+      "1b2a080b:change_type",
+      "1b2a080b:reason",
+      "75098141:event_stage",
+      "75098141:project_name",
+      "0a20de11:event_stage",
+      "0a20de11:fund_source",
+      "716eee3f:event_stage",
+      "716eee3f:uncertainty",
+      "716eee3f:case_role",
+      "896c22a4:uncertainty",
+      "feb60d47:event_stage",
+      "feb60d47:pricing_basis",
+      "feb60d47:approval_status",
+      "dc1ecf8f:event_stage",
+      "6f4e1f91:event_stage",
+      "6f4e1f91:change_type",
+      "6c1eafcc:funding_source"
+    ],
+    "incorrect": [
+      {"field": "1b2a080b:position", "reason": "Selected only two titles although four distinct resigned positions were disclosed."},
+      {"field": "75098141:funding_source", "reason": "Treated cash contribution method as funding source."},
+      {"field": "0a20de11:project_name", "reason": "Abstained despite the current temporary-liquidity-use action being explicit."},
+      {"field": "716eee3f:claim_amount_cny", "reason": "Selected principal while the claim also included provisional penalty and undetermined fees without one aggregate."},
+      {"field": "716eee3f:enforceability_uncertainty", "reason": "Misclassified general case/profit uncertainty as enforcement uncertainty."},
+      {"field": "896c22a4:event_stage", "reason": "Used document title/role instead of the current recommendation action."},
+      {"field": "896c22a4:purpose", "reason": "Returned a generic heading while four peer use-of-proceeds projects lacked one scalar answer."},
+      {"field": "896c22a4:subscribers", "reason": "Returned an eligible investor range even though final subscribers were undetermined."},
+      {"field": "896c22a4:approval_status", "reason": "Returned historical internal approval instead of the current sponsor recommendation stage."},
+      {"field": "feb60d47:relationship", "reason": "Dropped the controlling-party relationship and retained only a generic controlled-enterprise fragment."},
+      {"field": "feb60d47:transaction_type", "reason": "Abstained despite the current engineering general-contract type being explicit."},
+      {"field": "dc1ecf8f:event_date", "reason": "Used the announcement footer date although the completion date was not explicitly disclosed."},
+      {"field": "dc1ecf8f:vesting_schedule", "reason": "Returned ambiguous instead of absent for a terminated plan with no current vesting arrangement."},
+      {"field": "6f4e1f91:uncertainty", "reason": "Treated routine future business-registration processing as major uncertainty."},
+      {"field": "6c1eafcc:investment_amount_cny", "reason": "Used all parties' 50 million yuan total instead of the listed group's 45 million yuan contribution."}
+    ]
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "supported_semantic_precision_min",
+      "abstention_recall_min"
+    ],
+    "consequence": "Do not open the 2024 extraction holdout and do not promote v14 to downstream prediction features."
+  }
+}

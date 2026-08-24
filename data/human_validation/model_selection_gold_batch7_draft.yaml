@@ -1,0 +1,185 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-21T16:56:19+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v16
+prompt_sha256: 4d6a21b4288c7b3dfa6e935b2058bd8ce127f35e9fbb4200e9b3ca6eecc60b5f
+validator_contract_version: evidence-validator-v7
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 1df251c42addbd52c981abfff627bd2bcbd0aad13402a965a10f163f26925c5b
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "对存在减值迹象的资产计提了减值准备", unit: TEXT, evidence_quotes: ["对存在减值迹象的资产计提了减值准备"]}
+      event_date: {status: ambiguous, reason: "正文仅披露减值测试时点和报告期间，未披露计提动作发生日；落款日不能替代。"}
+      counterparty: {status: absent, reason: "资产减值计提是公司会计处理，不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "聆达集团股份有限公司", unit: TEXT, evidence_quotes: ["聆达集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "本次计提资产减值准备数据未经审计", unit: TEXT, evidence_quotes: ["公司本次计提资产减值准备数据未经审计"]}
+      asset_type: {status: supported, normalized_value: "应收账款、应收票据、其他应收款、存货、固定资产、在建工程", unit: TEXT, evidence_quotes: ["应收账款、应收票据、其他应收款、存货、固定资产、在建工程"]}
+      impairment_amount_cny: {status: supported, normalized_value: "39018100", unit: CNY, evidence_quotes: ["计提减值准备总金额为3,901.81万元"]}
+      profit_effect_cny: {status: supported, normalized_value: "39018100", unit: CNY, evidence_quotes: ["将减少公司2022年度归属于上市公司股东的净利润3,901.81万元"]}
+      impairment_reason:
+        status: supported
+        normalized_value: "更加真实、准确反映财务状况及经营成果，并遵循谨慎性原则"
+        unit: TEXT
+        evidence_quotes: ["为更加真实、准确反映公司截至2022年12月31日的财务状况及经营成果", "基于谨慎性原则"]
+      reversibility: {status: absent, reason: "正文未说明本次减值准备未来能否转回；表头中的转回或转销栏目不是当前可逆性结论。"}
+
+  - audit_item_id: fe17f190707341277b786125e00e06b6255d42437f2791abff7e44c5613ee843
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过股权转让议案", unit: TEXT, evidence_quotes: ["审议通过了《关于天润新能向华东新华转让夏县天润 100%股权的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-02-10", unit: DATE, evidence_quotes: ["2023 年 2 月 10 日"]}
+      counterparty: {status: supported, normalized_value: "华东新华能源投资有限公司", unit: TEXT, evidence_quotes: ["华东新华能源投资有限公司"]}
+      subject_name: {status: supported, normalized_value: "夏县天润风电有限公司", unit: TEXT, evidence_quotes: ["夏县天润风电有限公司"]}
+      uncertainty: {status: absent, reason: "正文披露了分期支付和交割条件，但未明确表述交易能否完成存在重大不确定性。"}
+      transaction_asset: {status: supported, normalized_value: "夏县天润风电有限公司100%股权", unit: TEXT, evidence_quotes: ["夏县天润风电有限公司100%股权"]}
+      consideration_cny: {status: supported, normalized_value: "1113300705.73", unit: CNY, evidence_quotes: ["股权对价：1,113,300,705.73元人民币"]}
+      book_value_cny: {status: supported, normalized_value: "533121780.30", unit: CNY, evidence_quotes: ["533,121,780.30"]}
+      expected_gain_cny: {status: absent, reason: "正文只称预计对净利润产生一定积极影响，未披露可核验的收益金额。"}
+      ownership_ratio_pct: {status: supported, normalized_value: "100", unit: PCT, evidence_quotes: ["标的股权：夏县天润风电有限公司100%股权"]}
+      transaction_stage: {status: supported, normalized_value: "董事会审议通过，尚待协议履行和交割", unit: TEXT, evidence_quotes: ["第八届董事会第八次会议审议通过了", "本次交易完成后"]}
+
+  - audit_item_id: e7c6eff96ca2c5e2c4eae036425fda18908f2eb78f2d795ca0ab1e039bc934ef
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "收到法院通知书，法院正在审查重整申请", unit: TEXT, evidence_quotes: ["公司收到苏州市中级人民法院送达的《通知书》", "苏州市中级人民法院亦对重整事宜进行审查"]}
+      event_date: {status: supported, normalized_value: "2023-02-06", unit: DATE, evidence_quotes: ["2023 年 2 月 6 日"]}
+      counterparty: {status: absent, reason: "破产重整申请不是双边交易；债权人另由 applicant 字段表示。"}
+      subject_name: {status: supported, normalized_value: "江苏中利集团股份有限公司", unit: TEXT, evidence_quotes: ["江苏中利集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "能否受理及是否进入预重整和重整程序存在不确定性", unit: TEXT, evidence_quotes: ["能否被法院受理、后续公司是否进入预重整及重整程序尚存在不确定性"]}
+      case_stage: {status: supported, normalized_value: "法院审查中，尚未收到预重整受理通知", unit: TEXT, evidence_quotes: ["苏州市中级人民法院亦对重整事宜进行审查", "公司尚未收到法院的预重整受理通知"]}
+      applicant: {status: supported, normalized_value: "江苏欣意装饰工程有限公司", unit: TEXT, evidence_quotes: ["债权人江苏欣意装饰工程有限公司"]}
+      court: {status: supported, normalized_value: "苏州市中级人民法院", unit: TEXT, evidence_quotes: ["苏州市中级人民法院"]}
+      claim_deadline: {status: absent, reason: "法院尚未受理，正文未披露债权申报截止日。"}
+      administrator: {status: absent, reason: "正文仅泛指未来配合法院及管理人，未披露已指定的管理人名称。"}
+      restructuring_plan: {status: absent, reason: "正文未披露重整计划或预重整方案内容。"}
+      business_effect: {status: supported, normalized_value: "股票交易存在被叠加实施退市风险警示的风险", unit: TEXT, evidence_quotes: ["公司股票交易存在被实施退市风险警示的风险", "将对公司股票交易叠加实施退市风险警示"]}
+
+  - audit_item_id: 2974183d0b0953e8928186d98704c6b714abefaab5beaf75913dc645db999f82
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过回购公司股份方案", unit: TEXT, evidence_quotes: ["审议通过了《关于回购公司股份方案的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-01-06", unit: DATE, evidence_quotes: ["公司于2023年1月6日召开第四届董事会第二次会议"]}
+      counterparty: {status: absent, reason: "集中竞价回购方案没有预先确定的交易对手。"}
+      subject_name: {status: supported, normalized_value: "无锡江南奕帆电力传动科技股份有限公司", unit: TEXT, evidence_quotes: ["无锡江南奕帆电力传动科技股份有限公司"]}
+      uncertainty:
+        status: supported
+        normalized_value: "股价持续超过上限时，方案可能无法或只能部分实施"
+        unit: TEXT
+        evidence_quotes: ["本次回购股份方案存在回购期限内股票价格持续超出回购价格上限", "导致本次回购方案无法实施或只能部分实施等不确定性风险"]
+      plan_amount_lower_cny: {status: supported, normalized_value: "20000000", unit: CNY, evidence_quotes: ["不低于人民币2,000万元（含）"]}
+      plan_amount_upper_cny: {status: supported, normalized_value: "39000000", unit: CNY, evidence_quotes: ["不超过人民币3,900万元（含）"]}
+      price_cap_cny_per_share: {status: supported, normalized_value: "42", unit: CNY_PER_SHARE, evidence_quotes: ["不超过人民币42元/股（含）"]}
+      completed_amount_cny: {status: absent, reason: "本文件是回购方案公告，未披露已经实际支付的回购金额。"}
+      completed_share_count: {status: absent, reason: "文中的476,100至928,500股是测算数量，不是已回购数量。"}
+      completed_share_ratio_pct: {status: absent, reason: "文中的0.85%至1.66%是预计比例，不是已完成比例。"}
+      purpose: {status: supported, normalized_value: "用于员工持股计划或者股权激励", unit: TEXT, evidence_quotes: ["用于员工持股计划或者股权激励"]}
+
+  - audit_item_id: 17619cedcf69eb5e286f0ce4b9e9644373603c34f20b57ac52a0314165db0565
+    review_status: complete
+    upstream_document_role: compliance_self_check_supporting_document
+    fields:
+      event_stage:
+        status: supported
+        normalized_value: "完成2023年股票期权激励计划自查并作出真实性保证"
+        unit: TEXT
+        evidence_quotes: ["2023 年股票期权激励计划自查表", "本公司保证所填写的情况真实、准确、完整、合法"]
+      event_date: {status: ambiguous, reason: "正文未披露自查完成日，只有签署页落款日期。"}
+      counterparty: {status: absent, reason: "自查表是公司自行填报；列示独立财务顾问不等于当前双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "浙江南都电源动力股份有限公司", unit: TEXT, evidence_quotes: ["浙江南都电源动力股份有限公司"]}
+      uncertainty: {status: absent, reason: "自查表未对当前自查结论披露重大不确定性。"}
+      incentive_share_count: {status: absent, reason: "自查表只确认计划是否披露权益数量，未给出实际拟授予数量。"}
+      incentive_share_ratio_pct: {status: absent, reason: "20%和1%均为合规阈值，不是本计划实际授予比例。"}
+      grant_price_cny_per_share: {status: absent, reason: "自查表只确认是否披露行权价格及确定方法，未给出实际价格。"}
+      performance_targets: {status: absent, reason: "自查表只确认是否包含业绩指标，未披露具体目标值。"}
+      recipient_count: {status: absent, reason: "自查表未披露激励对象实际人数。"}
+      vesting_schedule: {status: absent, reason: "自查表列示期限合规检查问题，未披露本计划具体分期行权安排。"}
+
+  - audit_item_id: a116ddfbd2c461eb42cb5b5303da997e02d93bf15c7bcd5c8fb5ecf4113559ff
+    review_status: complete
+    fields:
+      event_stage:
+        status: supported
+        normalized_value: "完成董事会和监事会换届选举，并聘任高级管理人员等"
+        unit: TEXT
+        evidence_quotes: ["完成公司第八届董事会董事长、监事会主席的选举", "聘任了高级管理人员、董事会秘书、证券事务代表"]
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["于 2023 年 1 月 11 日召开"]}
+      counterparty: {status: absent, reason: "公司内部换届和聘任不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "河南安彩高科股份有限公司", unit: TEXT, evidence_quotes: ["河南安彩高科股份有限公司"]}
+      uncertainty: {status: absent, reason: "换届选举和聘任已经完成，正文未披露结果存在重大不确定性。"}
+      executive_name: {status: ambiguous, reason: "公告同时披露多名董事、监事、高管及证券事务代表，没有唯一人员。"}
+      position: {status: ambiguous, reason: "公告同时涉及董事长、监事会主席、总经理、副总经理等多个职位。"}
+      change_type: {status: supported, normalized_value: "换届选举及聘任", unit: TEXT, evidence_quotes: ["在本次换届后不再担任公司董事职务", "聘任了高级管理人员、董事会秘书、证券事务代表"]}
+      reason: {status: supported, normalized_value: "任期届满", unit: TEXT, evidence_quotes: ["因任期届满"]}
+      successor: {status: ambiguous, reason: "不同离任及新任职位分别对应多人，无法归一为唯一继任者。"}
+
+  - audit_item_id: 56f9fe61492db3ab38a70ff7b28be8522d3bd9e90f2c5b57ec0ee9f548668f0b
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过追加对外投资暨关联交易事项", unit: TEXT, evidence_quotes: ["本次追加对外投资暨关联交易事项已经公司八届四十三次董事会审议通过"]}
+      event_date: {status: supported, normalized_value: "2023-02-10", unit: DATE, evidence_quotes: ["公司于2023年2月10日召开八届四十三次董事会"]}
+      counterparty: {status: supported, normalized_value: "西电集团财务有限责任公司", unit: TEXT, evidence_quotes: ["西电集团财务有限责任公司"]}
+      subject_name: {status: supported, normalized_value: "许继电气股份有限公司", unit: TEXT, evidence_quotes: ["许继电气股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "尚需中国银保监会批准，交易存在不确定性", unit: TEXT, evidence_quotes: ["本次交易尚需经中国银保监会批准后方可实施", "交易存在不确定性"]}
+      project_name: {status: supported, normalized_value: "西电财司1.99%股份", unit: TEXT, evidence_quotes: ["承接许继集团原计划出资西电财司1.99%股份"]}
+      investment_amount_cny: {status: supported, normalized_value: "109557400", unit: CNY, evidence_quotes: ["公司拟承接许继集团原计划出资西电财司1.99%股份", "以自有资金追加投资10,955.74 万元"]}
+      ownership_ratio_pct: {status: supported, normalized_value: "5.99", unit: PCT, evidence_quotes: ["本次追加投资后，公司将持有西电财司的股权比例为5.99%"]}
+      funding_source: {status: supported, normalized_value: "自有资金", unit: TEXT, evidence_quotes: ["以自有资金追加投资10,955.74 万元"]}
+      construction_period: {status: absent, reason: "本次事项为金融企业股权增资，不涉及建设周期，正文亦未披露。"}
+
+  - audit_item_id: 1a4a305cb00f1cfb32b98c440a49cf82ccb9fd530bbd1793950c8c2a8c5d0f4b
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司财务部门完成初步业绩测算", unit: TEXT, evidence_quotes: ["本次业绩预告是公司财务部门的初步测算结果"]}
+      event_date: {status: ambiguous, reason: "正文未披露初步测算或预告形成日期，董事会落款日不能替代。"}
+      counterparty: {status: absent, reason: "业绩预告不存在双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "武汉中元华电科技股份有限公司", unit: TEXT, evidence_quotes: ["武汉中元华电科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "初步测算结果未经审计机构审计", unit: TEXT, evidence_quotes: ["初步测算结果，未经审计机构审计"]}
+      forecast_period: {status: supported, normalized_value: "2022-01-01至2022-12-31", unit: TEXT, evidence_quotes: ["2022 年 1 月 1 日至 2022 年 12 月 31 日"]}
+      forecast_type: {status: supported, normalized_value: "同向下降", unit: TEXT, evidence_quotes: ["同向下降"]}
+      net_profit_lower_cny: {status: supported, normalized_value: "7168800", unit: CNY, evidence_quotes: ["盈利：716.88 万元–1,075.00 万元"]}
+      net_profit_upper_cny: {status: supported, normalized_value: "10750000", unit: CNY, evidence_quotes: ["盈利：716.88 万元–1,075.00 万元"]}
+      yoy_lower_pct: {status: supported, normalized_value: "88", unit: PCT, evidence_quotes: ["比上年同期下降：88% - 92%"]}
+      yoy_upper_pct: {status: supported, normalized_value: "92", unit: PCT, evidence_quotes: ["比上年同期下降：88% - 92%"]}
+      change_reason: {status: ambiguous, reason: "业绩变化同时涉及参投基金公允价值变动、智能电网经营和医疗健康减亏等并列原因。"}
+
+  - audit_item_id: 9a184df57b69ea9083dfc22bd846f4d682894a7c9c38b8c922afc7208034033e
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "收到子公司发来的相关法律文件", unit: TEXT, evidence_quotes: ["收到子公\n司发来的相关法律文件"]}
+      event_date: {status: supported, normalized_value: "2023-01-19", unit: DATE, evidence_quotes: ["于 2023 年 1 月 19 日收到"]}
+      counterparty: {status: supported, normalized_value: "信息产业电子第十一设计研究院科技工程股份有限公司", unit: TEXT, evidence_quotes: ["信息产业电子第十一设计研究院科技工程股份有限公司"]}
+      subject_name: {status: supported, normalized_value: "宿迁腾晖新能源技术有限公司", unit: TEXT, evidence_quotes: ["宿迁腾晖新能源技术有限公司"]}
+      uncertainty: {status: supported, normalized_value: "是否立案及对本期或期后利润的影响无法判断", unit: TEXT, evidence_quotes: ["无法获悉上述案件是否立案", "无法判断是否对公司本期利润或期后利润的影响"]}
+      case_role: {status: supported, normalized_value: "被申请人", unit: TEXT, evidence_quotes: ["被申请人：宿迁腾晖新能源技术有限公司"]}
+      case_stage: {status: supported, normalized_value: "已申请财产保全，是否立案未知", unit: TEXT, evidence_quotes: ["向宿迁市宿城区人民法院申请财产保全", "无法获悉上述案件是否立案"]}
+      claim_amount_cny: {status: absent, reason: "4,300万元是申请保全设备的价值，不是诉讼请求或债权金额。"}
+      judgment_amount_cny: {status: absent, reason: "案件是否立案尚不明确，正文没有判决金额。"}
+      provision_amount_cny: {status: absent, reason: "正文未披露针对本案计提的预计负债或减值金额。"}
+      enforceability_uncertainty: {status: absent, reason: "案件尚无判决，正文披露的是立案和利润影响不确定性，不是判决执行不确定性。"}
+
+  - audit_item_id: 1310a9f3e5332415d37b00033e7439c3b9424d6c74ef41302107fb666f561fe4
+    review_status: complete
+    upstream_document_role: valuation_report_supporting_document
+    fields:
+      event_stage: {status: supported, normalized_value: "完成资产评估并形成评估结论", unit: TEXT, evidence_quotes: ["分别采用资产基础法和收益法进行了评估", "评估结论根据以上评估工作得出"]}
+      event_date: {status: supported, normalized_value: "2023-06-06", unit: DATE, evidence_quotes: ["二〇二三年六月六日"]}
+      counterparty: {status: absent, reason: "评估机构和被评估单位不是拟收购交易的对手方，报告未披露唯一出售方。"}
+      subject_name: {status: supported, normalized_value: "通辽金麒麟新能源智能科技有限公司", unit: TEXT, evidence_quotes: ["通辽金麒麟新能源智能科技有限公司"]}
+      uncertainty: {status: absent, reason: "评估假设和局限属于估值前提，正文未明确披露当前评估结论存在重大不确定性。"}
+      transaction_asset: {status: supported, normalized_value: "通辽金麒麟股东全部权益", unit: TEXT, evidence_quotes: ["通辽金麒麟的股东全部权益"]}
+      consideration_cny: {status: absent, reason: "资产评估说明披露评估值，但未披露拟收购交易对价。"}
+      ownership_ratio_pct: {status: absent, reason: "股东全部权益表示评估对象范围；正文未以数值披露晨丰科技拟收购的股权比例。"}
+      payment_method: {status: absent, reason: "资产评估说明未披露拟收购价款的支付方式。"}
+      transaction_stage: {status: supported, normalized_value: "拟收购股权，已完成资产评估", unit: TEXT, evidence_quotes: ["晨丰科技拟收购通辽金麒麟的股权", "为该经济行为提供通辽金麒麟股东全部权益价值的参考依据"]}
+      valuation_cny: {status: supported, normalized_value: "82200000", unit: CNY, evidence_quotes: ["本次评估最终采用收益法评估结果 82,200,000.00 元"]}

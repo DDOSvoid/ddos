@@ -101,18 +101,62 @@ def _ensure_column(engine: "Engine", table: str, column: str, ddl: str) -> None:
             row[1]
             for row in conn.execute(text(f"PRAGMA table_info({table})"))
         }
+        if not existing:
+            return
         if column not in existing:
             conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}"))
 
 
 def _run_lightweight_migrations(engine: "Engine") -> None:
     """新增列的幂等迁移。"""
-    _ensure_column(
-        engine, "classifications", "industry", "VARCHAR(50)"
-    )
-    _ensure_column(
-        engine, "classifications", "industry_group", "VARCHAR(20)"
-    )
+    if engine.dialect.name != "sqlite":
+        return
+
+    columns = {
+        "industry": "VARCHAR(50)",
+        "industry_group": "VARCHAR(20)",
+        "classification_source": "VARCHAR(30)",
+        "rule_id": "VARCHAR(80)",
+        "document_type": "VARCHAR(50)",
+        "relevance": "VARCHAR(30)",
+        "secondary_tags": "TEXT",
+        "model_sub_category": "VARCHAR(50)",
+        "model_confidence": "FLOAT",
+        "model_margin": "FLOAT",
+        "needs_review": "BOOLEAN",
+        "review_status": "VARCHAR(20)",
+        "review_reason": "TEXT",
+        "review_note": "TEXT",
+        "reviewed_by": "VARCHAR(100)",
+        "reviewed_at": "DATETIME",
+        "taxonomy_version": "VARCHAR(20)",
+    }
+    for column, ddl in columns.items():
+        _ensure_column(engine, "classifications", column, ddl)
+
+    target_columns = {
+        "dataset_role": "VARCHAR(40)",
+        "split_contract": "VARCHAR(80)",
+        "split_source_sha256": "VARCHAR(64)",
+    }
+    for column, ddl in target_columns.items():
+        _ensure_column(engine, "announcement_market_targets", column, ddl)
+
+    # 历史结果只补充审计元数据，不改动原分类类别和置信度。
+    from sqlalchemy import text
+
+    from sqlalchemy import inspect
+
+    if inspect(engine).has_table("classifications"):
+        with engine.begin() as conn:
+            conn.execute(text(
+                "UPDATE classifications "
+                "SET classification_source = COALESCE(classification_source, 'legacy'), "
+                "review_status = COALESCE(review_status, 'pending'), "
+                "needs_review = COALESCE(needs_review, 1), "
+                "relevance = COALESCE(relevance, 'uncertain'), "
+                "taxonomy_version = COALESCE(taxonomy_version, 'v1')"
+            ))
 
 
 def init_db() -> None:

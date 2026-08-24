@@ -1,0 +1,34 @@
+{
+  "contract": "causal-market-target-v1",
+  "created_at": "2026-08-20T12:00:19.549427+00:00",
+  "benchmark_code": "000300.SH",
+  "entry_rule": "first stock trading session strictly after publication; entry at open",
+  "exit_rule": "horizon-th stock trading session close",
+  "target_rule": "stock return minus benchmark return; sign gives actual direction",
+  "warning": "retrospective training targets, not historical predictions or accuracy",
+  "announcements": 46909,
+  "targets": 139430,
+  "by_horizon": {
+    "1": {
+      "matured": 46679,
+      "pending": 230,
+      "bullish": 21644,
+      "bearish": 25035,
+      "neutral": 0
+    },
+    "3": {
+      "matured": 46475,
+      "pending": 434,
+      "bullish": 21651,
+      "bearish": 24824,
+      "neutral": 0
+    },
+    "5": {
+      "matured": 46276,
+      "pending": 633,
+      "bullish": 21648,
+      "bearish": 24628,
+      "neutral": 0
+    }
+  }
+}

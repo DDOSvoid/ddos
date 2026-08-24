@@ -1,0 +1,167 @@
+contract: protocol-clarification-gold-draft-v1
+created_at: "2026-08-21T15:06:48+08:00"
+reviewer: codex-assisted
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation_consumed_for_protocol_clarification
+eligible_for_model_selection_score: false
+reason_ineligible: "Source review exposed ambiguous Q3-period and external-investment amount semantics before any model request."
+future_data_read: false
+market_targets_read: false
+target_documents: 10
+completed_documents: 3
+
+documents:
+  - audit_item_id: 44e81e51c7fdc325adcf067e3b38530cbb182dae90763ac82f87c8d81bfe22ed
+    review_status: complete
+    upstream_document_role: supporting_document
+    fields:
+      event_stage:
+        status: supported
+        normalized_value: "现就你公司来函征询事项回函如下"
+        unit: TEXT
+        evidence_quotes: ["现就你公司来函征询事项回函如下"]
+      event_date:
+        status: supported
+        normalized_value: "2023-08-02"
+        unit: DATE
+        evidence_quotes: ["二〇二三年八月二日"]
+      counterparty:
+        status: supported
+        normalized_value: "天津百利特精电气股份有限公司"
+        unit: TEXT
+        evidence_quotes: ["天津百利特精电气股份有限公司"]
+      subject_name:
+        status: supported
+        normalized_value: "天津液压机械（集团）有限公司"
+        unit: TEXT
+        evidence_quotes: ["天津液压机械（集团）有限公司"]
+      uncertainty: {status: absent, reason: "回函未披露尚待结果或重大不确定性。"}
+      volatility_period: {status: absent, reason: "回函未披露异常波动期间。"}
+      volatility_type: {status: absent, reason: "回函未披露异常波动类型或幅度。"}
+      company_explanation:
+        status: supported
+        normalized_value: "不存在筹划对你公司股价产生较大影响的应披露而未披露的重大事项"
+        unit: TEXT
+        evidence_quotes:
+          - "不存在筹划对你公司股价产生较大影响的应披露而未披露的重大事项"
+          - "我公司及一致行动人不存在买卖你公司股票的情况"
+      regulatory_inquiry: {status: absent, reason: "询证函来自上市公司，不是监管机构问询。"}
+
+  - audit_item_id: 5a629926b9e684fa442e69ae0d98fb053eb040ff056d1639650080278f8e6adf
+    review_status: complete
+    upstream_document_role: core_event
+    fields:
+      event_stage:
+        status: supported
+        normalized_value: "审议通过了《关于计提资产减值准备和信用减值准备的议案》"
+        unit: TEXT
+        evidence_quotes: ["审议通过了《关于计提资产减值准备和信用减值准备的议案》"]
+      event_date:
+        status: supported
+        normalized_value: "2023-10-24"
+        unit: DATE
+        evidence_quotes: ["于2023 年 10 月 24日召开"]
+      counterparty: {status: absent, reason: "计提减值不涉及双边交易对手。"}
+      subject_name:
+        status: supported
+        normalized_value: "四川华体照明科技股份有限公司"
+        unit: TEXT
+        evidence_quotes: ["四川华体照明科技股份有限公司"]
+      uncertainty: {status: absent, reason: "公告未声明计提结果尚待审计或存在重大不确定性。"}
+      asset_type:
+        status: supported
+        normalized_value: "资产减值准备和信用减值准备"
+        unit: TEXT
+        evidence_quotes:
+          - "资产减值准备和信用减值准备"
+          - "合同资产减值"
+          - "存货跌价损失及合同履约成本减值损失"
+      impairment_amount_cny:
+        status: supported
+        normalized_value: "17754868.87"
+        unit: CNY
+        evidence_quotes: ["计提各项减值准备共计 17,754,868.87 元"]
+      profit_effect_cny:
+        status: supported
+        normalized_value: "17754868.87"
+        unit: CNY
+        evidence_quotes: ["合并报表利润总额17,754,868.87元"]
+      impairment_reason:
+        status: supported
+        normalized_value: "公司部分资产存在减值的情形"
+        unit: TEXT
+        evidence_quotes:
+          - "公司部分资产存在减值的情形"
+          - "基于谨慎性原则"
+      reversibility:
+        status: supported
+        normalized_value: "true"
+        unit: BOOLEAN
+        evidence_quotes: ["转回存货跌价准备1,656,885.62 元"]
+
+  - audit_item_id: 32c667dcecfa44e55b93ab36e14d6b76ebfe5122fb010acf5fa00e27db8c6055
+    review_status: complete
+    upstream_document_role: core_event
+    fields:
+      event_stage:
+        status: supported
+        normalized_value: "为该项目的中标候选人之一"
+        unit: TEXT
+        evidence_quotes: ["为该项目的中标候选人之一"]
+      event_date:
+        status: supported
+        normalized_value: "2023-12-07"
+        unit: DATE
+        evidence_quotes: ["于2023 年12 月7 日"]
+      counterparty:
+        status: supported
+        normalized_value: "国家电网有限公司"
+        unit: TEXT
+        evidence_quotes: ["国家电网有限公司"]
+      subject_name:
+        status: supported
+        normalized_value: "积成电子股份有限公司"
+        unit: TEXT
+        evidence_quotes: ["积成电子股份有限公司"]
+      uncertainty:
+        status: supported
+        normalized_value: "尚未收到国家电网有限公司及其相关代理机构发给公司的中标通知书"
+        unit: TEXT
+        evidence_quotes: ["尚未收到国家电网有限公司及其相关代理机构发给公司的中标通知书"]
+      bid_amount_cny:
+        status: supported
+        normalized_value: "130806100"
+        unit: CNY
+        evidence_quotes: ["中标金额合计约为13,080.61万元"]
+      annual_revenue_ratio_pct:
+        status: supported
+        normalized_value: "5.95"
+        unit: PCT
+        evidence_quotes: ["占公司2022年度营业收入的5.95%"]
+      project_name:
+        status: supported
+        normalized_value: "国家电网有限公司 2023 年第八十九批采购（营销项目第二次电能表（含用电信息采集）招标采购）"
+        unit: TEXT
+        evidence_quotes: ["国家电网有限公司 2023 年第八十九批采购（营销项目第二次电能表（含用电信息采集）招标采购）"]
+      performance_uncertainty:
+        status: supported
+        normalized_value: "具体中标的有关事项待收到中标通知书后"
+        unit: TEXT
+        evidence_quotes: ["具体中标的有关事项待收到中标通知书后"]
+
+  - audit_item_id: 4422240629b284bcf76933eeb6c78d1311f175201ae2958f526b2ab2cd05ffef
+    review_status: pending
+  - audit_item_id: afe1bc0be18effc9e225903f84d749b0bed924cc62e585eb05dfad30672f178a
+    review_status: pending
+  - audit_item_id: 3293e153cd929895ac919a4bf8da1627869d7c3c0fafcf01b4f3c72491971acf
+    review_status: pending
+  - audit_item_id: dc25b8191cc407ebdb3ff33357a73b0dbff02c1547032ba96bfb87eac7aea910
+    review_status: pending
+  - audit_item_id: ee1a9cc1210a85f9a3dff77a847ed3ad583631d34ab5a8afbfee494ce98a288a
+    review_status: pending
+  - audit_item_id: 3466ca34c7b691577b1de0e39898d034854554e763594b7b8a2c8934a96b89ba
+    review_status: pending
+  - audit_item_id: 2ab55c6be20eedb776c7a8e25b60d4916cbe256db393a814bd55a807829adfb2
+    review_status: pending

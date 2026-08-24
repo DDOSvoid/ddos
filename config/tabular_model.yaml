@@ -1,0 +1,94 @@
+contract: causal-tabular-model-v1
+split_contract: causal-impact-split-v2
+development_contract: causal-multimodel-development-v1
+
+directories:
+  source: src/prediction/tabular
+  data: data/tabular
+  models: models/tabular
+
+sampling:
+  feature_frequency: daily
+  raw_intraday_frequency: 15min
+  raw_intraday_usage: lagged_daily_aggregates_only
+  decision_point: daily_preopen
+  historical_announcement_time_precision: date_only
+  minute_level_prediction_status: blocked_pending_authoritative_announcement_timestamp
+  higher_frequency_upgrade_rule: "Create a new versioned timing contract; never mutate this contract in place."
+
+model_families:
+  - lightgbm
+  - catboost
+
+features:
+  allowed_groups:
+    - announcement_amount_ratios
+    - valuation
+    - lagged_momentum
+    - lagged_volatility
+    - lagged_liquidity
+    - lagged_intraday_aggregates
+    - disclosed_fundamentals
+    - categorical_event_context
+  required_availability_metadata: true
+  market_daily_rule: "trade_date must be strictly earlier than announcement published_date"
+  fundamental_rule: "actual disclosure time must be no later than prediction as_of"
+  forbidden_exact:
+    - target
+    - entry_date
+    - exit_date
+    - entry_price
+    - exit_price
+    - stock_return
+    - benchmark_return
+    - excess_return
+    - actual_direction
+    - outcome_available_at
+    - future_excess_return
+    - future_realized_volatility
+    - future_downside_return
+  forbidden_prefixes:
+    - target_
+    - label_
+    - future_
+    - outcome_
+    - post_announcement_
+
+labels:
+  stored_separately_from_features: true
+  return:
+    name: future_excess_return
+    horizons_sessions: [1, 3, 5]
+    benchmark_code: 000300.SH
+  risk:
+    - name: future_absolute_excess_return
+      horizons_sessions: [1, 3, 5]
+    - name: future_realized_volatility
+      horizons_sessions: [3, 5]
+    - name: future_downside_return
+      horizons_sessions: [1, 3, 5]
+
+training:
+  eligible_role: train
+  date_start: "2023-01-01"
+  date_end: "2024-12-31"
+  split_strategy: expanding_window
+  random_split_allowed: false
+  fit_preprocessors_on_fold_train_only: true
+
+official_test:
+  date_start: "2025-01-01"
+  date_end: "2025-08-19"
+  requires_frozen_model_and_hyperparameters: true
+  read_limit: 1
+  tuning_after_read_allowed: false
+
+quarantine:
+  date_start: "2025-08-20"
+  date_end: "2025-12-31"
+  model_selection_allowed: false
+
+forward_validation:
+  date_start: "2026-01-01"
+  training_allowed: false
+  model_selection_allowed: false

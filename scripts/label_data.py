@@ -1,28 +1,22 @@
 #!/usr/bin/env python
-"""数据标注助手 — 打通"真实公告 → 人工标注 → 合并重训"的完整路径。
+"""真实公告标注助手。
 
-人工标注流程:
-  1. 导出真实公告（默认全部状态，优先有正文的；可选 --status 过滤）
-     python scripts/label_data.py --export --output data/labeled/to_label.jsonl --count 200
-  2. 打开 JSONL 文件，为每行填写正确的 sub_category / major_category
-  3. 校验已标注文件（可选，看格式是否合法）
-     python scripts/label_data.py --import --input data/labeled/to_label.jsonl
-  4. 与种子数据合并（按 announcement_id/text 去重，校验类别合法性）
-     python scripts/label_data.py --merge \
-         --inputs data/labeled/seed.jsonl data/labeled/to_label.jsonl \
-         --output data/labeled/combined.jsonl
-  5. 用合并数据重训分类器 + 温度校准
-     python -m src.training.train_classifier --data data/labeled/combined.jsonl --output models/bert-classifier
-     python scripts/calibrate_temperature.py --data data/labeled/combined.jsonl --model models/bert-classifier
+流程：
+  1. 导出待复核真实公告：
+     python scripts/label_data.py --export --output data/labeled/to_review.jsonl
+  2. 人工填写类别、reviewer、labeled_at、dataset_role，并将 label_status 改为 verified。
+  3. 校验：
+     python scripts/label_data.py --import --input data/labeled/to_review.jsonl
+  4. 合并真实已验证批次：
+     python scripts/label_data.py --merge --inputs data/labeled/batch_*.jsonl \
+         --output data/labeled/real_verified.jsonl
+  5. 生产训练：
+     python scripts/setup_model.py --data data/labeled/real_verified.jsonl --force
 
-JSONL 格式（一行一个样本）:
-  {"announcement_id": "AN...", "text": "公告标题\\n公告正文", "sub_category": "earnings_q1", "major_category": "A"}
-
-说明:
-  - 默认 --export 从全部状态导出（管线跑完后公告已推进到 reported，
-    旧的只导 preprocessed 会导致永远导出 0 条）。
-  - 已出现在 data/labeled/combined.jsonl 中的公告会被自动跳过，避免重复标注。
+合成数据、AI 建议和未经人工确认的规则标签不能进入生产训练、验证或校准。
 """
+
+from __future__ import annotations
 
 import argparse
 import json
@@ -33,12 +27,26 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from sqlalchemy.orm import Session
 
-from src.config import event_registry
 from src.database.engine import get_engine
-from src.database.models import Announcement
+from src.database.models import Announcement, Classification
+from src.training.label_contract import SCHEMA_VERSION, validate_label_item
 
-# 默认合并输出：已标注的真实数据 + 种子数据
-DEFAULT_COMBINED = Path("data/labeled/combined.jsonl")
+DEFAULT_VERIFIED = Path("data/labeled/real_verified.jsonl")
+
+
+def _already_labeled_ids(path: Path) -> set[str]:
+    ids: set[str] = set()
+    if not path.exists():
+        return ids
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            try:
+                announcement_id = json.loads(line).get("announcement_id")
+            except json.JSONDecodeError:
+                continue
+            if announcement_id:
+                ids.add(str(announcement_id))
+    return ids
 
 
 def export_unlabeled(
@@ -46,82 +54,91 @@ def export_unlabeled(
     count: int = 200,
     status: str | None = None,
     skip_labeled: bool = True,
+    review_only: bool = True,
 ) -> int:
-    """导出未标注公告为 JSONL。
-
-    status=None 时导出全部状态（默认，因管线跑完后无 preprocessed 残留）；
-    指定 --status 则只导该状态。优先选有正文的公告（对标注更有信息量）。
-    """
+    """导出真实公告候选；默认只导出 needs_review=true。"""
     engine = get_engine()
-    exported = 0
-
-    # 已标注过的 announcement_id 集合（避免重复导出）
-    labeled_ids: set[str] = set()
-    if skip_labeled and DEFAULT_COMBINED.exists():
-        with open(DEFAULT_COMBINED, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    aid = json.loads(line).get("announcement_id")
-                    if aid:
-                        labeled_ids.add(aid)
-                except json.JSONDecodeError:
-                    continue
+    labeled_ids = _already_labeled_ids(DEFAULT_VERIFIED) if skip_labeled else set()
 
     with Session(engine) as session:
-        q = session.query(Announcement)
+        query = session.query(Announcement)
         if status:
-            q = q.filter_by(processing_status=status)
-        # 有正文的排前面（full_text IS NULL → 0），再按发布日期倒序
-        announcements = (
-            q.order_by(
-                Announcement.full_text.is_(None),
-                Announcement.published_date.desc(),
+            query = query.filter_by(processing_status=status)
+        if review_only:
+            query = query.join(Classification, Announcement.classification).filter(
+                Classification.needs_review.is_(True)
             )
-            .limit(count)
+        announcements = (
+            query.order_by(
+                Announcement.full_text.is_(None),
+                Announcement.published_date.asc(),
+                Announcement.id.asc(),
+            )
+            .limit(count + len(labeled_ids))
             .all()
         )
 
-        if not announcements:
-            print(
-                f"No announcements to export (status={status or 'all'}). "
-                "Run fetcher + preprocessor first."
-            )
-            return 0
-
         out_path = Path(output_path)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-
+        exported = 0
         with open(out_path, "w", encoding="utf-8") as f:
             for ann in announcements:
-                if ann.announcement_id in labeled_ids:
+                if ann.announcement_id in labeled_ids or exported >= count:
                     continue
-                text = f"{ann.title or ''}\n{ann.full_text or ''}"
-                if len(text.strip()) < 10:
-                    continue  # 标题+正文都空的不值得标
+                text = f"{ann.title or ''}\n{ann.full_text or ''}".strip()
+                if len(text) < 10:
+                    continue
+                classification = ann.classification
                 item = {
+                    "schema_version": SCHEMA_VERSION,
                     "announcement_id": ann.announcement_id,
-                    "text": text[:3000],  # 截断避免太长
-                    "sub_category": "",    # 待标注
-                    "major_category": "",  # 待标注
+                    "published_at": (
+                        ann.published_date.isoformat() if ann.published_date else ""
+                    ),
+                    "text": text[:3000],
+                    "major_category": "",
+                    "sub_category": "",
+                    "label_source": "human",
+                    "label_status": "candidate",
+                    "labeled_at": "",
+                    "reviewer": "",
+                    "dataset_role": "",
+                    "evidence": "",
+                    "suggested_major_category": (
+                        classification.major_category if classification else None
+                    ),
+                    "suggested_sub_category": (
+                        classification.sub_category if classification else None
+                    ),
+                    "suggested_confidence": (
+                        classification.confidence if classification else None
+                    ),
+                    "suggested_source": (
+                        classification.classification_source if classification else None
+                    ),
+                    "suggested_rule_id": classification.rule_id if classification else None,
+                    "suggested_document_type": (
+                        classification.document_type if classification else None
+                    ),
+                    "suggested_relevance": classification.relevance if classification else None,
+                    "model_candidate_sub_category": (
+                        classification.model_sub_category if classification else None
+                    ),
+                    "model_candidate_confidence": (
+                        classification.model_confidence if classification else None
+                    ),
                 }
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
                 exported += 1
 
-    skipped = len(labeled_ids)
-    print(f"Exported {exported} announcements to {out_path} (skipped {skipped} already-labeled)")
-    print("\n标注说明:")
-    print("  修改 sub_category 和 major_category 字段")
-    print("  sub_category 选项见 config/event_types.yaml")
-    print("  major_category: A/B/C/D/E/F/G")
-    print("  标注完成后运行 --merge 合并种子数据并重训")
+    print(f"Exported {exported} real announcements to {out_path}")
+    print("确认后填写 major_category/sub_category/reviewer/labeled_at/dataset_role，")
+    print("并将 label_status 改为 verified。AI/规则建议不能直接作为生产真值。")
     return exported
 
 
-def import_labeled(input_path: str) -> int:
-    """导入已标注数据（验证格式）。"""
+def import_labeled(input_path: str, show_errors: int = 20) -> int:
+    """校验文件中可用于生产训练的真实标注。"""
     path = Path(input_path)
     if not path.exists():
         print(f"File not found: {input_path}")
@@ -129,110 +146,95 @@ def import_labeled(input_path: str) -> int:
 
     valid = 0
     invalid = 0
-    with open(path, "r", encoding="utf-8") as f:
-        for i, line in enumerate(f, 1):
+    with open(path, encoding="utf-8") as f:
+        for line_number, line in enumerate(f, 1):
             line = line.strip()
             if not line:
                 continue
             try:
-                item = json.loads(line)
-                if not item.get("sub_category"):
-                    print(f"  Line {i}: missing sub_category")
-                    invalid += 1
-                    continue
-                if not item.get("text"):
-                    print(f"  Line {i}: missing text")
-                    invalid += 1
-                    continue
+                validate_label_item(json.loads(line), production=True)
                 valid += 1
-            except json.JSONDecodeError as e:
-                print(f"  Line {i}: JSON error: {e}")
+            except (json.JSONDecodeError, ValueError) as exc:
+                if invalid < show_errors:
+                    print(f"  Line {line_number}: {exc}")
                 invalid += 1
-
-    print(f"\nValidation result: {valid} valid, {invalid} invalid out of {valid + invalid} lines")
+    if invalid > show_errors:
+        print(f"  ... 另有 {invalid - show_errors} 条错误未展开")
+    print(f"Validation result: {valid} valid, {invalid} invalid")
     return valid
 
 
 def merge_labeled(inputs: list[str], output_path: str) -> int:
-    """合并多个标注/种子 JSONL 为一个训练集。
-
-    - 跳过缺 sub_category 的行（未标注）
-    - 校验 sub_category 必须存在于 event_types.yaml（防错别字悄悄新增类别）
-    - 按 announcement_id 去重（无 id 的行退化为按 text 去重）
-    """
+    """合并真实人工验证标注；拒绝候选、AI、规则和 synthetic 标签。"""
     seen_ids: set[str] = set()
     seen_texts: set[str] = set()
     merged: list[dict] = []
-    skipped = 0
-    invalid_cat = 0
+    rejected = 0
 
-    for inp in inputs:
-        path = Path(inp)
+    for input_name in inputs:
+        path = Path(input_name)
         if not path.exists():
-            print(f"  [merge] 文件不存在，跳过: {inp}")
+            print(f"  [merge] 文件不存在，跳过: {input_name}")
             continue
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
+        with open(path, encoding="utf-8") as f:
+            for line_number, line in enumerate(f, 1):
                 line = line.strip()
                 if not line:
                     continue
                 try:
                     item = json.loads(line)
-                except json.JSONDecodeError:
-                    skipped += 1
+                    validate_label_item(item, production=True)
+                except (json.JSONDecodeError, ValueError) as exc:
+                    print(f"  [merge] {path}:{line_number}: {exc}")
+                    rejected += 1
                     continue
-                if not item.get("sub_category") or not item.get("text"):
-                    skipped += 1  # 未标注或空文本
+                announcement_id = str(item["announcement_id"])
+                if announcement_id in seen_ids or item["text"] in seen_texts:
                     continue
-                sub = item["sub_category"]
-                if sub not in event_registry.sub_to_major_map:
-                    print(f"  [merge] 非法 sub_category '{sub}'（不在 event_types.yaml），丢弃")
-                    invalid_cat += 1
-                    continue
-                # 幂等：id 优先，无 id 退化 text
-                dedup_key = item.get("announcement_id") or f"text:{item['text']}"
-                if dedup_key in seen_ids or item["text"] in seen_texts:
-                    skipped += 1
-                    continue
-                seen_ids.add(dedup_key)
+                seen_ids.add(announcement_id)
                 seen_texts.add(item["text"])
                 merged.append(item)
 
+    merged.sort(key=lambda item: (item["published_at"], item["announcement_id"]))
     out_path = Path(output_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         for item in merged:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
-
-    print(
-        f"[merge] {len(merged)} 条 → {out_path} "
-        f"(跳过 {skipped} 未标注/重复, 丢弃 {invalid_cat} 非法类别)"
-    )
+    print(f"[merge] {len(merged)} verified real labels -> {out_path}; rejected={rejected}")
     return len(merged)
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Label data helper")
-    parser.add_argument("--export", action="store_true", help="Export unlabeled real announcements")
-    parser.add_argument("--import", dest="import_file", action="store_true", help="Validate a labeled file")
-    parser.add_argument("--merge", action="store_true", help="Merge seed + labeled files into a training set")
-    parser.add_argument("--output", default="data/labeled/to_label.jsonl", help="Output path for export/merge")
-    parser.add_argument("--input", default="data/labeled/labeled.jsonl", help="Input path for import")
-    parser.add_argument("--inputs", nargs="+", default=None,
-                        help="Merge 的输入文件列表（如 seed.jsonl to_label.jsonl）")
-    parser.add_argument("--count", type=int, default=200, help="Number of samples to export")
-    parser.add_argument("--status", default=None, help="Export 仅导出指定状态（默认全部）")
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Real announcement labeling helper")
+    parser.add_argument("--export", action="store_true")
+    parser.add_argument("--import", dest="import_file", action="store_true")
+    parser.add_argument("--merge", action="store_true")
+    parser.add_argument("--output", default="data/labeled/to_review.jsonl")
+    parser.add_argument("--input", default="data/labeled/to_review.jsonl")
+    parser.add_argument("--inputs", nargs="+")
+    parser.add_argument("--count", type=int, default=200)
+    parser.add_argument("--show-errors", type=int, default=20)
+    parser.add_argument("--status")
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="导出全部公告；默认只导出 needs_review=true",
+    )
     args = parser.parse_args()
 
     if args.export:
-        export_unlabeled(args.output, args.count, status=args.status)
+        export_unlabeled(
+            args.output,
+            args.count,
+            status=args.status,
+            review_only=not args.all,
+        )
     elif args.import_file:
-        import_labeled(args.input)
+        import_labeled(args.input, show_errors=max(args.show_errors, 0))
     elif args.merge:
         if not args.inputs:
-            print("--merge 需要 --inputs 文件列表")
-            parser.print_help()
-            sys.exit(1)
+            parser.error("--merge 需要 --inputs")
         merge_labeled(args.inputs, args.output)
     else:
         parser.print_help()

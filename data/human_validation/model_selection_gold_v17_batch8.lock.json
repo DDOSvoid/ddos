@@ -1,0 +1,60 @@
+{
+  "contract": "blind-model-selection-gold-lock-v1",
+  "frozen_at": "2026-08-21T19:40:14+08:00",
+  "eligible_for_model_selection_score": true,
+  "candidate_outputs_seen": false,
+  "model_requests_sent_before_gold_freeze": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "dataset_role": "train",
+  "evaluation_role": "model_selection_validation",
+  "document_count": 10,
+  "field_count": 107,
+  "supported_field_count": 75,
+  "absent_field_count": 24,
+  "ambiguous_field_count": 8,
+  "audit_item_ids": [
+    "bf02f7ec26cba3f9ece77d8284fea19fe9f5a2c20222e19a26f9e13174ca6016",
+    "6db76133f600bb4e1d575f086fb2a9611fbb96580a2b5fee7a3bfa03d4decc02",
+    "c724ac5aa786c07459df2766abed605a7a5d83a2f8801c64521027f85dec3ce6",
+    "cd903082a34efff83dcd6ada701c6dac1d5934ae28b6e30d4381213423addd0b",
+    "579ff5f1b2266e0f2f2e5b199cf213facf3d149f00611311a39d923afb7513c9",
+    "dbdc73f89153cc94ba611d58364bc448b0bcb4f3db42097eb49da050089dabf1",
+    "193bfd56ec08bf9db15354ba74d85a0f0394eeefa20b5638f9720a8f3ad57e56",
+    "49503a0efc1de935589ce4e78dd0a8ae70ada0dba4913645349714fa9a2013d3",
+    "64b10401170a068bd0f7f58b21ee4a8d273b973a5ecac2461dc282ac6e3f6467",
+    "1125271a2d49821d1540f30e1f88b54a5506237303e7121e8c21aa54f0b152f5"
+  ],
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "prompt_version": "structured-extraction-prompt-v17",
+  "prompt_sha256": "9fd6053975ec614ade931db4e3c3427a70fba0fee39a2a612674c9b203a39895",
+  "validator_contract_version": "evidence-validator-v8",
+  "gold_draft_path": "data/human_validation/model_selection_gold_batch8_draft.yaml",
+  "gold_draft_sha256": "d69ed0d53ea8eba4037f8e4038f97023a0dd457622fd8d74569cccea279014ea",
+  "pre_annotation_freeze_path": "config/llm_extraction_v17_frozen.yaml",
+  "pre_annotation_freeze_sha256": "113c4b2e89485f7c309c20d1e0b0bc4e5934cde63f43a530e4f8c71c766430f6",
+  "pre_annotation_target_field_count_estimate": 106,
+  "validated_requested_field_count": 107,
+  "freeze_metadata_erratum_path": "config/llm_extraction_v17_freeze_erratum.yaml",
+  "gold_validation": {
+    "requested_field_sets_complete": true,
+    "all_supported_quotes_exact": true,
+    "all_supported_facts_pass_evidence_validator": false,
+    "evidence_validator_rejection_count": 2,
+    "evidence_validator_rejections": [
+      {
+        "audit_item_id": "6db76133f600bb4e1d575f086fb2a9611fbb96580a2b5fee7a3bfa03d4decc02",
+        "field_name": "counterparty",
+        "reason": "entity normalized value is not fully supported for field counterparty"
+      },
+      {
+        "audit_item_id": "c724ac5aa786c07459df2766abed605a7a5d83a2f8801c64521027f85dec3ce6",
+        "field_name": "resulting_holding_ratio_pct",
+        "reason": "numeric evidence is not self-contained for field resulting_holding_ratio_pct"
+      }
+    ],
+    "all_supported_facts_pass_frozen_taxonomy": true,
+    "frozen_taxonomy_rejection_count": 0,
+    "maximum_quote_length": 40
+  }
+}

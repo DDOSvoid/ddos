@@ -29,13 +29,28 @@ data/ddos.db
 data/*.db
 data/*.db-shm
 data/*.db-wal
+data/backups/
+data/amazingdata/
+data/source_archive/
 
 # Models (large files) — clone 后运行 scripts/setup_model.py 复现
-models/
+models/*
+!models/tabular/
+models/tabular/*
+!models/tabular/README.md
+!models/timeseries/
+models/timeseries/*
+!models/timeseries/README.md
 *.pt
 *.bin
 *.safetensors
 *.pth
+
+# Tabular datasets/artifacts are generated locally; keep only their contracts.
+data/tabular/*
+!data/tabular/README.md
+data/timeseries/*
+!data/timeseries/README.md
 
 # Logs
 logs/

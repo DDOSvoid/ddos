@@ -1,0 +1,47 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-21T17:05:47+08:00"
+candidate: structured-extraction-prompt-v16
+validator_contract_version: evidence-validator-v7
+decision: FAIL
+promotion_allowed: false
+extraction_holdout_read_allowed: false
+downstream_feature_use_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  prompt_tuned_after_candidate_read: false
+  official_test_read_count: 0
+  future_data_read: false
+  market_targets_read: false
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v16_frozen.yaml
+  pre_annotation_freeze_sha256: 3067b963332aee337bcd0e4fef1cc166a43ebc52e9a002a29028fea8f8cac3ad
+  archived_previous_lock: data/human_validation/model_selection_gold_v15_batch6.lock.json
+  archived_previous_lock_sha256: e55713f7b43d81770ab1ebf15e875426079aa611c72d914ab97870c8a33974e7
+  gold_lock: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_lock_sha256: 1ae4461345c4a537bb6cc5d9143e10f09cb1f42423d42634291243aefa76c45d
+  gold_draft: data/human_validation/model_selection_gold_batch7_draft.yaml
+  gold_draft_sha256: 05776812908c57d6d6bb24046553af489224b7f3e07d2654267c4e0d4d89d857
+  candidate: data/llm_extraction/deepseek-v4-flash_4d6a21b4288c_evidence-validator-v7.jsonl
+  candidate_sha256: dd13aa17fc0d28fe57705a439e37100b2f3a5d32f5cb52eca6c895eb2240d854
+  review: data/validation/llm_extraction_v16_model_selection_review_10.json
+  review_sha256: 71d4a54219406c8c75dd740fdc7ae32b219552981c8f90c404dfb40110dabe5b
+  final_runner_sha256: 17e699924ddaa1195f85d57f99dff7c02c46c165ed1979a0f976e6d9aa8c79a7
+
+passed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+
+failed_gates:
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+next_action: >-
+  Retire batch 7 from independent scoring. Develop v17 only with
+  prompt-development data and consumed v16 feedback. Focus on exact-copy
+  evidence for dates and percentages, table-cell context, listed-company
+  contribution evidence, profit-effect sign convention, legal amount roles,
+  and a dedicated valuation-date/report-author contract. Freeze again before
+  selecting a new unread 2023 batch. Keep 2024, 2025, and 2026 data closed.

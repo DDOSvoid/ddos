@@ -15,8 +15,6 @@ Usage:
 
 import argparse
 import json
-import os
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -33,7 +31,12 @@ from transformers import (
     TrainingArguments,
 )
 
-from src.training.dataset import build_label_mappings, create_splits, load_labeled_data
+from src.training.dataset import (
+    build_label_mappings,
+    create_declared_splits,
+    load_verified_labels,
+)
+from src.training.label_contract import validate_temporal_roles
 
 
 def compute_metrics(eval_pred) -> dict:
@@ -66,7 +69,10 @@ def train(
 
     # ── 1. 加载数据 ─────────────────────────────────
     logger.info(f"Loading labeled data from {data_path}...")
-    texts, sub_labels, _ = load_labeled_data(data_path)
+    samples = load_verified_labels(data_path)
+    validate_temporal_roles(samples)
+    texts = [sample.text for sample in samples]
+    sub_labels = [sample.sub_category for sample in samples]
     unique_labels = sorted(set(sub_labels))
     label2id, id2label = build_label_mappings(unique_labels)
     num_labels = len(unique_labels)
@@ -75,8 +81,23 @@ def train(
     logger.info(f"Labels: {unique_labels}")
 
     # ── 2. 划分数据集 ───────────────────────────────
-    splits = create_splits(texts, sub_labels, label2id, random_state=random_state)
-    logger.info(f"Train: {len(splits['train'][0])}, Val: {len(splits['val'][0])}, Test: {len(splits['test'][0])}")
+    splits = create_declared_splits(samples, label2id)
+    train_labels = {
+        sample.sub_category for sample in samples if sample.dataset_role == "train"
+    }
+    held_out_labels = {
+        sample.sub_category for sample in samples if sample.dataset_role != "train"
+    }
+    missing_from_train = held_out_labels - train_labels
+    if missing_from_train:
+        raise ValueError(
+            "validation/test 中存在训练集从未见过的类别: "
+            + ", ".join(sorted(missing_from_train))
+        )
+    logger.info(
+        f"Train: {len(splits['train'][0])}, Val: {len(splits['val'][0])}, "
+        f"Test: {len(splits['test'][0])}"
+    )
 
     # ── 3. 加载 Tokenizer 和模型 ─────────────────────
     logger.info(f"Loading model: {model_name}")
@@ -121,7 +142,8 @@ def train(
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # transformers 5.x: warmup_ratio 已移除 → 换算为 warmup_steps；evaluation_strategy → eval_strategy
+    # transformers 5.x: warmup_ratio 已移除，换算为 warmup_steps；
+    # evaluation_strategy 已更名为 eval_strategy。
     steps_per_epoch = max(1, len(train_hf) // batch_size)
     total_steps = steps_per_epoch * num_epochs
     warmup_steps = max(1, int(total_steps * warmup_ratio))
@@ -173,7 +195,13 @@ def train(
     predictions = trainer.predict(test_hf)
     y_pred = np.argmax(predictions.predictions, axis=-1)
     y_true = predictions.label_ids
-    report = classification_report(y_true, y_pred, target_names=[id2label[i] for i in range(num_labels)])
+    report = classification_report(
+        y_true,
+        y_pred,
+        labels=list(range(num_labels)),
+        target_names=[id2label[i] for i in range(num_labels)],
+        zero_division=0,
+    )
     logger.info(f"\nClassification Report:\n{report}")
 
     # ── 8. 保存模型 ─────────────────────────────────
@@ -183,6 +211,23 @@ def train(
     # 保存 label 映射
     with open(output_path / "label_mapping.json", "w", encoding="utf-8") as f:
         json.dump({"label2id": label2id, "id2label": id2label}, f, ensure_ascii=False, indent=2)
+
+    with open(output_path / "training_manifest.json", "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "data_contract": "real-label-v1",
+                "data_path": str(Path(data_path).resolve()),
+                "samples": len(samples),
+                "train_samples": len(splits["train"][0]),
+                "validation_samples": len(splits["val"][0]),
+                "test_samples": len(splits["test"][0]),
+                "label_sources": sorted({sample.label_source for sample in samples}),
+                "split_strategy": "declared_strict_temporal",
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
     logger.info(f"Model saved to {output_path}")
     return str(output_path)

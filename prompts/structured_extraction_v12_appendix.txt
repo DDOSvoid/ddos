@@ -1,0 +1,6 @@
+以下规则补充并覆盖前述规则：
+1. 金额字段的normalized_value采用有符号CNY：明确“增加利润”为正数，明确“减少利润”或“损失”为负数。impairment_amount_cny表示计提规模本身，保持非负；profit_effect_cny表示对利润的方向性影响，减少利润必须为负。
+2. 金额字段明确写“无”“不存在”“未发生”时，可返回supported，normalized_value为0，证据必须同时包含否定词和该金额字段对应的事项，例如“无逾期担保”。不得把“尚未披露”“无法确定”解释为0。
+3. share_pledge的pledged_share_count提取本公告当前新增质押或解除质押动作涉及的股数；pledged_share_ratio_pct统一提取该股数占该持有人所持股份的比例，不提取占上市公司总股本比例。累计质押余额不替代本次动作值。解除质押时pledge_status引用解除动作，release_date提取明确解除日期。
+4. supporting_document中的金额、用途、审批状态等只有在当前正文逐字重述时才可supported；仅标题或所引用的其他文件暗示时仍须absent。
+5. subject_name优先为当前核心动作直接涉及的上市公司、子公司或唯一标的主体；多个并列主体且没有唯一核心主体时返回ambiguous。

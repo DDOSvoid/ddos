@@ -1,0 +1,165 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-21T15:55:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v14
+prompt_sha256: 776e4ec8f3fc2bde1ee92d71de298654759b8926d5fbfc11017fd473c9b6aa90
+validator_contract_version: evidence-validator-v4
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 1b2a080b3590be13a7cded06f6a3a50a8aba11e24a3bc16894db2f4b97984dbc
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "收到公司副董事长兼总经理黄克先生的辞职报告", unit: TEXT, evidence_quotes: ["收到公司副董事长兼总经理黄克先生的辞职报告"]}
+      event_date: {status: supported, normalized_value: "2023-10-10", unit: DATE, evidence_quotes: ["2023年10\n月10日"]}
+      counterparty: {status: absent, reason: "辞职事项不存在双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "广东甘化科工股份有限公司", unit: TEXT, evidence_quotes: ["广东甘化科工股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露辞职生效或经营影响的重大不确定性。"}
+      executive_name: {status: supported, normalized_value: "黄克", unit: TEXT, evidence_quotes: ["黄克先生"]}
+      position: {status: ambiguous, reason: "本次同时辞去董事、副董事长、专门委员会委员及总经理等多个职位，单值字段无唯一答案。"}
+      change_type: {status: supported, normalized_value: "申请辞去", unit: TEXT, evidence_quotes: ["申请辞去"]}
+      reason: {status: supported, normalized_value: "职务变动原因", unit: TEXT, evidence_quotes: ["职务变动原因"]}
+      successor: {status: absent, reason: "正文仅称将尽快补选和聘任，未指定继任者。"}
+
+  - audit_item_id: 750981417dcb1afac2fcfa4f076c862f4008a93b53971225e214e0f7d6343d13
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司董事会同意英可瑞智造增资扩股、 引入投资人", unit: TEXT, evidence_quotes: ["公司董事会同意英可瑞智造增资扩股、 引入投资人"]}
+      event_date: {status: supported, normalized_value: "2023-09-14", unit: DATE, evidence_quotes: ["2023年9月14日"]}
+      counterparty: {status: ambiguous, reason: "引入三名并列投资者，单值counterparty无唯一答案。"}
+      subject_name: {status: supported, normalized_value: "深圳市英可瑞智造有限公司", unit: TEXT, evidence_quotes: ["深圳市英可瑞智造有限公司"]}
+      uncertainty: {status: absent, reason: "正文未明确披露本次增资的重大未决结果或风险。"}
+      project_name: {status: supported, normalized_value: "英可瑞智造增资扩股、 引入投资人", unit: TEXT, evidence_quotes: ["英可瑞智造增资扩股、 引入投资人"]}
+      investment_amount_cny: {status: supported, normalized_value: "12750000", unit: CNY, evidence_quotes: ["公司以货币形式认缴新增出资 1,275.00万元"]}
+      ownership_ratio_pct: {status: supported, normalized_value: "65", unit: PCT, evidence_quotes: ["持股比例为65%"]}
+      funding_source: {status: absent, reason: "货币形式是出资方式，不是资金来源；正文未披露自有或募集等来源。"}
+      construction_period: {status: absent, reason: "增资事项不涉及建设期披露。"}
+
+  - audit_item_id: 0a20de11115aff144f8c2ca66c5a8b8c36070ce6e46116b05f50e7d7bce5aeac
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "提前全部归还至募集资金专用账户", unit: TEXT, evidence_quotes: ["提前全部归还至募集资金专用账户"]}
+      event_date: {status: supported, normalized_value: "2023-09-19", unit: DATE, evidence_quotes: ["2023 年 9 月 19 日"]}
+      counterparty: {status: absent, reason: "募集资金归还专户不是双边交易。"}
+      subject_name: {status: supported, normalized_value: "海南金盘智能科技股份有限公司", unit: TEXT, evidence_quotes: ["海南金盘智能科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "归还已完成，正文未披露重大不确定性。"}
+      project_name: {status: supported, normalized_value: "暂时补充流动资金", unit: TEXT, evidence_quotes: ["暂时补充流动资金"]}
+      fund_source: {status: supported, normalized_value: "闲置募集资金", unit: TEXT, evidence_quotes: ["闲置募集资金"]}
+      fund_amount_cny: {status: supported, normalized_value: "345219745.26", unit: CNY, evidence_quotes: ["人民币345,219,745.26\n元募集资金"]}
+      project_status: {status: supported, normalized_value: "提前全部归还至募集资金专用账户", unit: TEXT, evidence_quotes: ["提前全部归还至募集资金专用账户"]}
+      expected_benefit: {status: absent, reason: "当前归还动作未披露预期收益。"}
+      subsidiary_target: {status: absent, reason: "当前归还动作未涉及子公司实施主体。"}
+
+  - audit_item_id: 716eee3fba7b1723354d159a00abac9d8470c0d31c25341f5c16c0d20c8c4fd5
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "法院已受理，尚未开庭审理", unit: TEXT, evidence_quotes: ["法院已受理，尚未开庭审理"]}
+      event_date: {status: supported, normalized_value: "2023-08-10", unit: DATE, evidence_quotes: ["2023 年 8 月 10 日"]}
+      counterparty: {status: ambiguous, reason: "存在两个并列被告，单值counterparty无唯一答案。"}
+      subject_name: {status: supported, normalized_value: "湖南领湃科技股份有限公司", unit: TEXT, evidence_quotes: ["湖南领湃科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "具体影响具有不确定性", unit: TEXT, evidence_quotes: ["具体影响具有不确定性"]}
+      case_role: {status: supported, normalized_value: "原告", unit: TEXT, evidence_quotes: ["上市公司所处的当事人地位：原告"]}
+      case_stage: {status: supported, normalized_value: "法院已受理，尚未开庭审理", unit: TEXT, evidence_quotes: ["法院已受理，尚未开庭审理"]}
+      claim_amount_cny: {status: ambiguous, reason: "诉请包含欠款、暂计违约金以及未定诉讼和保全费用，正文未给出唯一合计金额。"}
+      judgment_amount_cny: {status: absent, reason: "案件尚未开庭且无判决金额。"}
+      provision_amount_cny: {status: absent, reason: "正文未披露计提预计负债或减值金额。"}
+      enforceability_uncertainty: {status: absent, reason: "正文披露的是案件结果和利润影响不确定性，并非判决执行或回款不确定性。"}
+
+  - audit_item_id: 896c22a40e9f1ba57910814b81185e9fc8439fb7294f94a686c799462f0a9c77
+    review_status: complete
+    upstream_document_role: supporting_document
+    fields:
+      event_stage: {status: supported, normalized_value: "同意推荐上海先惠自动化技术股份有限公司本次发行的股票在上海证券交易所上市交易", unit: TEXT, evidence_quotes: ["同意推荐上海先惠自动化技术股份有限公司本\n次发行的股票在上海证券交易所上市交易"]}
+      event_date: {status: ambiguous, reason: "正文仅有2023年9月月份及空白签章日，没有当前推荐动作的完整日期。"}
+      counterparty: {status: supported, normalized_value: "东兴证券股份有限公司", unit: TEXT, evidence_quotes: ["东兴证券股份有限公司"]}
+      subject_name: {status: supported, normalized_value: "上海先惠自动化技术股份有限公司", unit: TEXT, evidence_quotes: ["上海先惠自动化技术股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "本次发行存在发行募集资金不足甚至无法成功实施的风险", unit: TEXT, evidence_quotes: ["本次发行存在发行募集资金不足甚至无法成功实施的风险"]}
+      placement_amount_cny: {status: supported, normalized_value: "1050000000", unit: CNY, evidence_quotes: ["拟募集资金总额不超过 105,000.00 万元"]}
+      placement_share_count: {status: supported, normalized_value: "22800000", unit: SHARES, evidence_quotes: ["不超过 2,280.00 万股"]}
+      placement_price_cny_per_share: {status: ambiguous, reason: "最终发行价格尚待询价确定，仅披露动态下限。"}
+      purpose: {status: ambiguous, reason: "募集资金投向四个并列项目，单值purpose无唯一总括答案。"}
+      subscribers: {status: ambiguous, reason: "最终发行对象尚未确定，仅披露不超过35名的类型范围。"}
+      lockup_period: {status: supported, normalized_value: "6", unit: MONTHS, evidence_quotes: ["自发行结束之日起六个月内不得转让"]}
+      approval_status: {status: supported, normalized_value: "保荐机构同意推荐", unit: TEXT, evidence_quotes: ["保荐机构同意推荐"]}
+
+  - audit_item_id: feb60d47a0463b70db768eb53f3ffe64f8424b02376fad0cd9fdf2464b77895f
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司召开第七届董事会第三十七次会议审议通过上述事项", unit: TEXT, evidence_quotes: ["公司召开第七届董事会第三十七次\n会议审议通过上述事项"]}
+      event_date: {status: supported, normalized_value: "2023-09-05", unit: DATE, evidence_quotes: ["2023 年 9 月 5 日"]}
+      counterparty: {status: supported, normalized_value: "重庆连盛同辉科技有限公司", unit: TEXT, evidence_quotes: ["重庆连盛同辉科技有限公司"]}
+      subject_name: {status: supported, normalized_value: "重庆惠程未来智能电气有限公司", unit: TEXT, evidence_quotes: ["重庆惠程未来智能电气有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露本次关联交易的重大不确定性。"}
+      related_party: {status: supported, normalized_value: "重庆连盛同辉科技有限公司", unit: TEXT, evidence_quotes: ["重庆连盛同辉科技有限公司"]}
+      relationship: {status: supported, normalized_value: "公司间接控股股东绿发实业间接控制的公司", unit: TEXT, evidence_quotes: ["公司间接控股股东绿发实业间接控制的公司"]}
+      transaction_type: {status: supported, normalized_value: "工程总承包", unit: TEXT, evidence_quotes: ["工程总承包"]}
+      transaction_amount_cny: {status: supported, normalized_value: "18016106.39", unit: CNY, evidence_quotes: ["合同总价：人民币 18,016,106.39 元"]}
+      pricing_basis: {status: supported, normalized_value: "通过招标方式确定中标单位和中标价格", unit: TEXT, evidence_quotes: ["通过招标方式确定中标单位和中标价格"]}
+      approval_status: {status: supported, normalized_value: "本事项无需提交公司股东大会审议", unit: TEXT, evidence_quotes: ["本事项无需提交公司股东大会审议"]}
+
+  - audit_item_id: a26917e46fd4895cfb55d792f0dcb6e6b7d61e23d5a5c29d05570f97d9d64d12
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "2023 年半年度报告摘要", unit: TEXT, evidence_quotes: ["2023 年半年度报告摘要"]}
+      event_date: {status: ambiguous, reason: "封面日期未明确标注为董事会批准日或报告报出日。"}
+      counterparty: {status: absent, reason: "财务报告无双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "无锡江南奕帆电力传动科技股份有限公司", unit: TEXT, evidence_quotes: ["无锡江南奕帆电力传动科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "摘要未明确披露未经审计或其他重大财务不确定性。"}
+      revenue_cny: {status: supported, normalized_value: "85348376.01", unit: CNY, evidence_quotes: ["营业收入（元） 85,348,376.01"]}
+      revenue_yoy_pct: {status: supported, normalized_value: "-7.66", unit: PCT, evidence_quotes: ["85,348,376.01 92,431,365.92 -7.66%"]}
+      net_profit_cny: {status: supported, normalized_value: "27259282.26", unit: CNY, evidence_quotes: ["归属于上市公司股东的净利润（元） 27,259,282.26"]}
+      net_profit_yoy_pct: {status: supported, normalized_value: "-41.46", unit: PCT, evidence_quotes: ["27,259,282.26 46,563,108.69 -41.46%"]}
+      non_gaap_profit_cny: {status: supported, normalized_value: "26173627.37", unit: CNY, evidence_quotes: ["利润（元） 26,173,627.37"]}
+      operating_cashflow_cny: {status: supported, normalized_value: "2088034.81", unit: CNY, evidence_quotes: ["经营活动产生的现金流量净额（元） 2,088,034.81"]}
+
+  - audit_item_id: dc1ecf8fe287c251016fe160f11cd8221ac5c8319c19091c8e4b0dbee8090d02
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "股票已全部出售完毕并提前终止", unit: TEXT, evidence_quotes: ["股票已全部出售完毕并提前终止"]}
+      event_date: {status: ambiguous, reason: "正文仅称截至公告披露日完成，落款日不能替代实际出售完成日。"}
+      counterparty: {status: absent, reason: "出售通过市场完成，正文未披露具体交易对手。"}
+      subject_name: {status: supported, normalized_value: "浙江迪贝电气股份有限公司", unit: TEXT, evidence_quotes: ["浙江迪贝电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "出售和终止均已完成，无明确重大不确定性。"}
+      incentive_share_count: {status: supported, normalized_value: "874400", unit: SHARES, evidence_quotes: ["公司股票 874,400 股已全部出\n售完毕"]}
+      incentive_share_ratio_pct: {status: supported, normalized_value: "0.67", unit: PCT, evidence_quotes: ["占公司总股本的 0.67%"]}
+      grant_price_cny_per_share: {status: absent, reason: "当前出售终止动作未披露授予或行权价格。"}
+      performance_targets: {status: absent, reason: "当前出售终止动作未重述业绩目标。"}
+      recipient_count: {status: absent, reason: "当前出售终止动作未披露参与人数。"}
+      vesting_schedule: {status: absent, reason: "仅陈述历史锁定期届满，当前动作没有新的归属或行权安排。"}
+
+  - audit_item_id: 6f4e1f912d58640bc7575851f9c690d9711344876c4f954c2ac87e7f49542dcd
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "会议审议通过了", unit: TEXT, evidence_quotes: ["会议审议通过了"]}
+      event_date: {status: supported, normalized_value: "2023-08-29", unit: DATE, evidence_quotes: ["2023年8月29日"]}
+      counterparty: {status: absent, reason: "董事会选举不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "华瑞电器股份有限公司", unit: TEXT, evidence_quotes: ["华瑞电器股份有限公司"]}
+      uncertainty: {status: absent, reason: "选举已审议通过，未披露重大不确定性。"}
+      executive_name: {status: ambiguous, reason: "同时选举张波和邓乐坚两名人员，单值字段无唯一答案。"}
+      position: {status: ambiguous, reason: "同时涉及董事长、法定代表人和副董事长多个不同职位。"}
+      change_type: {status: supported, normalized_value: "选举", unit: TEXT, evidence_quotes: ["选举"]}
+      reason: {status: absent, reason: "正文未披露本次选举发生的原因。"}
+      successor: {status: ambiguous, reason: "存在两名并列当选人员且正文未界定单一继任关系。"}
+
+  - audit_item_id: 6c1eafcc73578469e64c8d2c726300b27dbe0d009163c11ad51885d8648f04c4
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "审议通过了 《关于对控股子公司增资的议案》", unit: TEXT, evidence_quotes: ["审议通过了 《关于对控股子公司增\n资的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-10-24", unit: DATE, evidence_quotes: ["2023 年 10 月 24\n日"]}
+      counterparty: {status: supported, normalized_value: "温州显丰企业管理服务有限公司", unit: TEXT, evidence_quotes: ["温州显丰企业管理服务有限公司"]}
+      subject_name: {status: supported, normalized_value: "浙江宏丰半导体新材料有限公司", unit: TEXT, evidence_quotes: ["浙江宏丰半导体新材料有限公司"]}
+      uncertainty: {status: absent, reason: "董事会已批准且正文未披露重大不确定性。"}
+      project_name: {status: supported, normalized_value: "对控股子公司增资", unit: TEXT, evidence_quotes: ["对控股子公司增资"]}
+      investment_amount_cny: {status: supported, normalized_value: "45000000", unit: CNY, evidence_quotes: ["公司以自有资金认缴4,500 万元"]}
+      ownership_ratio_pct: {status: supported, normalized_value: "75.375", unit: PCT, evidence_quotes: ["持股比例由51%增加至 75.375%"]}
+      funding_source: {status: supported, normalized_value: "公司自有资金", unit: TEXT, evidence_quotes: ["公司自有资金"]}
+      construction_period: {status: absent, reason: "当前增资公告未披露建设期。"}

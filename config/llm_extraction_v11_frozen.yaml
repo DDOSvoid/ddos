@@ -1,0 +1,61 @@
+contract: llm-extraction-frozen-candidate-v1
+frozen_at: "2026-08-21T15:20:00+08:00"
+status: superseded_after_source_only_protocol_audit
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed: false
+  market_targets_allowed: false
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v11
+  prompt_sha256: 17e9a39977ff4537c864acacce4b8e278a8e3358a92ce273e11e18543b3badf1
+  validator_contract_version: evidence-validator-v2
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: 14ee50dc96db22fade62886d5953d46cd37ab1ad7f04fa5c4f708ce08112b344
+  src/ml/llm_client.py: 6d433a7d39ffbf6a17f841926dbfbe99a007fc91c4e0d44cbb6ea5413f01378d
+  scripts/run_llm_extraction_candidates.py: ab344bdcebfa9968043f53f84409b114015a22ad10bae667f1124e669e7ffa48
+
+blind_gold_batch_3:
+  role: model_selection_validation
+  model_requests_allowed_before_gold_freeze: false
+  target_documents: 10
+  selection_note: "Nine source bodies retained unread from v10 batch plus one unseen replacement at position 20. Titles and categories may be used for stratification; source bodies define blindness."
+  audit_item_ids:
+    - 38bc080dc4f097c59b9707d18eeaac3bd71d197490839be04555807fabc875ab
+    - 6a6a770a3e385cac96be6f34b6a92cac47cb567ea3b32d0e1d3745ba4cec4d3d
+    - ba142d8122fd4b25ed034f7ccb6043d3ddca89f213aa42940dffe854e7d98686
+    - 086b7d8a511e5122e5e9176ced236404a943278454177223822cd38ea903171d
+    - d0f2800eb979909d25e723163ed9a41a6709c528b185ec1f59ddcb782fa1b6a9
+    - 2cbe65eba16fed44830ab14db0273e77995f997c07ae029686a65b808f172346
+    - f92b8764892999216a52c040ba346003cf51bc4d5716b28c1c06abf97b5e0475
+    - 716121463befc9741caf9776578df206d1e11c0e5c2773072ce47472897920a8
+    - e22747ed83685d4659e0fee0c508149a04054998fb4e59e39f78fdf807e2d93a
+    - 8569692b943d5b0b2ff2a00cd1c96f2b52ec0afe1c7a98a50932f41d26067ceb
+  consumed_for_protocol_clarification: true
+  model_requests_sent: false
+  reason_ineligible: "Source-only annotation exposed lexical-zero, share-ratio-denominator, and signed-profit-effect gaps; v12 was written afterward."
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_batch3_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_tuning_after_model_selection_read: false

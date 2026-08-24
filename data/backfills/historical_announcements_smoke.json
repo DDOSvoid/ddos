@@ -1,0 +1,29 @@
+{
+  "contract": "historical-announcement-backfill-v1",
+  "start_date": "2025-08-20",
+  "end_date": "2025-08-31",
+  "created_at": "2026-08-20T11:47:21.964652+00:00",
+  "metadata_only": true,
+  "completed_segments": {
+    "2025-08-20_2025-08-31_batch-000": {
+      "completed_at": "2026-08-20T11:47:23.117143+00:00",
+      "company_count": 10,
+      "api_items": 119,
+      "matched_items": 119,
+      "unmatched_items": 0,
+      "new_announcements": 119
+    }
+  },
+  "totals": {
+    "api_items": 119,
+    "matched_items": 119,
+    "unmatched_items": 0,
+    "new_announcements": 119
+  },
+  "updated_at": "2026-08-20T11:47:23.117154+00:00",
+  "progress": {
+    "completed": 1,
+    "total": 1
+  },
+  "finished_at": "2026-08-20T11:47:23.118403+00:00"
+}

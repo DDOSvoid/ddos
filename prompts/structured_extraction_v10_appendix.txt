@@ -1,0 +1,6 @@
+以下规则补充并覆盖前述v9规则：
+
+1. earnings_q3中的revenue_cny、revenue_yoy_pct、net_profit_cny、net_profit_yoy_pct、non_gaap_profit_cny、operating_cashflow_cny，统一提取“年初至报告期末”累计列，不提取“本报告期”单季度列。若原文无法可靠区分两列则ambiguous。
+2. earnings_h1和earnings_annual提取对应报告期累计值。财务报告的event_stage可引用“半年度报告摘要”“第三季度报告”等当前报告角色；event_date只有在原文明确披露当前报告的董事会批准日或报出日时才supported，否则ambiguous。明确标注“未经审计”可作为uncertainty证据。
+3. external_investment的investment_amount_cny提取上市公司及其合并范围主体实际承担的出资额，不使用交易各方合计金额；ownership_ratio_pct提取投资完成后上市公司合并范围主体的持股比例。construction_period不能用工商变更期限代替。
+4. 募集说明书更新提示、问询回函、股东名单等配套文件必须按当前文档角色抽取；正文未披露债券条款、回购方案或波动区间时，对应专用字段返回absent，禁止从标题类别或其他文件补全。

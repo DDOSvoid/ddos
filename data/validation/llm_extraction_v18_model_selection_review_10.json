@@ -1,0 +1,181 @@
+{
+  "contract": "llm-extraction-model-selection-review-v1",
+  "reviewed_at": "2026-08-22T21:49:29+08:00",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "prompt_version": "structured-extraction-prompt-v18",
+  "prompt_sha256": "b2f47d6fcafd3e004b92e07cd15626909125636cf8301ef50e9bde265e670805",
+  "validator_contract_version": "evidence-validator-v10",
+  "pre_annotation_freeze_sha256": "eeb66f61d74091e7c95e30f3109ad41dce6ba25a870d32cd34f5ed38d10c9625",
+  "gold_draft_sha256": "f95e7d4b5cf10dc1c92573422297cc22089cd133e2d2f4063cdcbcd4f1d0b925",
+  "gold_lock_sha256": "d905f7b5a0d1fb64144a7165920c015daef0f91b6cfe520fe196009c9777ef00",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_b2f47d6fcafd_evidence-validator-v10_blind-batch9.jsonl",
+  "candidate_sha256": "0c5430bbc7ec30de46572d612bcd68f96994dcd33fe6b7aaf5e6435076286ccc",
+  "candidate_file_contains_prompt_development_records": false,
+  "model_selection_records_selected_by_locked_ids": 10,
+  "documents": 10,
+  "fields": 105,
+  "gold_counts": {"supported": 73, "absent": 16, "ambiguous": 16},
+  "candidate_counts": {"supported": 76, "absent": 16, "ambiguous": 13},
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 10,
+  "usage": {
+    "prompt_tokens": 70920,
+    "prompt_cache_hit_tokens": 53760,
+    "prompt_cache_miss_tokens": 17160,
+    "completion_tokens": 11548,
+    "total_tokens": 82468
+  },
+  "metrics": {
+    "status_exact_accuracy": 0.8476,
+    "support_vs_abstain_accuracy": 0.8571,
+    "strict_field_accuracy": 0.5429,
+    "post_lock_human_semantic_field_accuracy": 0.8190,
+    "supported_semantic_precision": 0.8421,
+    "supported_semantic_recall": 0.8767,
+    "abstention_precision": 0.7931,
+    "abstention_recall": 0.7188,
+    "numeric_date_boolean_exact_accuracy": 0.8750
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 57,
+    "semantically_equivalent_non_exact_fields": 29,
+    "incorrect_fields": 19,
+    "equivalent": [
+      "af1adc3a:event_stage",
+      "af1adc3a:uncertainty",
+      "af1adc3a:net_profit_yoy_pct",
+      "81e46b82:event_stage",
+      "81e46b82:uncertainty",
+      "81e46b82:accounting_period",
+      "4e410ac5:event_stage",
+      "4e410ac5:guarantee_type",
+      "4e410ac5:guarantee_term",
+      "64b737b0:event_stage",
+      "64b737b0:uncertainty",
+      "64b737b0:business_type",
+      "64b737b0:instrument",
+      "64b737b0:business_period",
+      "ca53b9fe:event_stage",
+      "ca53b9fe:uncertainty",
+      "ca53b9fe:contract_period",
+      "ca53b9fe:performance_uncertainty",
+      "19cd5b49:event_stage",
+      "db226ddf:event_stage",
+      "db226ddf:uncertainty",
+      "db226ddf:project_name",
+      "db226ddf:performance_uncertainty",
+      "153b7356:event_stage",
+      "153b7356:uncertainty",
+      "ba142d81:event_stage",
+      "ba142d81:uncertainty",
+      "d494e58c:capacity",
+      "d494e58c:construction_period"
+    ],
+    "incorrect": [
+      {
+        "field": "81e46b82:event_date",
+        "reason": "Selected one subsidy receipt date although the current aggregate disclosure contains multiple receipt dates and no unique event date."
+      },
+      {
+        "field": "4e410ac5:guarantor",
+        "reason": "Abstained because the evidence span included an alias, although the listed company is the explicit guarantor."
+      },
+      {
+        "field": "64b737b0:counterparty",
+        "reason": "Returned a generic qualified-financial-institution class as a supported counterparty instead of abstaining."
+      },
+      {
+        "field": "64b737b0:maximum_amount_cny",
+        "reason": "Added a 2-billion-yuan notional-balance cap to a 60-million-yuan margin cap even though their measurement bases differ."
+      },
+      {
+        "field": "64b737b0:hedged_exposure",
+        "reason": "Abstained despite explicit foreign-currency receipts/payments, borrowings and silver-powder input exposure."
+      },
+      {
+        "field": "64b737b0:risk_controls",
+        "reason": "Returned only control-section headings rather than the disclosed exposure limits, matching rules, contract review and supervision controls."
+      },
+      {
+        "field": "ca53b9fe:event_date",
+        "reason": "Used the contract performance-period start date as the signing event date, which the document does not disclose."
+      },
+      {
+        "field": "19cd5b49:event_date",
+        "reason": "Abstained although every current release-of-pledge row identifies the same release date, 2023-02-06."
+      },
+      {
+        "field": "19cd5b49:counterparty",
+        "reason": "Returned absent rather than ambiguous even though the current releases identify two different pledgees."
+      },
+      {
+        "field": "19cd5b49:pledged_share_ratio_pct",
+        "reason": "Selected the first row's 2.21% although three current release rows have different holder-relative percentages and no aggregate percentage."
+      },
+      {
+        "field": "19cd5b49:release_date",
+        "reason": "Abstained because the table date evidence was not reconstructed with its row context, although all current rows show 2023-02-06."
+      },
+      {
+        "field": "db226ddf:counterparty",
+        "reason": "Abstained after failing to reconstruct the two explicitly named agreement counterparties from separate source spans."
+      },
+      {
+        "field": "153b7356:counterparty",
+        "reason": "Misclassified the two selling shareholders as transaction counterparties for an unexecuted market-reduction plan."
+      },
+      {
+        "field": "153b7356:holder_name",
+        "reason": "Returned a supported combined holder list although the scalar field has two independent holders and no unique holder."
+      },
+      {
+        "field": "153b7356:planned_share_count",
+        "reason": "Added two shareholders' separately disclosed plan limits into a synthetic total that is not stated in the document."
+      },
+      {
+        "field": "153b7356:progress",
+        "reason": "Abstained after inventing a continuous date-range quote; the two table cells do support the common plan window."
+      },
+      {
+        "field": "ba142d81:event_date",
+        "reason": "Used the announcement footer date for an aggregate multi-case disclosure whose current event date is not explicit."
+      },
+      {
+        "field": "d494e58c:event_stage",
+        "reason": "Returned only the bare verb 'approved' and omitted the subsidiary investment project that was approved."
+      },
+      {
+        "field": "d494e58c:uncertainty",
+        "reason": "Returned only two risk-section headings and omitted the disclosed schedule, cost, demand, price and battery-source risk content."
+      }
+    ]
+  },
+  "frozen_validator_audit": {
+    "gold_supported_fields_rejected_before_candidate_requests": 0,
+    "fields": [],
+    "changed_after_candidate_review": false,
+    "period_scalar_note": "The locked MONTHS and YEARS values canonicalize to 12 and 4. The candidate returned an equivalent TEXT period for hedging, so that field is semantic-equivalent but not numeric/unit exact.",
+    "note": "All 73 supported gold fields passed the frozen validator before candidate requests. No candidate implementation was changed after review."
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "supported_semantic_precision_min",
+      "abstention_recall_min",
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not open the 2024 extraction holdout and do not promote v18 to downstream prediction features."
+  }
+}

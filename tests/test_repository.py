@@ -4,12 +4,11 @@ from datetime import date
 
 import pytest
 
-from src.database.models import Announcement, Classification, Company
+from src.database.models import Announcement, Classification, ClassificationRevision, Company
 from src.database.repository import (
     AnnouncementRepository,
     ClassificationRepository,
     CompanyRepository,
-    ExtractedFieldRepository,
     ScoreRepository,
 )
 
@@ -223,6 +222,78 @@ class TestClassificationRepository:
         assert cls.industry == "电气设备"
         assert cls.industry_group == "新能源与电力"
         assert cls.confidence == pytest.approx(0.95)
+
+    def test_manual_review_preserves_revision(self, db_session):
+        ann = self._seed_announcement(db_session)
+        original = ClassificationRepository.upsert(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_q1",
+            confidence=0.42,
+            classification_source="model",
+            needs_review=True,
+        )
+        db_session.commit()
+
+        reviewed = ClassificationRepository.manual_review(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_h1",
+            reviewed_by="tester",
+            note="标题明确为半年报",
+            relevance="core_event",
+            expected_classification_id=original.id,
+        )
+        db_session.commit()
+
+        assert reviewed.sub_category == "earnings_h1"
+        assert reviewed.classification_source == "manual"
+        assert reviewed.review_status == "reviewed"
+        assert reviewed.needs_review is False
+        revision = db_session.query(ClassificationRevision).one()
+        assert revision.previous_sub_category == "earnings_q1"
+        assert revision.new_sub_category == "earnings_h1"
+        assert revision.changed_by == "tester"
+
+    def test_automatic_upsert_does_not_overwrite_manual_review(self, db_session):
+        ann = self._seed_announcement(db_session)
+        original = ClassificationRepository.upsert(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_q1",
+            confidence=0.42,
+            classification_source="model",
+            needs_review=True,
+        )
+        ClassificationRepository.manual_review(
+            db_session,
+            announcement_id=ann.id,
+            major_category="A",
+            sub_category="earnings_h1",
+            reviewed_by="tester",
+            expected_classification_id=original.id,
+        )
+        db_session.commit()
+
+        preserved = ClassificationRepository.upsert(
+            db_session,
+            announcement_id=ann.id,
+            major_category="B",
+            sub_category="forecast_performance",
+            confidence=0.995,
+            classification_source="rule",
+            rule_id="forecast_performance",
+        )
+        db_session.commit()
+
+        assert preserved.major_category == "A"
+        assert preserved.sub_category == "earnings_h1"
+        assert preserved.classification_source == "manual"
+        assert preserved.review_status == "reviewed"
+        assert preserved.reviewed_by == "tester"
 
 
 class TestScoreRepository:

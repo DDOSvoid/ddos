@@ -1,0 +1,99 @@
+schema_version: announcement-structured-evidence-v2
+description: >-
+  Causal, evidence-bound facts extracted from one immutable announcement source
+  snapshot. This schema intentionally contains no price direction or return label.
+
+common_fields:
+  - event_stage
+  - event_date
+  - counterparty
+  - subject_name
+  - uncertainty
+
+event_fields:
+  earnings_q1: [revenue_cny, revenue_yoy_pct, net_profit_cny, net_profit_yoy_pct, non_gaap_profit_cny, operating_cashflow_cny]
+  earnings_h1: [revenue_cny, revenue_yoy_pct, net_profit_cny, net_profit_yoy_pct, non_gaap_profit_cny, operating_cashflow_cny]
+  earnings_q3: [revenue_cny, revenue_yoy_pct, net_profit_cny, net_profit_yoy_pct, non_gaap_profit_cny, operating_cashflow_cny]
+  earnings_annual: [revenue_cny, revenue_yoy_pct, net_profit_cny, net_profit_yoy_pct, non_gaap_profit_cny, operating_cashflow_cny]
+  forecast_performance: [forecast_period, forecast_type, net_profit_lower_cny, net_profit_upper_cny, yoy_lower_pct, yoy_upper_pct, change_reason]
+  forecast_revision: [forecast_period, prior_forecast, revised_forecast, revision_direction, change_reason]
+  forecast_express: [revenue_cny, revenue_yoy_pct, net_profit_cny, net_profit_yoy_pct, total_assets_cny, net_assets_cny]
+  buyback: [plan_amount_lower_cny, plan_amount_upper_cny, price_cap_cny_per_share, completed_amount_cny, completed_share_count, completed_share_ratio_pct, purpose]
+  buyback_cancel: [cancelled_share_count, cancelled_share_ratio_pct, cancellation_reason, original_grant_price_cny_per_share, affected_people_count, registration_date]
+  equity_increase: [holder_name, planned_share_lower, planned_share_upper, planned_amount_lower_cny, planned_amount_upper_cny, progress]
+  equity_decrease: [holder_name, planned_share_count, planned_share_ratio_pct, completed_share_count, completed_share_ratio_pct, progress]
+  equity_change: [holder_name, change_type, changed_share_count, changed_share_ratio_pct, resulting_holding_ratio_pct, control_changed]
+  equity_incentive: [incentive_share_count, incentive_share_ratio_pct, grant_price_cny_per_share, performance_targets, recipient_count, vesting_schedule]
+  no_reduce_commitment: [holder_name, commitment_period, committed_share_count, committed_share_ratio_pct, extension]
+  share_pledge: [holder_name, pledged_share_count, pledged_share_ratio_pct, pledge_purpose, pledgee, pledge_status, release_date]
+  dividend: [cash_dividend_cny_per_10_shares, bonus_shares_per_10_shares, capitalized_shares_per_10_shares, record_date, ex_dividend_date]
+  lockup_expiry: [unlock_share_count, unlock_share_ratio_pct, listing_date, holder_count]
+  private_placement: [placement_amount_cny, placement_share_count, placement_price_cny_per_share, purpose, subscribers, lockup_period, approval_status]
+  convertible_bond: [bond_amount_cny, bond_term_years, coupon_rate_pct, conversion_price_cny_per_share, use_of_proceeds, credit_rating]
+  fundraising_usage: [project_name, fund_source, fund_amount_cny, project_status, expected_benefit, subsidiary_target]
+  guarantee: [guarantor, guaranteed_party, guarantee_amount_cny, guarantee_type, guarantee_term, cumulative_guarantee_ratio_pct, overdue_guarantee_amount_cny]
+  related_transaction: [related_party, relationship, transaction_type, transaction_amount_cny, pricing_basis, approval_status]
+  financial_assistance: [recipient, assistance_amount_cny, interest_rate_pct, term, guarantee_measures, related_party]
+  financing_credit: [financial_institution, credit_amount_cny, financing_type, term, interest_rate_pct, collateral]
+  hedging_derivatives: [business_type, instrument, maximum_amount_cny, hedged_exposure, business_period, risk_controls]
+  equity_financing: [financing_type, financing_amount_cny, issue_market, approval_status, application_date, use_of_proceeds]
+  treasury_management: [fund_amount_cny, product_type, financial_institution, investment_period, funding_source, expected_yield_pct]
+  entrusted_management: [manager, managed_asset, agreement_type, start_date, end_date, termination_reason, business_effect]
+  major_contract: [contract_amount_cny, annual_revenue_ratio_pct, contract_period, counterparty, performance_uncertainty]
+  bid_win: [bid_amount_cny, annual_revenue_ratio_pct, project_name, counterparty, performance_uncertainty]
+  government_subsidy: [subsidy_amount_cny, income_related_amount_cny, asset_related_amount_cny, accounting_period]
+  product_approval: [product_name, approval_name, approval_number, indication_or_use, commercialization_uncertainty]
+  project_commissioning: [project_name, capacity, investment_amount_cny, expected_revenue_contribution_cny, product_type]
+  strategic_cooperation: [partner_name, cooperation_scope, cooperation_period, partner_type, exclusivity, binding_status]
+  intellectual_property: [property_name, property_type, authorization_date, application_area, expected_business_effect]
+  project_progress: [project_name, project_stage, progress_summary, delay_reason, expected_completion_date, business_effect]
+  merger_acquisition: [transaction_asset, consideration_cny, ownership_ratio_pct, payment_method, transaction_stage, valuation_cny]
+  asset_sale: [transaction_asset, consideration_cny, book_value_cny, expected_gain_cny, ownership_ratio_pct, transaction_stage]
+  external_investment: [project_name, investment_amount_cny, ownership_ratio_pct, funding_source, construction_period]
+  project_investment: [project_name, investment_amount_cny, capacity, construction_period, expected_operation_date]
+  litigation: [case_role, case_stage, claim_amount_cny, judgment_amount_cny, provision_amount_cny, enforceability_uncertainty]
+  penalty: [authority, penalty_reason, fine_amount_cny, remedy_requirement, operational_effect]
+  investigation: [investigating_authority, investigated_subject, investigation_reason, investigation_stage]
+  debt_default: [default_amount_cny, default_ratio_pct, creditor, debt_type, default_reason, negotiation_status]
+  st_delisting_risk: [risk_type, trigger_condition, deadline, remediation_status]
+  bankruptcy_restructuring: [case_stage, applicant, court, claim_deadline, administrator, restructuring_plan, business_effect]
+  regulatory_action: [authority, action_type, subject, issue_summary, reply_deadline, remedy_requirement]
+  asset_impairment: [asset_type, impairment_amount_cny, profit_effect_cny, impairment_reason, reversibility]
+  trading_risk_warning: [risk_summary, valuation_risk, business_risk, volatility_period, company_clarification]
+  judicial_equity_action: [holder_name, action_type, affected_share_count, affected_share_ratio_pct, court, auction_date, control_effect]
+  tax_matter: [tax_type, payment_amount_cny, reporting_period, authority, penalty_amount_cny, profit_effect_cny]
+  executive_change: [executive_name, position, change_type, reason, successor]
+  controller_change: [new_controller, old_controller, change_method, transfer_ratio_pct, transfer_price_cny, regulatory_approval_required]
+  trading_halt_resume: [halt_reason, halt_date, resume_date, expected_duration]
+  abnormal_volatility: [volatility_period, volatility_type, company_explanation, regulatory_inquiry]
+  meeting_resolution: [meeting_type, meeting_date, resolution_summary, related_issue, approval_status]
+  investor_relations: [activity_date, activity_type, participants, topics_covered]
+  accounting_change: [change_type, effective_date, reason, affected_items, profit_effect_cny, retrospective_adjustment]
+  auditor_change: [old_auditor, new_auditor, change_type, reason, audit_fee_cny, approval_status]
+  operating_data: [reporting_period, revenue_cny, sales_volume, output_volume, yoy_change_pct, business_segment]
+  legal_opinion: [opinion_type, issuing_institution, subject_matter, conclusion, issuance_date]
+  routine_disclosure: []
+  supporting_document: []
+  corporate_admin: []
+  h_share_routine: []
+  other: []
+
+normalization_units:
+  - CNY
+  - CNY_PER_SHARE
+  - PCT
+  - SHARES
+  - COUNT
+  - DATE
+  - DAYS
+  - MONTHS
+  - YEARS
+  - TEXT
+  - BOOLEAN
+
+evidence_contract:
+  exact_character_offsets_required: true
+  exact_quote_required: true
+  minimum_evidence_spans_per_supported_fact: 1
+  unsupported_fact_must_abstain: true
+  document_source_hash_required: true

@@ -1,0 +1,42 @@
+{
+  "contract": "blind-model-selection-gold-lock-v1",
+  "frozen_at": "2026-08-21T16:02:00+08:00",
+  "eligible_for_model_selection_score": true,
+  "candidate_outputs_seen": false,
+  "model_requests_sent_before_gold_freeze": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "dataset_role": "train",
+  "evaluation_role": "model_selection_validation",
+  "document_count": 10,
+  "field_count": 107,
+  "supported_field_count": 67,
+  "absent_field_count": 27,
+  "ambiguous_field_count": 13,
+  "audit_item_ids": [
+    "1b2a080b3590be13a7cded06f6a3a50a8aba11e24a3bc16894db2f4b97984dbc",
+    "750981417dcb1afac2fcfa4f076c862f4008a93b53971225e214e0f7d6343d13",
+    "0a20de11115aff144f8c2ca66c5a8b8c36070ce6e46116b05f50e7d7bce5aeac",
+    "716eee3fba7b1723354d159a00abac9d8470c0d31c25341f5c16c0d20c8c4fd5",
+    "896c22a40e9f1ba57910814b81185e9fc8439fb7294f94a686c799462f0a9c77",
+    "feb60d47a0463b70db768eb53f3ffe64f8424b02376fad0cd9fdf2464b77895f",
+    "a26917e46fd4895cfb55d792f0dcb6e6b7d61e23d5a5c29d05570f97d9d64d12",
+    "dc1ecf8fe287c251016fe160f11cd8221ac5c8319c19091c8e4b0dbee8090d02",
+    "6f4e1f912d58640bc7575851f9c690d9711344876c4f954c2ac87e7f49542dcd",
+    "6c1eafcc73578469e64c8d2c726300b27dbe0d009163c11ad51885d8648f04c4"
+  ],
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "prompt_version": "structured-extraction-prompt-v14",
+  "prompt_sha256": "776e4ec8f3fc2bde1ee92d71de298654759b8926d5fbfc11017fd473c9b6aa90",
+  "validator_contract_version": "evidence-validator-v4",
+  "gold_draft_path": "data/human_validation/model_selection_gold_batch5_draft.yaml",
+  "gold_draft_sha256": "bff1a095385a27631fbea4684e84b728214e8792cd654333e05d87faac57549b",
+  "pre_annotation_freeze_path": "config/llm_extraction_v14_frozen.yaml",
+  "pre_annotation_freeze_sha256": "d7130e571c4c45b4d3542905a058d9171d9a93d6591fc83aa936dc5469f417c2",
+  "gold_validation": {
+    "requested_field_sets_complete": true,
+    "all_supported_quotes_exact": true,
+    "all_supported_facts_pass_candidate_validator": true,
+    "maximum_quote_length": 40
+  }
+}

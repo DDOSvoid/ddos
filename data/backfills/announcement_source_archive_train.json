@@ -1,0 +1,8 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "last_announcement_db_id": 46987,
+  "processed": 70,
+  "failures": [],
+  "updated_at": "2026-08-21T03:44:18.109043+00:00"
+}

@@ -16,7 +16,7 @@ Disclosure-Driven Opportunity Scanner — A 股上市公司公告自动化分析
   Preprocessor ─── 文本清洗（HTML → 纯文本规范化）
         │
         ▼
-  Classifier ─── BERT 微调分类（A-G 大类 + 30 子类，置信度校准）
+  Classifier ─── 标题规则 + BERT 决策层（A-G/X + 30+ 子类，可拒绝分类）
         │
         ▼
   Extractor ─── DeepSeek 字段提取（按分类路由提示词，批量结构化）
@@ -99,7 +99,7 @@ python scripts/run_pipeline.py --date 2026-08-08 --stages report
 
 ### 7. 本地 Web 界面
 
-启动只读展示前端（仪表盘 / 公告列表 / 单条详情 / 日报查看器）：
+启动本地展示与复核前端（仪表盘 / 公告列表 / 单条详情 / 人工复核 / 日报查看器）：
 
 ```powershell
 # 首次需安装 Web 依赖（fastapi/uvicorn/jinja2/markdown）
@@ -113,8 +113,9 @@ python scripts/run_web.py --port 9000
 python scripts/run_web.py --db-url "sqlite:///data/empty.db"
 ```
 
-- 界面**只读**，不会改动管线数据。
-- 仪表盘统计卡 + 分类/行业/方向分布图；公告列表支持按日期、行业域、大类、方向、状态、关键词筛选与分页；详情页展示分类置信度、四维评分与 LLM 提取字段；日报查看器把 `data/reports/*.md` 渲染为网页。
+- 公告列表支持按日期、行业域、大类、子类、复核状态、分类来源、方向、状态和关键词筛选。
+- 详情页可以人工确认或修正分类；每次操作写入 `classification_revisions`，保留原类别、修订人和备注。
+- 首次启动会为旧数据库幂等补充 V2 审计字段，旧分类值不会被自动覆盖。
 - ECharts 已本地化（`src/web/static/vendor/echarts.min.js`），离线可用；文件缺失时自动降级为纯表格展示。
 
 ## 模型构建与复现
@@ -130,11 +131,23 @@ python scripts/generate_seed_data.py
 # 2. 微调 BERT（models/bert-classifier）
 python -m src.training.train_classifier --data data/labeled/seed.jsonl --output models/bert-classifier
 
-# 3. 温度校准（锐化 softmax 置信度 → temperature.json）
+# 3. 温度校准（必须使用独立的真实公告验证集）
 python scripts/calibrate_temperature.py
 ```
 
-> **第 3 步不能省**：种子模型 30 类间 softmax 偏平，top-1 置信度仅 0.1~0.25，不校准会被 `extraction_min_confidence=0.6`（`config.yaml`）全部挡掉，提取阶段空转。校准产物 `temperature.json` 与权重一起在 `models/` 下。
+> 不要用纯合成验证集锐化生产置信度。当前决策层会保存 top-2 间隔，并对低置信度、低间隔结果主动拒绝分类；真实验证集建立前，模型独立结果默认进入复核队列。
+
+### 分类审计与安全应用规则
+
+```powershell
+# 默认只读：统计规则覆盖、冲突和建议修改样例
+python scripts/audit_classifications.py
+
+# 显式应用高精度规则；执行前自动备份数据库，并写修订历史
+python scripts/audit_classifications.py --apply-rules
+```
+
+`--apply-rules` 只应用标题规则，不批量应用模型拒绝结果。人工确认仍通过详情页完成。
 
 辅助诊断脚本：
 
@@ -193,7 +206,7 @@ pipeline:
 |------|--------|------|
 | `.env` | 密钥（gitignore） | Tushare token、DeepSeek key |
 | `config/config.yaml` | 业务参数 + 模型 | `pipeline.*`、`models.extraction.model`、`scoring.*` |
-| `config/event_types.yaml` | A-G 分类体系 + 每类提取字段 | 30 子类定义 |
+| `config/event_types.yaml` | A-G/X 分类体系 + 每类提取字段 | 30+ 子类定义 |
 | `config/tracked_companies.yaml` | 试点跟踪公司名单 | — |
 
 ## 评分公式
@@ -227,7 +240,7 @@ credibility ∈ [0.0, 1.0]    ← 来源可信度 × 数据完整度（填了/�
 ddos/
 ├── config/                      # 配置文件
 │   ├── config.yaml              # 主配置（模型/管线/评分）
-│   ├── event_types.yaml         # A-G 事件分类体系（30 子类）
+│   ├── event_types.yaml         # A-G/X 事件分类体系（含其他出口）
 │   ├── industries.yaml          # 申万一级行业 → 行业域（18 域）
 │   └── tracked_companies.yaml   # 跟踪公司名单
 ├── src/
@@ -241,7 +254,7 @@ ddos/
 │   │   ├── scorer.py            # 规则评分引擎
 │   │   ├── reporter.py          # 每日报告 + 深度分析
 │   │   └── orchestrator.py      # 管线编排器
-│   ├── web/                     # 只读展示前端（FastAPI + Jinja2）
+│   ├── web/                     # 本地展示与人工复核前端
 │   │   ├── app.py               # create_app() 工厂
 │   │   ├── routes.py            # 路由（仪表盘/公告/日报）
 │   │   ├── labels.py            # 中文标签映射
@@ -264,9 +277,10 @@ ddos/
 │   ├── generate_seed_data.py    # 合成种子训练数据
 │   ├── calibrate_temperature.py # 温度校准
 │   ├── check_confidence.py      # 置信度诊断
+│   ├── audit_classifications.py # 只读审计 / 安全应用标题规则
 │   ├── seed_database.py         # 初始化数据库 + 股票列表
 │   └── label_data.py            # 数据标注助手
-├── tests/                       # 测试（97 passed, 2 skipped）
+├── tests/                       # 测试（120 passed, 2 skipped）
 ├── notebooks/                   # Jupyter 探索
 ├── data/                        # 运行时数据（gitignore）
 └── models/                      # 训练好的模型（gitignore，setup_model.py 复现）
@@ -275,7 +289,7 @@ ddos/
 ## 运行测试
 
 ```powershell
-python -m pytest tests/ -q        # 全部测试（97 passed, 2 skipped）
+python -m pytest tests/ -q        # 全部测试（120 passed, 2 skipped）
 python -m pytest tests/ -v        # 详细输出
 ```
 

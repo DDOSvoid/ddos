@@ -1,0 +1,120 @@
+contract: causal-timeseries-daily-v1
+split_contract: causal-impact-split-v2
+development_contract: causal-multimodel-development-v1
+
+directories:
+  source: src/prediction/timeseries
+  data: data/timeseries
+  models: models/timeseries
+
+sampling:
+  feature_frequency: daily
+  decision_point: daily_preopen
+  historical_announcement_time_precision: date_only
+  market_daily_rule: "trade_date must be strictly earlier than announcement published_date"
+  daily_bar_available_time: "15:05:00"
+  sequence_lookbacks_sessions: [5, 20, 60]
+  maximum_sequence_sessions: 60
+  minimum_history_sessions: 20
+  minimum_valid_stock_sessions: 15
+  intraday_candidate_frequency: 15min
+  intraday_prediction_status: blocked_pending_authoritative_announcement_timestamp
+  intraday_upgrade_rule: "Create a versioned timing-v2 contract; never mutate daily-v1 in place."
+
+model_families:
+  baselines:
+    - logistic_regression
+  baseline_candidates:
+    logistic_regression:
+      c_values: [0.1, 1.0, 10.0]
+      class_weights: [none, balanced]
+  sequence_candidates:
+    - small_tcn
+  sequence_candidate_gate: stable_oof_increment_over_causal_baseline
+
+features:
+  allowed_groups:
+    - lagged_stock_returns
+    - lagged_benchmark_returns
+    - lagged_excess_returns
+    - lagged_volatility
+    - lagged_range_and_gap
+    - lagged_volume_and_amount
+    - market_regime
+    - missing_and_suspension_masks
+  required_availability_metadata: true
+  normalization:
+    causal_per_sequence_allowed: true
+    fold_train_fitted_allowed: true
+    full_sample_fitted_allowed: false
+  forbidden_exact:
+    - target
+    - actual_direction
+    - entry_date
+    - exit_date
+    - entry_price
+    - exit_price
+    - stock_return
+    - benchmark_return
+    - excess_return
+    - outcome_available_at
+    - future_return
+    - future_excess_return
+    - future_high
+    - future_low
+    - future_realized_volatility
+    - future_downside_return
+  forbidden_prefixes:
+    - target_
+    - label_
+    - future_
+    - outcome_
+    - post_announcement_
+
+labels:
+  stored_separately_from_features: true
+  direction:
+    name: actual_direction
+    positive_when: excess_return > 0
+    horizons_sessions: [1, 3, 5]
+  economic_value:
+    name: excess_return
+    feature_use_forbidden: true
+
+training:
+  eligible_role: train
+  date_start: "2023-01-01"
+  date_end: "2024-12-31"
+  split_strategy: expanding_window
+  random_split_allowed: false
+  fit_preprocessors_on_fold_train_only: true
+  outcome_must_mature_by_fold_end: true
+
+evaluation:
+  horizons_sessions: [1, 3, 5]
+  minimum_oof_bullish_signals_per_horizon: 300
+  bullish_wilson_lower_must_exceed: 0.50
+  minimum_folds_with_bullish_hit_rate_above_half: 2
+  minimum_worst_fold_bullish_hit_rate: 0.48
+  cost_adjusted_mean_excess_return_ci_lower_must_exceed: 0.0
+  brier_score_must_beat_constant_base_rate: true
+  incremental_oof_improvement_over_table_required: true
+  incremental_comparison_requires_identical_samples_and_folds: true
+
+official_test:
+  date_start: "2025-01-01"
+  date_end: "2025-08-19"
+  requires_frozen_model_features_preprocessors_thresholds: true
+  read_limit: 1
+  tuning_after_read_allowed: false
+
+quarantine:
+  date_start: "2025-08-20"
+  date_end: "2025-12-31"
+  fitting_allowed: false
+  model_selection_allowed: false
+
+forward_validation:
+  date_start: "2026-01-01"
+  training_allowed: false
+  model_selection_allowed: false

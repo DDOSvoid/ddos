@@ -1,0 +1,22 @@
+contract: llm-extraction-frozen-candidate-v1
+frozen_at: "2026-08-21T15:30:00+08:00"
+status: superseded_before_blind_source_review
+
+candidate:
+  model: deepseek-v4-flash
+  prompt_version: structured-extraction-prompt-v12
+  prompt_sha256: b4fe2c279f255c317c21150ed0f119e4a8076e9ec99f63b9d88ff33f026e2a43
+  validator_contract_version: evidence-validator-v3
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+protocol_note:
+  source_bodies_read_after_freeze: 0
+  model_requests_sent: false
+  reason_superseded: "Category-specific scalar definitions were completed from schema and sampling metadata before any selected source body was opened."
+
+data_boundary:
+  official_test_read_count: 0
+  future_data_allowed: false
+  market_targets_allowed: false

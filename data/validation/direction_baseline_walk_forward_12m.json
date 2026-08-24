@@ -1,0 +1,55 @@
+{
+  "contract": "walk-forward-direction-baseline-v1",
+  "created_at": "2026-08-20T12:00:54.201895+00:00",
+  "predictor": "frozen event_types direction_baseline sign",
+  "warning": "research baseline, not live historical predictions",
+  "minimum_matured_samples_per_subcategory": 20,
+  "ranking_rule": "bullish only; Wilson 95% historical hit-rate lower bound > 0.5",
+  "by_horizon": {
+    "1": {
+      "matured_targets": 46679,
+      "directional_predictions": 7184,
+      "directional_accuracy": 0.4937360801781737,
+      "bullish_candidates": 5579,
+      "bullish_hit_rate": 0.48557089084065247,
+      "ranked_bullish": 1076,
+      "ranked_bullish_hit_rate": 0.483271375464684,
+      "bullish_rejected_insufficient_history": 253,
+      "bullish_rejected_accuracy_lower_bound": 4250,
+      "ranked_category_counts": {
+        "buyback": 151,
+        "equity_incentive": 627,
+        "convertible_bond": 298
+      }
+    },
+    "3": {
+      "matured_targets": 46475,
+      "directional_predictions": 7132,
+      "directional_accuracy": 0.49228827818283794,
+      "bullish_candidates": 5535,
+      "bullish_hit_rate": 0.4800361336946703,
+      "ranked_bullish": 498,
+      "ranked_bullish_hit_rate": 0.5481927710843374,
+      "bullish_rejected_insufficient_history": 317,
+      "bullish_rejected_accuracy_lower_bound": 4720,
+      "ranked_category_counts": {
+        "buyback": 498
+      }
+    },
+    "5": {
+      "matured_targets": 46276,
+      "directional_predictions": 7079,
+      "directional_accuracy": 0.48184771860432263,
+      "bullish_candidates": 5489,
+      "bullish_hit_rate": 0.46748041537620694,
+      "ranked_bullish": 520,
+      "ranked_bullish_hit_rate": 0.4115384615384615,
+      "bullish_rejected_insufficient_history": 370,
+      "bullish_rejected_accuracy_lower_bound": 4599,
+      "ranked_category_counts": {
+        "equity_incentive": 379,
+        "buyback": 141
+      }
+    }
+  }
+}

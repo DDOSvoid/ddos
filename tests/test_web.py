@@ -319,6 +319,34 @@ def test_announcement_detail_404(client):
     assert resp.status_code == 404
 
 
+def test_manual_classification_review(client):
+    import re
+
+    detail_link = client.get("/announcements", params={"keyword": "第一季度"})
+    ann_id = int(re.search(r"/announcements/(\d+)", detail_link.text).group(1))
+    detail = client.get(f"/announcements/{ann_id}")
+    classification_id = int(
+        re.search(r'name="classification_id" value="(\d+)"', detail.text).group(1)
+    )
+
+    resp = client.post(
+        f"/announcements/{ann_id}/classification",
+        content=(
+            f"classification_id={classification_id}&"
+            "classification_choice=A%3Aearnings_h1&"
+            "reviewed_by=tester&review_note=%E6%A0%87%E9%A2%98%E7%A1%AE%E8%AE%A4"
+        ),
+        headers={"content-type": "application/x-www-form-urlencoded"},
+        follow_redirects=True,
+    )
+
+    assert resp.status_code == 200
+    assert "分类复核结果已保存" in resp.text
+    assert "reviewed" in resp.text
+    assert "earnings_q1" in resp.text
+    assert "earnings_h1" in resp.text
+
+
 # ── 日报 ───────────────────────────────────────────────────────
 
 

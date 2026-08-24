@@ -1,0 +1,27 @@
+{
+  "contract": "temporal-classification-v1",
+  "batch_id": "oot_20260820",
+  "status": "predictions_locked",
+  "frozen_at": "2026-08-20T08:45:25.602400+00:00",
+  "database": "D:\\ddosvoid\\ddos\\data\\ddos.db",
+  "data_cutoff": "2026-08-15",
+  "validation_start": "2026-08-16",
+  "announcements_at_freeze": 1894,
+  "git_head": "54d03ccffdaac8b5aafb22d4582a0d3f13849cd7",
+  "frozen_file_sha256": {
+    "src/pipeline/classification_rules.py": "857ad1b39ad398ba97aa833646d2cc9d25b9fc37b40d2800802c086a0f3e33e8",
+    "config/event_types.yaml": "09b3191c0b8c780da64eabd1bdb4acec9b572200f12da2c568ff44a2b83f165d",
+    "src/ml/classifier_wrapper.py": "d636b79aaa0971be8f27c796fd32312a8aae213cae64b635e1b49ecceaf4a3b9",
+    "src/pipeline/classifier.py": "024b24601eecd7c1a6b306e89e7e2e281a0db2122cf2eb940a3a94c24422ae00"
+  },
+  "rules_must_not_change_before_prediction_lock": true,
+  "validation_end": "2026-08-20",
+  "prediction_count": 467,
+  "predictions_locked_at": "2026-08-20T08:53:54.614336+00:00",
+  "predictions_sha256": "4e880f20853d40c65ee1382811f13fb6d61dd7bf421c239cc2ff4dbbc8d246fd",
+  "blind_review_sha256_at_creation": "92bc875b6e357796c54f2b0ebeef0476d6af499d4f1024681f1a00d06fbb8f7d",
+  "blind_review_enriched_at": "2026-08-20T08:55:42.873228+00:00",
+  "blind_review_enriched_sha256": "92bc875b6e357796c54f2b0ebeef0476d6af499d4f1024681f1a00d06fbb8f7d",
+  "blind_review_full_text_fetched": 0,
+  "blind_review_full_text_failed": 0
+}

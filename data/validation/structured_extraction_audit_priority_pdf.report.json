@@ -1,0 +1,75 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "started_at": "2026-08-21T04:16:24.482262+00:00",
+  "completed_at": "2026-08-21T04:22:37.784614+00:00",
+  "dataset_role": "train",
+  "development_contract": "causal-multimodel-development-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "announcements_selected": 150,
+  "pdf_mode": "archive",
+  "content_source": "pdf",
+  "only_accepted": true,
+  "relevances": [
+    "core_event"
+  ],
+  "rate_limit_per_minute": 30,
+  "refresh": false,
+  "counts": {
+    "skipped_existing": 14,
+    "processed": 150,
+    "created": 129,
+    "identical_existing": 0,
+    "content_chars": 1762918,
+    "content_pages": 2069,
+    "pdf_archived": 129,
+    "failed": 7
+  },
+  "unresolved_failures": [
+    {
+      "announcement_db_id": 84958,
+      "announcement_id": "AN202310231602718242",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    },
+    {
+      "announcement_db_id": 89327,
+      "announcement_id": "AN202311291612752817",
+      "error_type": "ValueError",
+      "error": "static attachment response is not a PDF"
+    },
+    {
+      "announcement_db_id": 91139,
+      "announcement_id": "AN202312221614831776",
+      "error_type": "ValueError",
+      "error": "PDF page 15 has no extractable text"
+    },
+    {
+      "announcement_db_id": 112525,
+      "announcement_id": "AN202404261631444417",
+      "error_type": "ValueError",
+      "error": "PDF page 1 has no extractable text"
+    },
+    {
+      "announcement_db_id": 119693,
+      "announcement_id": "AN202407011637135123",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    },
+    {
+      "announcement_db_id": 126393,
+      "announcement_id": "AN202409091639801806",
+      "error_type": "ValueError",
+      "error": "PDF page 46 has no extractable text"
+    },
+    {
+      "announcement_db_id": 134292,
+      "announcement_id": "AN202412261641440775",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    }
+  ]
+}

@@ -1,0 +1,693 @@
+{
+  "contract": "historical-announcement-backfill-v1",
+  "start_date": "2025-08-20",
+  "end_date": "2026-07-16",
+  "created_at": "2026-08-20T11:47:37.062936+00:00",
+  "metadata_only": true,
+  "completed_segments": {
+    "2025-08-20_2025-08-31_batch-000": {
+      "completed_at": "2026-08-20T11:47:45.147539+00:00",
+      "company_count": 50,
+      "api_items": 777,
+      "matched_items": 777,
+      "unmatched_items": 0,
+      "new_announcements": 658
+    },
+    "2025-08-20_2025-08-31_batch-001": {
+      "completed_at": "2026-08-20T11:47:51.044855+00:00",
+      "company_count": 50,
+      "api_items": 595,
+      "matched_items": 595,
+      "unmatched_items": 0,
+      "new_announcements": 595
+    },
+    "2025-08-20_2025-08-31_batch-002": {
+      "completed_at": "2026-08-20T11:47:59.175538+00:00",
+      "company_count": 50,
+      "api_items": 789,
+      "matched_items": 789,
+      "unmatched_items": 0,
+      "new_announcements": 789
+    },
+    "2025-08-20_2025-08-31_batch-003": {
+      "completed_at": "2026-08-20T11:48:07.115170+00:00",
+      "company_count": 50,
+      "api_items": 757,
+      "matched_items": 757,
+      "unmatched_items": 0,
+      "new_announcements": 757
+    },
+    "2025-08-20_2025-08-31_batch-004": {
+      "completed_at": "2026-08-20T11:48:14.131344+00:00",
+      "company_count": 50,
+      "api_items": 656,
+      "matched_items": 656,
+      "unmatched_items": 0,
+      "new_announcements": 656
+    },
+    "2025-08-20_2025-08-31_batch-005": {
+      "completed_at": "2026-08-20T11:48:23.339198+00:00",
+      "company_count": 50,
+      "api_items": 884,
+      "matched_items": 884,
+      "unmatched_items": 0,
+      "new_announcements": 884
+    },
+    "2025-08-20_2025-08-31_batch-006": {
+      "completed_at": "2026-08-20T11:48:31.961280+00:00",
+      "company_count": 47,
+      "api_items": 846,
+      "matched_items": 846,
+      "unmatched_items": 0,
+      "new_announcements": 846
+    },
+    "2025-09-01_2025-09-30_batch-000": {
+      "completed_at": "2026-08-20T11:48:36.816154+00:00",
+      "company_count": 50,
+      "api_items": 498,
+      "matched_items": 498,
+      "unmatched_items": 0,
+      "new_announcements": 498
+    },
+    "2025-09-01_2025-09-30_batch-001": {
+      "completed_at": "2026-08-20T11:48:40.940178+00:00",
+      "company_count": 50,
+      "api_items": 338,
+      "matched_items": 338,
+      "unmatched_items": 0,
+      "new_announcements": 338
+    },
+    "2025-09-01_2025-09-30_batch-002": {
+      "completed_at": "2026-08-20T11:48:45.994663+00:00",
+      "company_count": 50,
+      "api_items": 465,
+      "matched_items": 465,
+      "unmatched_items": 0,
+      "new_announcements": 465
+    },
+    "2025-09-01_2025-09-30_batch-003": {
+      "completed_at": "2026-08-20T11:48:49.957883+00:00",
+      "company_count": 50,
+      "api_items": 351,
+      "matched_items": 351,
+      "unmatched_items": 0,
+      "new_announcements": 351
+    },
+    "2025-09-01_2025-09-30_batch-004": {
+      "completed_at": "2026-08-20T11:48:55.026427+00:00",
+      "company_count": 50,
+      "api_items": 467,
+      "matched_items": 467,
+      "unmatched_items": 0,
+      "new_announcements": 467
+    },
+    "2025-09-01_2025-09-30_batch-005": {
+      "completed_at": "2026-08-20T11:48:59.541150+00:00",
+      "company_count": 50,
+      "api_items": 436,
+      "matched_items": 436,
+      "unmatched_items": 0,
+      "new_announcements": 436
+    },
+    "2025-09-01_2025-09-30_batch-006": {
+      "completed_at": "2026-08-20T11:49:06.715670+00:00",
+      "company_count": 47,
+      "api_items": 566,
+      "matched_items": 566,
+      "unmatched_items": 0,
+      "new_announcements": 566
+    },
+    "2025-10-01_2025-10-31_batch-000": {
+      "completed_at": "2026-08-20T11:49:12.774138+00:00",
+      "company_count": 50,
+      "api_items": 565,
+      "matched_items": 565,
+      "unmatched_items": 0,
+      "new_announcements": 565
+    },
+    "2025-10-01_2025-10-31_batch-001": {
+      "completed_at": "2026-08-20T11:49:20.320004+00:00",
+      "company_count": 50,
+      "api_items": 734,
+      "matched_items": 734,
+      "unmatched_items": 0,
+      "new_announcements": 734
+    },
+    "2025-10-01_2025-10-31_batch-002": {
+      "completed_at": "2026-08-20T11:49:27.344810+00:00",
+      "company_count": 50,
+      "api_items": 678,
+      "matched_items": 678,
+      "unmatched_items": 0,
+      "new_announcements": 678
+    },
+    "2025-10-01_2025-10-31_batch-003": {
+      "completed_at": "2026-08-20T11:49:32.853503+00:00",
+      "company_count": 50,
+      "api_items": 515,
+      "matched_items": 515,
+      "unmatched_items": 0,
+      "new_announcements": 515
+    },
+    "2025-10-01_2025-10-31_batch-004": {
+      "completed_at": "2026-08-20T11:49:38.834822+00:00",
+      "company_count": 50,
+      "api_items": 557,
+      "matched_items": 557,
+      "unmatched_items": 0,
+      "new_announcements": 557
+    },
+    "2025-10-01_2025-10-31_batch-005": {
+      "completed_at": "2026-08-20T11:49:44.878201+00:00",
+      "company_count": 50,
+      "api_items": 551,
+      "matched_items": 551,
+      "unmatched_items": 0,
+      "new_announcements": 551
+    },
+    "2025-10-01_2025-10-31_batch-006": {
+      "completed_at": "2026-08-20T11:49:48.309387+00:00",
+      "company_count": 47,
+      "api_items": 326,
+      "matched_items": 326,
+      "unmatched_items": 0,
+      "new_announcements": 326
+    },
+    "2025-11-01_2025-11-30_batch-000": {
+      "completed_at": "2026-08-20T11:49:54.440972+00:00",
+      "company_count": 50,
+      "api_items": 582,
+      "matched_items": 582,
+      "unmatched_items": 0,
+      "new_announcements": 582
+    },
+    "2025-11-01_2025-11-30_batch-001": {
+      "completed_at": "2026-08-20T11:50:01.859076+00:00",
+      "company_count": 50,
+      "api_items": 657,
+      "matched_items": 657,
+      "unmatched_items": 0,
+      "new_announcements": 657
+    },
+    "2025-11-01_2025-11-30_batch-002": {
+      "completed_at": "2026-08-20T11:50:08.560141+00:00",
+      "company_count": 50,
+      "api_items": 589,
+      "matched_items": 589,
+      "unmatched_items": 0,
+      "new_announcements": 589
+    },
+    "2025-11-01_2025-11-30_batch-003": {
+      "completed_at": "2026-08-20T11:50:12.394624+00:00",
+      "company_count": 50,
+      "api_items": 389,
+      "matched_items": 389,
+      "unmatched_items": 0,
+      "new_announcements": 389
+    },
+    "2025-11-01_2025-11-30_batch-004": {
+      "completed_at": "2026-08-20T11:50:16.521067+00:00",
+      "company_count": 50,
+      "api_items": 381,
+      "matched_items": 381,
+      "unmatched_items": 0,
+      "new_announcements": 381
+    },
+    "2025-11-01_2025-11-30_batch-005": {
+      "completed_at": "2026-08-20T11:50:20.970654+00:00",
+      "company_count": 50,
+      "api_items": 438,
+      "matched_items": 438,
+      "unmatched_items": 0,
+      "new_announcements": 438
+    },
+    "2025-11-01_2025-11-30_batch-006": {
+      "completed_at": "2026-08-20T11:50:23.467127+00:00",
+      "company_count": 47,
+      "api_items": 210,
+      "matched_items": 210,
+      "unmatched_items": 0,
+      "new_announcements": 210
+    },
+    "2025-12-01_2025-12-31_batch-000": {
+      "completed_at": "2026-08-20T11:50:27.921664+00:00",
+      "company_count": 50,
+      "api_items": 422,
+      "matched_items": 422,
+      "unmatched_items": 0,
+      "new_announcements": 422
+    },
+    "2025-12-01_2025-12-31_batch-001": {
+      "completed_at": "2026-08-20T11:50:36.071294+00:00",
+      "company_count": 50,
+      "api_items": 755,
+      "matched_items": 755,
+      "unmatched_items": 0,
+      "new_announcements": 755
+    },
+    "2025-12-01_2025-12-31_batch-002": {
+      "completed_at": "2026-08-20T11:50:43.761265+00:00",
+      "company_count": 50,
+      "api_items": 728,
+      "matched_items": 728,
+      "unmatched_items": 0,
+      "new_announcements": 728
+    },
+    "2025-12-01_2025-12-31_batch-003": {
+      "completed_at": "2026-08-20T11:50:48.663787+00:00",
+      "company_count": 50,
+      "api_items": 469,
+      "matched_items": 469,
+      "unmatched_items": 0,
+      "new_announcements": 469
+    },
+    "2025-12-01_2025-12-31_batch-004": {
+      "completed_at": "2026-08-20T11:50:54.701841+00:00",
+      "company_count": 50,
+      "api_items": 596,
+      "matched_items": 596,
+      "unmatched_items": 0,
+      "new_announcements": 596
+    },
+    "2025-12-01_2025-12-31_batch-005": {
+      "completed_at": "2026-08-20T11:50:59.688926+00:00",
+      "company_count": 50,
+      "api_items": 489,
+      "matched_items": 489,
+      "unmatched_items": 0,
+      "new_announcements": 489
+    },
+    "2025-12-01_2025-12-31_batch-006": {
+      "completed_at": "2026-08-20T11:51:04.229577+00:00",
+      "company_count": 47,
+      "api_items": 400,
+      "matched_items": 400,
+      "unmatched_items": 0,
+      "new_announcements": 400
+    },
+    "2026-01-01_2026-01-31_batch-000": {
+      "completed_at": "2026-08-20T11:51:08.220682+00:00",
+      "company_count": 50,
+      "api_items": 355,
+      "matched_items": 355,
+      "unmatched_items": 0,
+      "new_announcements": 355
+    },
+    "2026-01-01_2026-01-31_batch-001": {
+      "completed_at": "2026-08-20T11:51:12.722094+00:00",
+      "company_count": 50,
+      "api_items": 407,
+      "matched_items": 407,
+      "unmatched_items": 0,
+      "new_announcements": 407
+    },
+    "2026-01-01_2026-01-31_batch-002": {
+      "completed_at": "2026-08-20T11:51:16.721321+00:00",
+      "company_count": 50,
+      "api_items": 391,
+      "matched_items": 391,
+      "unmatched_items": 0,
+      "new_announcements": 391
+    },
+    "2026-01-01_2026-01-31_batch-003": {
+      "completed_at": "2026-08-20T11:51:19.679602+00:00",
+      "company_count": 50,
+      "api_items": 277,
+      "matched_items": 277,
+      "unmatched_items": 0,
+      "new_announcements": 277
+    },
+    "2026-01-01_2026-01-31_batch-004": {
+      "completed_at": "2026-08-20T11:51:22.713793+00:00",
+      "company_count": 50,
+      "api_items": 252,
+      "matched_items": 252,
+      "unmatched_items": 0,
+      "new_announcements": 252
+    },
+    "2026-01-01_2026-01-31_batch-005": {
+      "completed_at": "2026-08-20T11:51:26.736682+00:00",
+      "company_count": 50,
+      "api_items": 367,
+      "matched_items": 367,
+      "unmatched_items": 0,
+      "new_announcements": 367
+    },
+    "2026-01-01_2026-01-31_batch-006": {
+      "completed_at": "2026-08-20T11:51:29.715966+00:00",
+      "company_count": 47,
+      "api_items": 270,
+      "matched_items": 270,
+      "unmatched_items": 0,
+      "new_announcements": 270
+    },
+    "2026-02-01_2026-02-28_batch-000": {
+      "completed_at": "2026-08-20T11:51:32.146027+00:00",
+      "company_count": 50,
+      "api_items": 201,
+      "matched_items": 201,
+      "unmatched_items": 0,
+      "new_announcements": 201
+    },
+    "2026-02-01_2026-02-28_batch-001": {
+      "completed_at": "2026-08-20T11:51:34.210427+00:00",
+      "company_count": 50,
+      "api_items": 184,
+      "matched_items": 184,
+      "unmatched_items": 0,
+      "new_announcements": 184
+    },
+    "2026-02-01_2026-02-28_batch-002": {
+      "completed_at": "2026-08-20T11:51:36.700629+00:00",
+      "company_count": 50,
+      "api_items": 226,
+      "matched_items": 226,
+      "unmatched_items": 0,
+      "new_announcements": 226
+    },
+    "2026-02-01_2026-02-28_batch-003": {
+      "completed_at": "2026-08-20T11:51:38.150411+00:00",
+      "company_count": 50,
+      "api_items": 141,
+      "matched_items": 141,
+      "unmatched_items": 0,
+      "new_announcements": 141
+    },
+    "2026-02-01_2026-02-28_batch-004": {
+      "completed_at": "2026-08-20T11:51:39.672104+00:00",
+      "company_count": 50,
+      "api_items": 142,
+      "matched_items": 142,
+      "unmatched_items": 0,
+      "new_announcements": 142
+    },
+    "2026-02-01_2026-02-28_batch-005": {
+      "completed_at": "2026-08-20T11:51:42.232441+00:00",
+      "company_count": 50,
+      "api_items": 201,
+      "matched_items": 201,
+      "unmatched_items": 0,
+      "new_announcements": 201
+    },
+    "2026-02-01_2026-02-28_batch-006": {
+      "completed_at": "2026-08-20T11:51:44.714964+00:00",
+      "company_count": 47,
+      "api_items": 233,
+      "matched_items": 233,
+      "unmatched_items": 0,
+      "new_announcements": 233
+    },
+    "2026-03-01_2026-03-31_batch-000": {
+      "completed_at": "2026-08-20T11:51:49.319126+00:00",
+      "company_count": 50,
+      "api_items": 443,
+      "matched_items": 443,
+      "unmatched_items": 0,
+      "new_announcements": 443
+    },
+    "2026-03-01_2026-03-31_batch-001": {
+      "completed_at": "2026-08-20T11:51:58.068986+00:00",
+      "company_count": 50,
+      "api_items": 849,
+      "matched_items": 849,
+      "unmatched_items": 0,
+      "new_announcements": 849
+    },
+    "2026-03-01_2026-03-31_batch-002": {
+      "completed_at": "2026-08-20T11:52:05.043736+00:00",
+      "company_count": 50,
+      "api_items": 690,
+      "matched_items": 690,
+      "unmatched_items": 0,
+      "new_announcements": 690
+    },
+    "2026-03-01_2026-03-31_batch-003": {
+      "completed_at": "2026-08-20T11:52:09.107761+00:00",
+      "company_count": 50,
+      "api_items": 381,
+      "matched_items": 381,
+      "unmatched_items": 0,
+      "new_announcements": 381
+    },
+    "2026-03-01_2026-03-31_batch-004": {
+      "completed_at": "2026-08-20T11:52:15.726465+00:00",
+      "company_count": 50,
+      "api_items": 605,
+      "matched_items": 605,
+      "unmatched_items": 0,
+      "new_announcements": 605
+    },
+    "2026-03-01_2026-03-31_batch-005": {
+      "completed_at": "2026-08-20T11:52:19.641941+00:00",
+      "company_count": 50,
+      "api_items": 384,
+      "matched_items": 384,
+      "unmatched_items": 0,
+      "new_announcements": 384
+    },
+    "2026-03-01_2026-03-31_batch-006": {
+      "completed_at": "2026-08-20T11:52:24.716202+00:00",
+      "company_count": 47,
+      "api_items": 456,
+      "matched_items": 456,
+      "unmatched_items": 0,
+      "new_announcements": 456
+    },
+    "2026-04-01_2026-04-30_batch-000": {
+      "completed_at": "2026-08-20T11:52:41.934241+00:00",
+      "company_count": 50,
+      "api_items": 1612,
+      "matched_items": 1612,
+      "unmatched_items": 0,
+      "new_announcements": 1612
+    },
+    "2026-04-01_2026-04-30_batch-001": {
+      "completed_at": "2026-08-20T11:52:56.835138+00:00",
+      "company_count": 50,
+      "api_items": 1417,
+      "matched_items": 1417,
+      "unmatched_items": 0,
+      "new_announcements": 1417
+    },
+    "2026-04-01_2026-04-30_batch-002": {
+      "completed_at": "2026-08-20T11:53:15.814842+00:00",
+      "company_count": 50,
+      "api_items": 1734,
+      "matched_items": 1734,
+      "unmatched_items": 0,
+      "new_announcements": 1734
+    },
+    "2026-04-01_2026-04-30_batch-003": {
+      "completed_at": "2026-08-20T11:53:33.986545+00:00",
+      "company_count": 50,
+      "api_items": 1706,
+      "matched_items": 1706,
+      "unmatched_items": 0,
+      "new_announcements": 1706
+    },
+    "2026-04-01_2026-04-30_batch-004": {
+      "completed_at": "2026-08-20T11:53:50.537382+00:00",
+      "company_count": 50,
+      "api_items": 1586,
+      "matched_items": 1586,
+      "unmatched_items": 0,
+      "new_announcements": 1586
+    },
+    "2026-04-01_2026-04-30_batch-005": {
+      "completed_at": "2026-08-20T11:54:10.348443+00:00",
+      "company_count": 50,
+      "api_items": 1880,
+      "matched_items": 1880,
+      "unmatched_items": 0,
+      "new_announcements": 1880
+    },
+    "2026-04-01_2026-04-30_batch-006": {
+      "completed_at": "2026-08-20T11:54:25.979141+00:00",
+      "company_count": 47,
+      "api_items": 1463,
+      "matched_items": 1463,
+      "unmatched_items": 0,
+      "new_announcements": 1463
+    },
+    "2026-05-01_2026-05-31_batch-000": {
+      "completed_at": "2026-08-20T11:54:29.284520+00:00",
+      "company_count": 50,
+      "api_items": 345,
+      "matched_items": 345,
+      "unmatched_items": 0,
+      "new_announcements": 345
+    },
+    "2026-05-01_2026-05-31_batch-001": {
+      "completed_at": "2026-08-20T11:54:33.346530+00:00",
+      "company_count": 50,
+      "api_items": 391,
+      "matched_items": 391,
+      "unmatched_items": 0,
+      "new_announcements": 391
+    },
+    "2026-05-01_2026-05-31_batch-002": {
+      "completed_at": "2026-08-20T11:54:37.877020+00:00",
+      "company_count": 50,
+      "api_items": 426,
+      "matched_items": 426,
+      "unmatched_items": 0,
+      "new_announcements": 426
+    },
+    "2026-05-01_2026-05-31_batch-003": {
+      "completed_at": "2026-08-20T11:54:42.377225+00:00",
+      "company_count": 50,
+      "api_items": 420,
+      "matched_items": 420,
+      "unmatched_items": 0,
+      "new_announcements": 420
+    },
+    "2026-05-01_2026-05-31_batch-004": {
+      "completed_at": "2026-08-20T11:54:46.390850+00:00",
+      "company_count": 50,
+      "api_items": 378,
+      "matched_items": 378,
+      "unmatched_items": 0,
+      "new_announcements": 378
+    },
+    "2026-05-01_2026-05-31_batch-005": {
+      "completed_at": "2026-08-20T11:54:51.094923+00:00",
+      "company_count": 50,
+      "api_items": 410,
+      "matched_items": 410,
+      "unmatched_items": 0,
+      "new_announcements": 410
+    },
+    "2026-05-01_2026-05-31_batch-006": {
+      "completed_at": "2026-08-20T11:54:55.054667+00:00",
+      "company_count": 47,
+      "api_items": 382,
+      "matched_items": 382,
+      "unmatched_items": 0,
+      "new_announcements": 382
+    },
+    "2026-06-01_2026-06-30_batch-000": {
+      "completed_at": "2026-08-20T11:54:59.095579+00:00",
+      "company_count": 50,
+      "api_items": 365,
+      "matched_items": 365,
+      "unmatched_items": 0,
+      "new_announcements": 365
+    },
+    "2026-06-01_2026-06-30_batch-001": {
+      "completed_at": "2026-08-20T11:55:04.156419+00:00",
+      "company_count": 50,
+      "api_items": 398,
+      "matched_items": 398,
+      "unmatched_items": 0,
+      "new_announcements": 398
+    },
+    "2026-06-01_2026-06-30_batch-002": {
+      "completed_at": "2026-08-20T11:55:08.168058+00:00",
+      "company_count": 50,
+      "api_items": 395,
+      "matched_items": 395,
+      "unmatched_items": 0,
+      "new_announcements": 395
+    },
+    "2026-06-01_2026-06-30_batch-003": {
+      "completed_at": "2026-08-20T11:55:11.225997+00:00",
+      "company_count": 50,
+      "api_items": 261,
+      "matched_items": 261,
+      "unmatched_items": 0,
+      "new_announcements": 261
+    },
+    "2026-06-01_2026-06-30_batch-004": {
+      "completed_at": "2026-08-20T11:55:14.857107+00:00",
+      "company_count": 50,
+      "api_items": 323,
+      "matched_items": 323,
+      "unmatched_items": 0,
+      "new_announcements": 323
+    },
+    "2026-06-01_2026-06-30_batch-005": {
+      "completed_at": "2026-08-20T11:55:17.702284+00:00",
+      "company_count": 50,
+      "api_items": 294,
+      "matched_items": 294,
+      "unmatched_items": 0,
+      "new_announcements": 294
+    },
+    "2026-06-01_2026-06-30_batch-006": {
+      "completed_at": "2026-08-20T11:55:20.712277+00:00",
+      "company_count": 47,
+      "api_items": 271,
+      "matched_items": 271,
+      "unmatched_items": 0,
+      "new_announcements": 271
+    },
+    "2026-07-01_2026-07-16_batch-000": {
+      "completed_at": "2026-08-20T11:55:23.363383+00:00",
+      "company_count": 50,
+      "api_items": 190,
+      "matched_items": 190,
+      "unmatched_items": 0,
+      "new_announcements": 190
+    },
+    "2026-07-01_2026-07-16_batch-001": {
+      "completed_at": "2026-08-20T11:55:25.085816+00:00",
+      "company_count": 50,
+      "api_items": 196,
+      "matched_items": 196,
+      "unmatched_items": 0,
+      "new_announcements": 196
+    },
+    "2026-07-01_2026-07-16_batch-002": {
+      "completed_at": "2026-08-20T11:55:27.593981+00:00",
+      "company_count": 50,
+      "api_items": 204,
+      "matched_items": 204,
+      "unmatched_items": 0,
+      "new_announcements": 204
+    },
+    "2026-07-01_2026-07-16_batch-003": {
+      "completed_at": "2026-08-20T11:55:30.058165+00:00",
+      "company_count": 50,
+      "api_items": 203,
+      "matched_items": 203,
+      "unmatched_items": 0,
+      "new_announcements": 203
+    },
+    "2026-07-01_2026-07-16_batch-004": {
+      "completed_at": "2026-08-20T11:55:31.512008+00:00",
+      "company_count": 50,
+      "api_items": 133,
+      "matched_items": 133,
+      "unmatched_items": 0,
+      "new_announcements": 133
+    },
+    "2026-07-01_2026-07-16_batch-005": {
+      "completed_at": "2026-08-20T11:55:33.680426+00:00",
+      "company_count": 50,
+      "api_items": 164,
+      "matched_items": 164,
+      "unmatched_items": 0,
+      "new_announcements": 164
+    },
+    "2026-07-01_2026-07-16_batch-006": {
+      "completed_at": "2026-08-20T11:55:34.629073+00:00",
+      "company_count": 47,
+      "api_items": 90,
+      "matched_items": 90,
+      "unmatched_items": 0,
+      "new_announcements": 90
+    }
+  },
+  "totals": {
+    "api_items": 44548,
+    "matched_items": 44548,
+    "unmatched_items": 0,
+    "new_announcements": 44429
+  },
+  "updated_at": "2026-08-20T11:55:34.629083+00:00",
+  "progress": {
+    "completed": 84,
+    "total": 84
+  },
+  "finished_at": "2026-08-20T11:55:34.631268+00:00"
+}

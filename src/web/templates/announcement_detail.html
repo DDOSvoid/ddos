@@ -6,6 +6,8 @@
 {% block content %}
 <p class="back-link"><a href="{{ url_for('announcements') }}">← 返回公告列表</a></p>
 
+{% if saved %}<div class="notice notice-success">分类复核结果已保存，并写入修订历史。</div>{% endif %}
+
 <div class="detail-header">
   <h1 class="page-title">{{ ann.title }}</h1>
   <div class="detail-meta">
@@ -29,8 +31,19 @@
       <dt>大类</dt><dd>{{ category_label(cls.major_category) }}</dd>
       <dt>子类</dt><dd>{{ sub_label(cls.major_category, cls.sub_category) }}</dd>
       <dt>置信度</dt><dd>{{ '%d%%' | format(cls.confidence * 100) }}</dd>
+      <dt>分类来源</dt><dd>{{ cls.classification_source or 'legacy' }}</dd>
+      <dt>复核状态</dt><dd>{{ cls.review_status or 'pending' }}{% if cls.needs_review %} · 待复核{% endif %}</dd>
+      <dt>文档类型</dt><dd>{{ cls.document_type or '-' }}</dd>
+      <dt>相关性</dt><dd>{{ cls.relevance or '-' }}</dd>
+      <dt>规则</dt><dd>{{ cls.rule_id or '-' }}</dd>
+      <dt>原模型结果</dt><dd>{{ cls.model_sub_category or '-' }}{% if cls.model_confidence is not none %} ({{ '%d%%' | format(cls.model_confidence * 100) }}){% endif %}</dd>
+      <dt>模型间隔</dt><dd>{% if cls.model_margin is not none %}{{ '%.3f' | format(cls.model_margin) }}{% else %}-{% endif %}</dd>
+      <dt>复核原因</dt><dd>{{ cls.review_reason or '-' }}</dd>
       <dt>行业（申万一级）</dt><dd>{{ cls.industry or '-' }}</dd>
       <dt>行业域</dt><dd>{{ cls.industry_group or '-' }}</dd>
+      <dt>辅助标签</dt><dd>
+        {% for tag in cls.secondary_tag_list %}<span class="tag">{{ tag }}</span>{% else %}-{% endfor %}
+      </dd>
     </dl>
     {% else %}
     <p class="empty">未分类</p>
@@ -59,6 +72,52 @@
     {% endif %}
   </section>
 </div>
+
+{% if cls %}
+<section class="panel review-panel">
+  <h2>人工复核</h2>
+  <form method="post" action="{{ url_for('review_announcement_classification', announcement_id=ann.id) }}" class="review-form">
+    <input type="hidden" name="classification_id" value="{{ cls.id }}">
+    <label>正确分类
+      <select name="classification_choice" required>
+        {% for major_code, major_label, subcategories in classification_groups %}
+        <optgroup label="{{ major_code }} · {{ major_label }}">
+          {% for sub_code, sub_def in subcategories %}
+          <option value="{{ major_code }}:{{ sub_code }}" {{ 'selected' if cls.major_category == major_code and cls.sub_category == sub_code }}>
+            {{ sub_def.label }}
+          </option>
+          {% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </label>
+    <label>复核人
+      <input type="text" name="reviewed_by" value="{{ cls.reviewed_by or 'local-user' }}" maxlength="100">
+    </label>
+    <label class="review-note">备注
+      <input type="text" name="review_note" value="{{ cls.review_note or '' }}" placeholder="可选：修正依据或说明" maxlength="500">
+    </label>
+    <button type="submit" class="btn">确认并保存</button>
+  </form>
+
+  {% if revisions %}
+  <h3 class="subheading">修订历史</h3>
+  <table class="table table-compact">
+    <thead><tr><th>时间</th><th>修改</th><th>操作人</th><th>备注</th></tr></thead>
+    <tbody>
+      {% for rev in revisions %}
+      <tr>
+        <td>{{ rev.changed_at }}</td>
+        <td>{{ rev.previous_major_category }}/{{ rev.previous_sub_category }} → {{ rev.new_major_category }}/{{ rev.new_sub_category }}</td>
+        <td>{{ rev.changed_by or '-' }}</td>
+        <td>{{ rev.note or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endif %}
 
 <section class="panel">
   <h2>提取字段</h2>

@@ -95,6 +95,32 @@ class TestCdpFetchContent:
         content = client.fetch_announcement_content("AN123")
         assert content["notice_content"] == "公告正文"
         assert content["attach_url_web"] == "https://pdf.x"
+        assert content["_content_complete"] is True
+
+    def test_fetch_content_assembles_all_pages(self):
+        client = _make_client(MagicMock())
+        client._fetch_json = MagicMock(
+            side_effect=[
+                {
+                    "data": {
+                        "art_code": "AN123",
+                        "page_size": 2,
+                        "notice_content": "first",
+                    }
+                },
+                {
+                    "data": {
+                        "art_code": "AN123",
+                        "page_size": 2,
+                        "notice_content": "second",
+                    }
+                },
+            ]
+        )
+        content = client.fetch_announcement_content("AN123")
+        assert content["notice_content"] == "firstsecond"
+        assert content["_content_pages_fetched"] == 2
+        assert content["_content_complete"] is True
 
     def test_fetch_content_error_returns_empty(self):
         page = MagicMock()

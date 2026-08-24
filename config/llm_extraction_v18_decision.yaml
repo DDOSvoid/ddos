@@ -1,0 +1,47 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-22T21:49:29+08:00"
+candidate: structured-extraction-prompt-v18
+validator_contract_version: evidence-validator-v10
+decision: FAIL
+promotion_allowed: false
+extraction_holdout_read_allowed: false
+downstream_feature_use_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  prompt_tuned_after_candidate_read: false
+  official_test_read_count: 0
+  future_data_read: false
+  market_targets_read: false
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v18_frozen.yaml
+  pre_annotation_freeze_sha256: eeb66f61d74091e7c95e30f3109ad41dce6ba25a870d32cd34f5ed38d10c9625
+  archived_previous_lock: data/human_validation/model_selection_gold_v17_batch8.lock.json
+  archived_previous_lock_sha256: b2d46e9aa1c6571187e84b492a90fa3622a1298e05322491362575616055d39e
+  gold_lock: data/human_validation/model_selection_gold_batch1.lock.json
+  gold_lock_sha256: d905f7b5a0d1fb64144a7165920c015daef0f91b6cfe520fe196009c9777ef00
+  gold_draft: data/human_validation/model_selection_gold_batch9_draft.yaml
+  gold_draft_sha256: f95e7d4b5cf10dc1c92573422297cc22089cd133e2d2f4063cdcbcd4f1d0b925
+  candidate: data/llm_extraction/deepseek-v4-flash_b2f47d6fcafd_evidence-validator-v10_blind-batch9.jsonl
+  candidate_sha256: 0c5430bbc7ec30de46572d612bcd68f96994dcd33fe6b7aaf5e6435076286ccc
+  review: data/validation/llm_extraction_v18_model_selection_review_10.json
+  review_sha256: c9ac382c65bc5ad3fbeace7b1d01acaa47db9bc39e51afec751d490c903ef01e
+  final_runner_sha256: 3cd75482040071c34ef7865429994a4b01854899493848039279858c110d7b1f
+
+passed_gates: []
+
+failed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+next_action: >-
+  Retire batch 9 from independent scoring. Develop v19 only from 2023
+  prompt-development data and consumed v18 feedback. Separate scalar fields from
+  multi-valued disclosures, reject synthetic sums across incompatible rows or
+  measurement bases, recover repeated table dates and split entity evidence,
+  require substantive risk/control content rather than section headings, and
+  expand bare-stage rejection to approval verbs. Keep 2024, 2025, and 2026 data closed.

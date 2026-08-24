@@ -1,0 +1,25 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "started_at": "2026-08-21T03:39:01.287959+00:00",
+  "completed_at": "2026-08-21T03:44:18.110056+00:00",
+  "dataset_role": "train",
+  "development_contract": "causal-multimodel-development-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "announcements_selected": 50,
+  "pdf_mode": "none",
+  "only_accepted": true,
+  "refresh": false,
+  "counts": {
+    "created": 50,
+    "identical_existing": 0,
+    "content_chars": 635250,
+    "content_pages": 159,
+    "pdf_archived": 0,
+    "processed": 50
+  },
+  "unresolved_failures": []
+}

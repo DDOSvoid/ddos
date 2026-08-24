@@ -170,6 +170,20 @@ class TushareClient:
             kwargs["end_date"] = end_date
         return self._call("daily", **kwargs)
 
+    def get_index_daily(
+        self,
+        ts_code: str,
+        start_date: str = "",
+        end_date: str = "",
+    ) -> "pd.DataFrame":
+        """获取指数日线行情，用于计算同期基准收益。"""
+        kwargs = {"ts_code": ts_code}
+        if start_date:
+            kwargs["start_date"] = start_date
+        if end_date:
+            kwargs["end_date"] = end_date
+        return self._call("index_daily", **kwargs)
+
     def get_namechange(self, ts_code: str = "") -> "pd.DataFrame":
         """获取股票曾用名。"""
         return self._call("namechange", ts_code=ts_code)
@@ -184,7 +198,12 @@ class EastmoneyClient:
     公告列表 API: https://np-anotice-stock.eastmoney.com/api/security/ann
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        rate_limit_per_minute: int | None = None,
+        content_max_retries: int = 1,
+        content_retry_backoff_seconds: float = 5.0,
+    ):
         self.base_url = config.eastmoney.base_url
         self.session = requests.Session()
         self.session.headers.update({
@@ -192,8 +211,15 @@ class EastmoneyClient:
             "Accept": "application/json, text/plain, */*",
             "Referer": "https://data.eastmoney.com/",
         })
-        self._min_interval = 60.0 / config.eastmoney.rate_limit_per_minute
+        rate_limit = rate_limit_per_minute or config.eastmoney.rate_limit_per_minute
+        if rate_limit <= 0:
+            raise ValueError("rate_limit_per_minute must be positive")
+        self._min_interval = 60.0 / rate_limit
         self._last_call: float = 0.0
+        self._content_max_retries = max(int(content_max_retries), 1)
+        self._content_retry_backoff_seconds = max(
+            float(content_retry_backoff_seconds), 0.0
+        )
 
     def _rate_limit(self) -> None:
         elapsed = time.time() - self._last_call
@@ -295,15 +321,51 @@ class EastmoneyClient:
             data dict，含 notice_content / attach_url_web / attach_url；失败返回空 dict
         """
         url = "https://np-cnotice-stock.eastmoney.com/api/content/ann"
-        params = {"art_code": art_code, "client_source": "web", "page_index": 1}
-        self._rate_limit()
+        from src.pipeline.announcement_content import (
+            assemble_content_pages,
+            expected_content_pages,
+        )
+
+        pages = []
+        expected_pages = 1
         try:
-            resp = self.session.get(url, params=params, timeout=30)
-            resp.raise_for_status()
-            return resp.json().get("data") or {}
+            for page_index in range(1, 501):
+                params = {
+                    "art_code": art_code,
+                    "client_source": "web",
+                    "page_index": page_index,
+                }
+                for attempt in range(1, self._content_max_retries + 1):
+                    self._rate_limit()
+                    try:
+                        resp = self.session.get(url, params=params, timeout=30)
+                        resp.raise_for_status()
+                        break
+                    except Exception:
+                        if attempt >= self._content_max_retries:
+                            raise
+                        delay = self._content_retry_backoff_seconds * attempt
+                        logger.warning(
+                            f"Retrying announcement content {art_code} page "
+                            f"{page_index} after {delay:.1f}s"
+                        )
+                        time.sleep(delay)
+                data = resp.json().get("data") or {}
+                if not data:
+                    break
+                pages.append(data)
+                if page_index == 1:
+                    expected_pages = expected_content_pages(data)
+                    if expected_pages > 500:
+                        raise ValueError(
+                            f"unreasonable content page count for {art_code}: "
+                            f"{expected_pages}"
+                        )
+                if page_index >= expected_pages:
+                    break
         except Exception as e:
             logger.warning(f"Eastmoney content API error for {art_code}: {e}")
-            return {}
+        return assemble_content_pages(pages, expected_pages=expected_pages)
 
 
 # ── 主数据获取器 ────────────────────────────────────────────────
@@ -414,14 +476,23 @@ class Fetcher:
                         # 富化：按 art_code 抓取正文与 PDF 链接（失败降级为列表摘要，不中断整批）
                         if config.pipeline.fetch_full_text and art_code:
                             content = self.em.fetch_announcement_content(art_code)
-                            raw.full_text = (
-                                clean_chinese_text(content.get("notice_content", ""))
-                                or item.get("notice_content", "")
-                            )
-                            raw.pdf_url = (
-                                content.get("attach_url_web")
-                                or content.get("attach_url")
-                            )
+                            if content.get("_content_complete", True):
+                                raw.full_text = (
+                                    clean_chinese_text(content.get("notice_content", ""))
+                                    or item.get("notice_content", "")
+                                )
+                                raw.pdf_url = (
+                                    content.get("attach_url_web")
+                                    or content.get("attach_url")
+                                )
+                            else:
+                                logger.warning(
+                                    "Incomplete announcement content rejected: "
+                                    f"{art_code} pages="
+                                    f"{content.get('_content_pages_fetched')}/"
+                                    f"{content.get('_content_pages_expected')}"
+                                )
+                                raw.full_text = item.get("notice_content", "")
                         else:
                             raw.full_text = item.get("notice_content", "")
 

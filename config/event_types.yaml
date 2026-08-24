@@ -26,6 +26,11 @@ categories:
         fields: [revenue, revenue_yoy_pct, net_profit, net_profit_yoy_pct,
                  gross_margin, net_margin, eps, roe, operating_cashflow,
                  dividend_plan, audit_opinion]
+      operating_data:
+        label: "经营数据"
+        direction_baseline: 0.0
+        fields: [reporting_period, revenue, sales_volume, output_volume,
+                 yoy_change_pct, business_segment]
 
   B:  # 财报前置事件
     label: "财报前置事件"
@@ -71,6 +76,31 @@ categories:
         direction_baseline: 0.5
         fields: [incentive_shares, incentive_ratio_pct, grant_price, performance_targets,
                  recipient_count, vesting_schedule]
+      no_reduce_commitment:
+        label: "承诺不减持"
+        direction_baseline: 0.1  # 控股股东自愿承诺不减持，微弱正面
+        fields: [committing_shareholder, commitment_period, share_quantity, share_ratio_pct,
+                 commitment_type, extension]
+      buyback_cancel:
+        label: "回购注销"
+        direction_baseline: 0.0  # 限制性股票回购注销，中性
+        fields: [cancelled_shares, cancel_ratio_pct, cancel_reason, original_grant_price,
+                 affected_people, register_cancel_date]
+      share_pledge:
+        label: "股份质押/解质押"
+        direction_baseline: 0.0
+        fields: [shareholder_name, pledged_shares, pledged_ratio_pct, pledge_purpose,
+                 pledgee, pledge_status, release_date]
+      equity_change:
+        label: "权益变动"
+        direction_baseline: 0.0
+        fields: [shareholder_name, change_type, changed_shares, changed_ratio_pct,
+                 resulting_holding_ratio_pct, control_changed]
+      dividend:
+        label: "利润分配/分红"
+        direction_baseline: 0.0
+        fields: [cash_dividend_per_share, stock_dividend_ratio, record_date,
+                 ex_dividend_date, payment_date, total_dividend]
 
   D:  # 资本运作事件
     label: "资本运作事件"
@@ -93,6 +123,61 @@ categories:
         label: "可转债/发债"
         direction_baseline: 0.1
         fields: [bond_amount, bond_term, coupon_rate, conversion_price, use_of_proceeds, credit_rating]
+      fundraising_usage:
+        label: "募集资金使用"
+        direction_baseline: 0.0  # 募投项目/募集资金使用，中性
+        fields: [project_name, fund_source, fund_amount, project_status,
+                 expected_benefit, subsidiary_target]
+      legal_opinion:
+        label: "法律意见书"
+        direction_baseline: 0.0  # 中介机构核查意见/法律意见书，中性
+        fields: [opinion_type, issuing_institution, subject_matter, conclusion,
+                 related_transaction, issuance_date]
+      guarantee:
+        label: "担保"
+        direction_baseline: 0.0
+        fields: [guarantor, guaranteed_party, guarantee_amount, guarantee_type,
+                 guarantee_term, cumulative_guarantee_ratio_pct, overdue_guarantee]
+      external_investment:
+        label: "对外投资/设立公司"
+        direction_baseline: 0.0
+        fields: [target_name, investment_amount, ownership_ratio_pct, investment_purpose,
+                 funding_source, project_location, approval_status]
+      related_transaction:
+        label: "关联交易"
+        direction_baseline: 0.0
+        fields: [related_party, relationship, transaction_type, transaction_amount,
+                 pricing_basis, approval_status]
+      financial_assistance:
+        label: "财务资助"
+        direction_baseline: 0.0
+        fields: [recipient, assistance_amount, interest_rate, term, guarantee_measures,
+                 related_party]
+      financing_credit:
+        label: "授信/融资"
+        direction_baseline: 0.0
+        fields: [financial_institution, credit_amount, financing_type, term,
+                 interest_rate, collateral]
+      hedging_derivatives:
+        label: "套期保值/衍生品"
+        direction_baseline: 0.0
+        fields: [business_type, instrument, maximum_amount, hedged_exposure,
+                 business_period, risk_controls]
+      equity_financing:
+        label: "股权融资/H股发行"
+        direction_baseline: 0.0
+        fields: [financing_type, financing_amount, issue_market, approval_status,
+                 application_date, use_of_proceeds]
+      treasury_management:
+        label: "现金管理/委托理财"
+        direction_baseline: 0.0
+        fields: [fund_amount, product_type, financial_institution, investment_period,
+                 funding_source, expected_yield]
+      entrusted_management:
+        label: "委托管理/终止委托管理"
+        direction_baseline: 0.0
+        fields: [manager, managed_asset, agreement_type, start_date, end_date,
+                 termination_reason, business_impact]
 
   E:  # 经营业务事件
     label: "经营业务事件"
@@ -118,6 +203,26 @@ categories:
         label: "战略合作"
         direction_baseline: 0.4
         fields: [partner_name, cooperation_scope, cooperation_period, partner_type, exclusivity]
+      government_subsidy:
+        label: "政府补助/退税"
+        direction_baseline: 0.0
+        fields: [subsidy_amount, subsidy_type, granting_authority, accounting_treatment,
+                 expected_profit_impact]
+      intellectual_property:
+        label: "专利/知识产权"
+        direction_baseline: 0.0
+        fields: [patent_name, patent_type, authorization_date, application_area,
+                 expected_business_impact]
+      project_investment:
+        label: "项目投资/产能建设"
+        direction_baseline: 0.0
+        fields: [project_name, investment_amount, project_location, planned_capacity,
+                 construction_period, funding_source, expected_return]
+      project_progress:
+        label: "项目进展"
+        direction_baseline: 0.0
+        fields: [project_name, project_stage, progress_summary, delay_reason,
+                 expected_completion_date, business_impact]
 
   F:  # 风险事件
     label: "风险事件"
@@ -144,6 +249,36 @@ categories:
         label: "ST/退市风险"
         direction_baseline: -0.95
         fields: [risk_type, trigger_condition, deadline, remediation_possible]
+      bankruptcy_restructuring:
+        label: "破产重整/清算"
+        direction_baseline: -0.8
+        fields: [case_stage, applicant, court, debt_claim_deadline, administrator,
+                 restructuring_plan, business_impact]
+      regulatory_action:
+        label: "监管问询/监管措施"
+        direction_baseline: 0.0
+        fields: [regulatory_body, action_type, subject, issue_summary, reply_deadline,
+                 rectification_requirement]
+      asset_impairment:
+        label: "资产减值"
+        direction_baseline: -0.4
+        fields: [asset_type, impairment_amount, profit_impact, impairment_reason,
+                 reversibility]
+      trading_risk_warning:
+        label: "交易风险提示"
+        direction_baseline: -0.1
+        fields: [risk_summary, valuation_risk, business_risk, volatility_period,
+                 company_clarification]
+      judicial_equity_action:
+        label: "股权司法冻结/拍卖"
+        direction_baseline: -0.3
+        fields: [shareholder_name, action_type, affected_shares, affected_ratio_pct,
+                 court, auction_date, control_impact]
+      tax_matter:
+        label: "税务补缴/风险"
+        direction_baseline: -0.2
+        fields: [tax_type, payment_amount, reporting_period, authority,
+                 penalty_amount, profit_impact]
 
   G:  # 治理与交易状态事件
     label: "治理与交易状态事件"
@@ -165,3 +300,45 @@ categories:
         label: "异常波动"
         direction_baseline: 0.0
         fields: [volatility_period, volatility_type, company_explanation, regulatory_inquiry]
+      meeting_resolution:
+        label: "会议决议/通知"
+        direction_baseline: 0.0  # 董事会/股东会决议与会议通知，中性
+        fields: [meeting_type, meeting_date, resolution_summary, related_issue, approval_status]
+      investor_relations:
+        label: "投资者关系活动"
+        direction_baseline: 0.0  # 投资者关系活动记录，中性
+        fields: [activity_date, activity_type, participants, topics_covered, company_highlights]
+      accounting_change:
+        label: "会计政策/估计变更"
+        direction_baseline: 0.0
+        fields: [change_type, effective_date, reason, affected_items, profit_impact,
+                 retrospective_adjustment]
+      auditor_change:
+        label: "审计机构变更/续聘"
+        direction_baseline: 0.0
+        fields: [old_auditor, new_auditor, change_type, reason, audit_fee,
+                 approval_status]
+
+  X:  # 非核心事件与拒绝分类出口
+    label: "其他与待复核"
+    subcategories:
+      routine_disclosure:
+        label: "例行披露"
+        direction_baseline: 0.0
+        fields: []
+      supporting_document:
+        label: "中介/支持性文件"
+        direction_baseline: 0.0
+        fields: []
+      corporate_admin:
+        label: "工商登记/行政变更"
+        direction_baseline: 0.0
+        fields: []
+      h_share_routine:
+        label: "H股例行披露"
+        direction_baseline: 0.0
+        fields: []
+      other:
+        label: "其他/待判断"
+        direction_baseline: 0.0
+        fields: []

@@ -1,0 +1,143 @@
+{
+  "contract": "llm-extraction-model-selection-review-v1",
+  "reviewed_at": "2026-08-21T17:05:47+08:00",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "prompt_version": "structured-extraction-prompt-v16",
+  "prompt_sha256": "4d6a21b4288c7b3dfa6e935b2058bd8ce127f35e9fbb4200e9b3ca6eecc60b5f",
+  "validator_contract_version": "evidence-validator-v7",
+  "gold_draft_sha256": "05776812908c57d6d6bb24046553af489224b7f3e07d2654267c4e0d4d89d857",
+  "gold_lock_sha256": "1ae4461345c4a537bb6cc5d9143e10f09cb1f42423d42634291243aefa76c45d",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_4d6a21b4288c_evidence-validator-v7.jsonl",
+  "candidate_sha256": "dd13aa17fc0d28fe57705a439e37100b2f3a5d32f5cb52eca6c895eb2240d854",
+  "documents": 10,
+  "fields": 110,
+  "gold_counts": {"supported": 70, "absent": 33, "ambiguous": 7},
+  "candidate_counts": {"supported": 68, "absent": 30, "ambiguous": 12},
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 6,
+  "usage": {
+    "prompt_tokens": 98998,
+    "prompt_cache_hit_tokens": 39552,
+    "prompt_cache_miss_tokens": 59446,
+    "completion_tokens": 10979,
+    "total_tokens": 109977
+  },
+  "metrics": {
+    "status_exact_accuracy": 0.9182,
+    "support_vs_abstain_accuracy": 0.9273,
+    "strict_field_accuracy": 0.6273,
+    "post_lock_human_semantic_field_accuracy": 0.9,
+    "supported_semantic_precision": 0.9265,
+    "supported_semantic_recall": 0.9,
+    "abstention_precision": 0.881,
+    "abstention_recall": 0.925,
+    "numeric_date_boolean_exact_accuracy": 0.7273
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 69,
+    "semantically_equivalent_non_exact_fields": 30,
+    "incorrect_fields": 11,
+    "equivalent": [
+      "1df251c4:event_stage",
+      "1df251c4:uncertainty",
+      "1df251c4:impairment_reason",
+      "fe17f190:event_stage",
+      "fe17f190:subject_name",
+      "fe17f190:transaction_stage",
+      "e7c6eff9:event_stage",
+      "e7c6eff9:uncertainty",
+      "e7c6eff9:case_stage",
+      "e7c6eff9:business_effect",
+      "2974183d:event_stage",
+      "2974183d:uncertainty",
+      "17619ced:event_stage",
+      "a116ddfb:event_stage",
+      "a116ddfb:change_type",
+      "a116ddfb:reason",
+      "56f9fe61:event_stage",
+      "56f9fe61:uncertainty",
+      "56f9fe61:funding_source",
+      "1a4a305c:event_stage",
+      "1a4a305c:uncertainty",
+      "1a4a305c:forecast_period",
+      "1a4a305c:forecast_type",
+      "9a184df5:event_stage",
+      "9a184df5:uncertainty",
+      "9a184df5:case_role",
+      "9a184df5:case_stage",
+      "1310a9f3:event_stage",
+      "1310a9f3:transaction_asset",
+      "1310a9f3:transaction_stage"
+    ],
+    "incorrect": [
+      {
+        "field": "1df251c4:profit_effect_cny",
+        "reason": "Returned -39,018,100 although the frozen extraction convention stores the disclosed profit-effect magnitude as positive 39,018,100 CNY."
+      },
+      {
+        "field": "fe17f190:event_date",
+        "reason": "The source explicitly ties 2023-02-10 to the current board approval, but a non-exact quote caused local rejection and final abstention."
+      },
+      {
+        "field": "fe17f190:book_value_cny",
+        "reason": "Abstained on the 2022 year-end net-asset book value of 533,121,780.30 CNY; the frozen evidence validator also flags this table-layout case as non-self-contained."
+      },
+      {
+        "field": "fe17f190:ownership_ratio_pct",
+        "reason": "The 100% sale ratio is explicit, but a non-exact evidence quote caused local rejection."
+      },
+      {
+        "field": "e7c6eff9:counterparty",
+        "reason": "Selected the court and was downgraded to ambiguous; a restructuring application has no bilateral counterparty and should be absent."
+      },
+      {
+        "field": "56f9fe61:project_name",
+        "reason": "Returned the generic announcement label rather than the specific additional investment in 1.99% of Xidian Finance equity."
+      },
+      {
+        "field": "56f9fe61:investment_amount_cny",
+        "reason": "The value was present in the raw response, but evidence omitted the listed-company contribution context and the taxonomy downgraded it to ambiguous."
+      },
+      {
+        "field": "1a4a305c:change_reason",
+        "reason": "Selected only the fund fair-value change and omitted parallel operating reasons, instead of abstaining on a scalar multi-cause conflict."
+      },
+      {
+        "field": "9a184df5:claim_amount_cny",
+        "reason": "Mapped the 43 million CNY value of assets under preservation to the legal claim amount, which the document did not disclose."
+      },
+      {
+        "field": "1310a9f3:event_date",
+        "reason": "Returned ambiguous rather than the frozen valuation-report date; valuation-date semantics require a dedicated schema/routing clarification before the next candidate."
+      },
+      {
+        "field": "1310a9f3:counterparty",
+        "reason": "Used the appraisal firm as a transaction counterparty even though the report does not disclose a unique acquisition seller."
+      }
+    ]
+  },
+  "frozen_validator_audit": {
+    "gold_supported_fields_rejected_before_candidate_requests": 1,
+    "fields": ["fe17f190:book_value_cny"],
+    "changed_after_candidate_review": false,
+    "note": "The human label remains supported because the table row and unit identify the value; the frozen validator cannot combine the separated table context within its short-quote rule."
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not open the 2024 extraction holdout and do not promote v16 to downstream prediction features."
+  }
+}

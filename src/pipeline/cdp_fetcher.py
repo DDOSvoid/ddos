@@ -177,9 +177,32 @@ class CdpEastmoneyClient:
 
     def fetch_announcement_content(self, art_code: str) -> dict:
         """获取单条公告正文 + PDF 链接。返回 data dict，失败返回空 dict。"""
-        url = f"{_CONTENT_URL}?{urlencode({'art_code': art_code, 'client_source': 'web', 'page_index': 1})}"
+        from src.pipeline.announcement_content import (
+            assemble_content_pages,
+            expected_content_pages,
+        )
+
+        pages = []
+        expected_pages = 1
         try:
-            data = self._fetch_json(url)
-            return data.get("data") or {}
+            for page_index in range(1, 501):
+                query = {
+                    "art_code": art_code,
+                    "client_source": "web",
+                    "page_index": page_index,
+                }
+                url = f"{_CONTENT_URL}?{urlencode(query)}"
+                payload = self._fetch_json(url)
+                data = payload.get("data") or {}
+                if not data:
+                    break
+                pages.append(data)
+                if page_index == 1:
+                    expected_pages = expected_content_pages(data)
+                    if expected_pages > 500:
+                        raise ValueError("unreasonable content page count")
+                if page_index >= expected_pages:
+                    break
         except Exception:
-            return {}
+            pass
+        return assemble_content_pages(pages, expected_pages=expected_pages)

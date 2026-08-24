@@ -1,0 +1,83 @@
+contract: causal-multimodel-development-v1
+timezone: Asia/Shanghai
+split_contract: causal-impact-split-v2
+
+decision_point:
+  name: daily_preopen
+  local_time: "08:30:00"
+  description: "Run once before the next tradable market open."
+
+historical_replay:
+  announcement_time_precision: date_only
+  announcement_text_rule: "Use only the original document version published for the event."
+  market_daily_rule: "trade_date must be strictly earlier than announcement published_date"
+  fundamental_rule: "disclosure_available_at must be no later than prediction as_of; later restatements are forbidden"
+  memory_rule: "outcome_available_at must be no later than prediction as_of"
+  current_llm_rule: "Historical LLM use is limited to cited extraction from the supplied document; no subjective historical direction label"
+
+prediction_target:
+  benchmark_code: 000300.SH
+  horizons_sessions: [1, 3, 5]
+  entry: "first stock trading-session open strictly after publication date"
+  exit: "horizon-th stock trading-session close"
+  value: "stock return minus same-period benchmark return"
+  direction: "1 when excess return > 0; -1 when excess return < 0; otherwise 0"
+
+internal_walk_forward:
+  folds:
+    - name: fold_1
+      train_start: "2023-01-01"
+      train_end: "2023-06-30"
+      validation_start: "2023-07-01"
+      validation_end: "2023-12-31"
+    - name: fold_2
+      train_start: "2023-01-01"
+      train_end: "2023-12-31"
+      validation_start: "2024-01-01"
+      validation_end: "2024-06-30"
+    - name: fold_3
+      train_start: "2023-01-01"
+      train_end: "2024-06-30"
+      validation_start: "2024-07-01"
+      validation_end: "2024-12-31"
+  refit_every_fold: true
+  fit_preprocessors_on_fold_train_only: true
+  outcome_must_mature_by_fold_end: true
+  random_split_allowed: false
+
+official_test:
+  read_limit: 1
+  evaluate_all_preregistered_candidates_in_one_read: true
+  tuning_after_read_allowed: false
+  quarantine_allowed: false
+  forward_validation_allowed: false
+
+module_gates:
+  text_extraction:
+    minimum_stratified_human_reviewed_documents: 300
+    minimum_numeric_value_and_unit_precision: 0.98
+    minimum_key_field_precision: 0.95
+    evidence_citation_required: true
+    abstention_required_when_unsupported: true
+  predictive_general:
+    minimum_oof_bullish_signals_per_horizon: 300
+    bullish_wilson_lower_must_exceed: 0.50
+    minimum_folds_with_bullish_hit_rate_above_half: 2
+    minimum_worst_fold_bullish_hit_rate: 0.48
+    cost_adjusted_mean_excess_return_ci_lower_must_exceed: 0.0
+    brier_score_must_beat_constant_base_rate: true
+  table_model:
+    must_pass_predictive_general: true
+    structured_feature_provenance_required: true
+  time_series_model:
+    must_pass_predictive_general: true
+    all_bars_must_precede_prediction_as_of: true
+    incremental_oof_improvement_over_table_required: true
+  fusion_model:
+    inputs_must_be_out_of_fold_predictions: true
+    must_pass_predictive_general: true
+    incremental_oof_improvement_over_best_component_required: true
+  memory_ranking:
+    minimum_matured_predictions_per_key: 50
+    rank_score: historical_hit_rate_wilson_lower
+    subjective_model_confidence_in_rank_forbidden: true

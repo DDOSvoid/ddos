@@ -1,0 +1,34 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "last_announcement_db_id": 49642,
+  "processed": 1205,
+  "failures": [
+    {
+      "announcement_db_id": 49640,
+      "announcement_id": "AN202302011582614779",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 49641,
+      "announcement_id": "AN202302011582614778",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    },
+    {
+      "announcement_db_id": 49642,
+      "announcement_id": "AN202302011582612375",
+      "error_type": "ValueError",
+      "error": "empty content response"
+    }
+  ],
+  "selection": {
+    "dataset_role": "train",
+    "only_accepted": true,
+    "relevances": [
+      "core_event"
+    ]
+  },
+  "updated_at": "2026-08-21T08:19:57.644861+00:00"
+}

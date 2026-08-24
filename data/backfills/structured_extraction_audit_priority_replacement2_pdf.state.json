@@ -1,0 +1,17 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "last_announcement_db_id": 134536,
+  "processed": 7,
+  "failures": [],
+  "selection": {
+    "dataset_role": "train",
+    "only_accepted": true,
+    "relevances": [
+      "core_event"
+    ],
+    "explicit_announcement_ids_sha256": "82aa0ae4d310c5ecab5bccb6cc956bc3ae5069727a3975fe217036ec063ba7ac",
+    "content_source": "pdf"
+  },
+  "updated_at": "2026-08-21T04:24:41.349115+00:00"
+}

@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-"""温度缩放校准 — 在验证集上搜索最优温度 T，锐化 softmax 以校正置信度。
+"""温度缩放校准 — 仅使用真实、人工验证的时间外 validation 数据。
 
-种子模型在 30 类间 softmax 分布偏平（top-1 置信度 0.10-0.25），
-低于下游 extraction_min_confidence=0.6 的可用门槛。温度缩放是标准校准手段：
-推理时 logits /= T（T<1 锐化），argmax 不变，只重标定置信度。
+推理时 logits /= T，argmax 不变，只重标定置信度。合成数据、AI 候选标签
+和训练集均不允许用于生产校准。
 
 用法:
     python scripts/calibrate_temperature.py \
-        --data data/labeled/seed.jsonl \
+        --data data/labeled/real_verified.jsonl \
         --model models/bert-classifier \
         --output models/bert-classifier/temperature.json
 
@@ -26,7 +25,7 @@ import torch
 from loguru import logger
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from src.training.dataset import build_label_mappings, create_splits, load_labeled_data
+from src.training.dataset import load_verified_labels
 
 
 def ece(confidences: np.ndarray, correct: np.ndarray, n_bins: int = 10) -> float:
@@ -52,18 +51,30 @@ def ece(confidences: np.ndarray, correct: np.ndarray, n_bins: int = 10) -> float
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Tune softmax temperature on validation set")
-    parser.add_argument("--data", default="data/labeled/seed.jsonl")
+    parser.add_argument("--data", required=True)
     parser.add_argument("--model", default="models/bert-classifier")
     parser.add_argument("--output", default="models/bert-classifier/temperature.json")
-    parser.add_argument("--random_state", type=int, default=42)
+    parser.add_argument("--min-samples", type=int, default=100)
     args = parser.parse_args()
 
-    # ── 复现与训练一致的 val 划分 ─────────────────────
-    texts, sub_labels, _ = load_labeled_data(args.data)
-    unique_labels = sorted(set(sub_labels))
-    label2id, id2label = build_label_mappings(unique_labels)
-    splits = create_splits(texts, sub_labels, label2id, random_state=args.random_state)
-    val_texts, val_ids = splits["val"]
+    # ── 只读取显式声明的时间外 validation 分区 ─────────
+    samples = load_verified_labels(args.data)
+    validation = [sample for sample in samples if sample.dataset_role == "validation"]
+    if len(validation) < args.min_samples:
+        raise ValueError(
+            f"真实 validation 样本不足: {len(validation)} < {args.min_samples}"
+        )
+
+    mapping_path = Path(args.model) / "label_mapping.json"
+    with open(mapping_path, encoding="utf-8") as f:
+        mapping = json.load(f)
+    label2id = {key: int(value) for key, value in mapping["label2id"].items()}
+    unknown = sorted({sample.sub_category for sample in validation} - set(label2id))
+    if unknown:
+        raise ValueError("validation 含模型未知类别: " + ", ".join(unknown))
+
+    val_texts = [sample.text for sample in validation]
+    val_ids = [label2id[sample.sub_category] for sample in validation]
     val_ids = np.asarray(val_ids)
     logger.info(f"Val samples: {len(val_texts)}")
 
@@ -86,34 +97,55 @@ def main() -> None:
     logger.info(f"Val accuracy: {correct.mean():.4f}")
 
     # ── 网格搜索温度 ───────────────────────────────────
-    temps = np.linspace(0.10, 1.00, 19)  # 0.10, 0.15, ..., 1.00
+    temps = np.geomspace(0.25, 4.0, 33)
     results = []
-    for T in temps:
-        probs = torch.softmax(torch.from_numpy(logits_all / T), dim=-1).numpy()
+    for temperature in temps:
+        probs = torch.softmax(
+            torch.from_numpy(logits_all / temperature), dim=-1
+        ).numpy()
         conf = probs.max(axis=-1)
+        true_probs = np.clip(probs[np.arange(len(val_ids)), val_ids], 1e-12, 1.0)
         results.append({
-            "T": round(float(T), 2),
-            "ece": ece(conf, correct),
-            "mean_conf": conf.mean(),
-            "conf_correct": conf[correct == 1].mean(),
-            "conf_wrong": conf[correct == 0].mean() if (correct == 0).any() else 0.0,
+            "T": float(temperature),
+            "nll": float(-np.log(true_probs).mean()),
+            "ece": float(ece(conf, correct)),
+            "mean_conf": float(conf.mean()),
+            "conf_correct": float(conf[correct == 1].mean()),
+            "conf_wrong": (
+                float(conf[correct == 0].mean()) if (correct == 0).any() else 0.0
+            ),
         })
 
     # 打印搜索表
-    print("\n  T     ECE     mean_conf  conf_correct  conf_wrong")
+    print("\n  T     NLL      ECE     mean_conf  conf_correct  conf_wrong")
     for r in results:
-        print(f"  {r['T']:.2f}   {r['ece']:.4f}   {r['mean_conf']:.3f}     "
+        print(f"  {r['T']:.3f}  {r['nll']:.4f}  {r['ece']:.4f}   {r['mean_conf']:.3f}     "
               f"{r['conf_correct']:.3f}         {r['conf_wrong']:.3f}")
 
-    best = min(results, key=lambda r: r["ece"])
-    print(f"\n✅ 最优温度 T={best['T']:.2f}  (ECE={best['ece']:.4f})")
+    best = min(results, key=lambda r: r["nll"])
+    print(
+        f"\n✅ 最优温度 T={best['T']:.3f}  "
+        f"(NLL={best['nll']:.4f}, ECE={best['ece']:.4f})"
+    )
     print(f"   校准后 top-1 平均置信度: {best['mean_conf']:.3f}")
 
     # ── 保存 ───────────────────────────────────────────
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
-        json.dump({"temperature": best["T"]}, f, ensure_ascii=False, indent=2)
+        json.dump(
+            {
+                "temperature": best["T"],
+                "calibration_contract": "real-label-v1",
+                "validation_samples": len(validation),
+                "selection_metric": "negative_log_likelihood",
+                "nll": best["nll"],
+                "ece": best["ece"],
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
     print(f"✅ 已保存 → {out}")
 
 

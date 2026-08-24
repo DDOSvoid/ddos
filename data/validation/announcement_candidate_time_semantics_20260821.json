@@ -1,0 +1,510 @@
+{
+  "contract": "announcement-candidate-time-semantics-audit-v1",
+  "created_at": "2026-08-21T03:23:58.737075+00:00",
+  "dataset_role": "train",
+  "market_target_table_queried": false,
+  "market_direction_labels_read": false,
+  "counts": {
+    "sampled": 48,
+    "response_success": 48,
+    "list_content_time_exact_match": 48,
+    "art_code_date_matches_eitime_date": 48,
+    "title_match": 48,
+    "notice_date_match": 48,
+    "attachment_epoch_available": 48,
+    "eitime_previous_evening_of_notice_date": 37
+  },
+  "attachment_epoch_minus_eitime_seconds": {
+    "minimum": 28796.0,
+    "median": 28822.5,
+    "maximum": 300785.0
+  },
+  "samples": [
+    {
+      "announcement_id": "AN202301021581628626",
+      "published_date": "2023-01-03",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 300785.0
+    },
+    {
+      "announcement_id": "AN202301311582549993",
+      "published_date": "2023-01-31",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 29496.0
+    },
+    {
+      "announcement_id": "AN202302231583653429",
+      "published_date": "2023-02-24",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 29974.0
+    },
+    {
+      "announcement_id": "AN202303141584260948",
+      "published_date": "2023-03-15",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 29228.0
+    },
+    {
+      "announcement_id": "AN202303291584661299",
+      "published_date": "2023-03-30",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28804.0
+    },
+    {
+      "announcement_id": "AN202304101585252589",
+      "published_date": "2023-04-10",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28821.0
+    },
+    {
+      "announcement_id": "AN202304181585546731",
+      "published_date": "2023-04-19",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28825.0
+    },
+    {
+      "announcement_id": "AN202304241585745143",
+      "published_date": "2023-04-25",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28816.0
+    },
+    {
+      "announcement_id": "AN202304251585812401",
+      "published_date": "2023-04-26",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28808.0
+    },
+    {
+      "announcement_id": "AN202304271586002728",
+      "published_date": "2023-04-28",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28817.0
+    },
+    {
+      "announcement_id": "AN202305041586259592",
+      "published_date": "2023-05-05",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28813.0
+    },
+    {
+      "announcement_id": "AN202305191586973186",
+      "published_date": "2023-05-19",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28824.0
+    },
+    {
+      "announcement_id": "AN202306051590427505",
+      "published_date": "2023-06-06",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28800.0
+    },
+    {
+      "announcement_id": "AN202306261591304188",
+      "published_date": "2023-06-26",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28881.0
+    },
+    {
+      "announcement_id": "AN202307121592218506",
+      "published_date": "2023-07-13",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28808.0
+    },
+    {
+      "announcement_id": "AN202307311592922424",
+      "published_date": "2023-07-31",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28824.0
+    },
+    {
+      "announcement_id": "AN202308171595014638",
+      "published_date": "2023-08-18",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28800.0
+    },
+    {
+      "announcement_id": "AN202308281595966037",
+      "published_date": "2023-08-29",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28796.0
+    },
+    {
+      "announcement_id": "AN202309051597501630",
+      "published_date": "2023-09-06",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28832.0
+    },
+    {
+      "announcement_id": "AN202309261599894567",
+      "published_date": "2023-09-27",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28836.0
+    },
+    {
+      "announcement_id": "AN202310231602789875",
+      "published_date": "2023-10-24",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28844.0
+    },
+    {
+      "announcement_id": "AN202310301605656913",
+      "published_date": "2023-10-31",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 48727.0
+    },
+    {
+      "announcement_id": "AN202311221611980165",
+      "published_date": "2023-11-22",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28803.0
+    },
+    {
+      "announcement_id": "AN202312081613647468",
+      "published_date": "2023-12-09",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 36321.0
+    },
+    {
+      "announcement_id": "AN202312221614823411",
+      "published_date": "2023-12-23",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28800.0
+    },
+    {
+      "announcement_id": "AN202401091616876095",
+      "published_date": "2024-01-09",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28798.0
+    },
+    {
+      "announcement_id": "AN202401311619799358",
+      "published_date": "2024-02-01",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28801.0
+    },
+    {
+      "announcement_id": "AN202403011624853750",
+      "published_date": "2024-03-02",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28833.0
+    },
+    {
+      "announcement_id": "AN202403251628098160",
+      "published_date": "2024-03-26",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28933.0
+    },
+    {
+      "announcement_id": "AN202404021629425589",
+      "published_date": "2024-04-03",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28800.0
+    },
+    {
+      "announcement_id": "AN202404161630292550",
+      "published_date": "2024-04-17",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28804.0
+    },
+    {
+      "announcement_id": "AN202404211630923404",
+      "published_date": "2024-04-22",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28801.0
+    },
+    {
+      "announcement_id": "AN202404241631180494",
+      "published_date": "2024-04-25",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28859.0
+    },
+    {
+      "announcement_id": "AN202404251631307404",
+      "published_date": "2024-04-26",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28800.0
+    },
+    {
+      "announcement_id": "AN202404261631415755",
+      "published_date": "2024-04-27",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 29207.0
+    },
+    {
+      "announcement_id": "AN202404291631611008",
+      "published_date": "2024-04-30",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28816.0
+    },
+    {
+      "announcement_id": "AN202405211634068082",
+      "published_date": "2024-05-21",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28808.0
+    },
+    {
+      "announcement_id": "AN202406101635917502",
+      "published_date": "2024-06-11",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28857.0
+    },
+    {
+      "announcement_id": "AN202407011637233820",
+      "published_date": "2024-07-02",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28828.0
+    },
+    {
+      "announcement_id": "AN202407301638477139",
+      "published_date": "2024-07-31",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28804.0
+    },
+    {
+      "announcement_id": "AN202408221639397400",
+      "published_date": "2024-08-23",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 59777.0
+    },
+    {
+      "announcement_id": "AN202408291639562893",
+      "published_date": "2024-08-30",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 29036.0
+    },
+    {
+      "announcement_id": "AN202409131639880138",
+      "published_date": "2024-09-14",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 32070.0
+    },
+    {
+      "announcement_id": "AN202410161640327958",
+      "published_date": "2024-10-16",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 38010.0
+    },
+    {
+      "announcement_id": "AN202410301640611904",
+      "published_date": "2024-10-30",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28804.0
+    },
+    {
+      "announcement_id": "AN202411221641029358",
+      "published_date": "2024-11-22",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": false,
+      "attachment_epoch_minus_eitime_seconds": 28799.0
+    },
+    {
+      "announcement_id": "AN202412121641280569",
+      "published_date": "2024-12-13",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28816.0
+    },
+    {
+      "announcement_id": "AN202412301641468796",
+      "published_date": "2024-12-31",
+      "list_content_time_exact_match": true,
+      "art_code_date_matches_eitime_date": true,
+      "title_match": true,
+      "notice_date_match": true,
+      "eitime_previous_evening_of_notice_date": true,
+      "attachment_epoch_minus_eitime_seconds": 28899.0
+    }
+  ],
+  "interpretation": [
+    "Exact agreement among Eastmoney fields supports internal consistency only.",
+    "It does not prove that eiTime is the exchange's legally authoritative publication timestamp.",
+    "Until authoritative semantics are established, store it as source_eitime/candidate precision.",
+    "Previous-evening candidates indicate the existing date-only target may enter one session late; targets must not be changed until a versioned timing contract is approved."
+  ]
+}

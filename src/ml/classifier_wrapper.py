@@ -3,11 +3,10 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 import torch
 from loguru import logger
-from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
 @dataclass
@@ -16,6 +15,10 @@ class ClassificationResult:
     major_category: str    # "A" ~ "G"
     sub_category: str      # e.g., "earnings_q1"
     confidence: float      # 0.0 ~ 1.0
+    second_sub_category: str | None = None
+    second_confidence: float | None = None
+    margin: float | None = None
+    model_qualified: bool = False
 
 
 class ClassifierWrapper:
@@ -69,6 +72,9 @@ class ClassifierWrapper:
         self.id2label: dict[int, str] = {}
         self._load_label_mapping()
 
+        # 只有真实标注训练 + 严格时间切分 + 真实验证校准的模型才有生产资格。
+        self.production_qualified = self._load_production_qualification()
+
         # 温度缩放（校准）— 模型目录下 temperature.json 可选；
         # 缺失时默认 1.0（不缩放），保持向后兼容。
         self.temperature = self._load_temperature()
@@ -78,13 +84,18 @@ class ClassifierWrapper:
 
     def _load_temperature(self) -> float:
         """从模型目录加载校准温度；缺失时返回 1.0。"""
+        if not self.production_qualified:
+            logger.warning(
+                "Classifier is not production-qualified; ignoring calibration temperature"
+            )
+            return 1.0
         if not (self.model_path and Path(self.model_path).exists()):
             return 1.0
         temp_file = Path(self.model_path) / "temperature.json"
         if not temp_file.exists():
             return 1.0
         try:
-            with open(temp_file, "r", encoding="utf-8") as f:
+            with open(temp_file, encoding="utf-8") as f:
                 data = json.load(f)
             t = float(data.get("temperature", 1.0))
             logger.info(f"Loaded calibration temperature: {t}")
@@ -93,12 +104,37 @@ class ClassifierWrapper:
             logger.warning(f"Failed to load temperature, defaulting to 1.0: {e}")
             return 1.0
 
+    def _load_production_qualification(self) -> bool:
+        if not (self.model_path and Path(self.model_path).exists()):
+            return False
+        model_dir = Path(self.model_path)
+        try:
+            with open(model_dir / "training_manifest.json", encoding="utf-8") as f:
+                training = json.load(f)
+            with open(model_dir / "temperature.json", encoding="utf-8") as f:
+                calibration = json.load(f)
+            with open(model_dir / "evaluation_manifest.json", encoding="utf-8") as f:
+                evaluation = json.load(f)
+        except (OSError, ValueError):
+            logger.warning("Classifier lacks real-data production manifests")
+            return False
+        qualified = (
+            training.get("data_contract") == "real-label-v1"
+            and training.get("split_strategy") == "declared_strict_temporal"
+            and calibration.get("calibration_contract") == "real-label-v1"
+            and evaluation.get("evaluation_contract") == "real-label-v1"
+            and evaluation.get("production_gate_pass") is True
+        )
+        if not qualified:
+            logger.warning("Classifier manifests do not satisfy real-label-v1")
+        return qualified
+
     def _load_label_mapping(self) -> None:
         """从模型目录加载 label 映射。"""
         if self.model_path and Path(self.model_path).exists():
             mapping_file = Path(self.model_path) / "label_mapping.json"
             if mapping_file.exists():
-                with open(mapping_file, "r", encoding="utf-8") as f:
+                with open(mapping_file, encoding="utf-8") as f:
                     mapping = json.load(f)
                     # id2label 的 key 是字符串，需要转 int
                     raw_id2label = mapping.get("id2label", {})
@@ -148,17 +184,26 @@ class ClassifierWrapper:
         outputs = self.model(**inputs)
         logits = outputs.logits / self.temperature
         probs = torch.softmax(logits, dim=-1)
-        confidences, pred_ids = torch.max(probs, dim=-1)
+        top_k = min(2, probs.shape[-1])
+        top_probs, top_ids = torch.topk(probs, k=top_k, dim=-1)
 
         # 转换为结果
         results = []
-        for pred_id, conf in zip(pred_ids.tolist(), confidences.tolist()):
+        for ids, confs in zip(top_ids.tolist(), top_probs.tolist()):
+            pred_id = ids[0]
+            conf = confs[0]
             sub_category = self.id2label.get(pred_id, f"unknown_{pred_id}")
             major = self._get_major_category(sub_category)
+            second_sub = self.id2label.get(ids[1]) if len(ids) > 1 else None
+            second_conf = confs[1] if len(confs) > 1 else None
             results.append(ClassificationResult(
                 major_category=major,
                 sub_category=sub_category,
                 confidence=conf,
+                second_sub_category=second_sub,
+                second_confidence=second_conf,
+                margin=(conf - second_conf if second_conf is not None else None),
+                model_qualified=self.production_qualified,
             ))
 
         return results

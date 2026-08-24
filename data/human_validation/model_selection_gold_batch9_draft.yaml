@@ -1,0 +1,162 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-22T21:40:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v18
+prompt_sha256: b2f47d6fcafd3e004b92e07cd15626909125636cf8301ef50e9bde265e670805
+validator_contract_version: evidence-validator-v10
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: af1adc3a6f697578d3d94c9794e0bbc599b9bb4e66643a998d8c5e74c93398aa
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露2022年度业绩快报初步核算结果", unit: TEXT, evidence_quotes: ["2022年度业绩快报", "财务数据仅为初步核算结果"]}
+      event_date: {status: ambiguous, reason: "正文没有披露快报形成或当前披露动作的日期，落款日不作为事件日。"}
+      counterparty: {status: absent, reason: "业绩快报是单方财务披露，不存在双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "苏州固锝电子股份有限公司", unit: TEXT, evidence_quotes: ["苏州固锝电子股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "财务数据未经审计且可能与年度报告最终数据存在差异", unit: TEXT, evidence_quotes: ["未经会计师事务所审计", "最终数据可能存在差异"]}
+      revenue_cny: {status: supported, normalized_value: "3269148773.49", unit: CNY, evidence_quotes: ["单位：元", "营业总收入", "3,269,148,773.49"]}
+      revenue_yoy_pct: {status: supported, normalized_value: "32.05", unit: PCT, evidence_quotes: ["增减变动幅度", "（％）", "营业总收入", "32.05%"]}
+      net_profit_cny: {status: supported, normalized_value: "374032821.93", unit: CNY, evidence_quotes: ["单位：元", "归属于上市公司股东的净利润", "374,032,821.93"]}
+      net_profit_yoy_pct: {status: supported, normalized_value: "71.80", unit: PCT, evidence_quotes: ["增减变动幅度", "（％）", "归属于上市公司股东的净利润", "71.80%"]}
+      total_assets_cny: {status: supported, normalized_value: "3460628368.96", unit: CNY, evidence_quotes: ["单位：元", "总资产", "3,460,628,368.96"]}
+      net_assets_cny: {status: supported, normalized_value: "2729090519.33", unit: CNY, evidence_quotes: ["单位：元", "归属于上市公司股东的所有者权益", "2,729,090,519.33"]}
+
+  - audit_item_id: 81e46b827b6f070f4fe2a77c7a3dd9a1d80c8cad3ce3562e848d7f8520799e99
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司及控股子公司累计收到政府补助2717.20万元", unit: TEXT, evidence_quotes: ["公司及控股子公司累计收到政府各项补助", "2,717.20 万元"]}
+      event_date: {status: ambiguous, reason: "公告包含多笔补助的不同到账日期，没有唯一的当前事件日期。"}
+      counterparty: {status: absent, reason: "政府补助不构成双边交易，正文也未给出唯一付款机关。"}
+      subject_name: {status: supported, normalized_value: "河南安彩高科股份有限公司", unit: TEXT, evidence_quotes: ["河南安彩高科股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "会计处理及影响以年度审计确认结果为准", unit: TEXT, evidence_quotes: ["具体的会计处理以会计师年度审计确认后的结果为准"]}
+      subsidy_amount_cny: {status: supported, normalized_value: "27172000", unit: CNY, evidence_quotes: ["2,717.20 万元（未经审计）"]}
+      income_related_amount_cny: {status: supported, normalized_value: "27172000", unit: CNY, evidence_quotes: ["2,717.20 万元（未经审计）", "均与收益相关"]}
+      asset_related_amount_cny: {status: absent, reason: "正文明确补助均与收益相关，未披露与资产相关补助金额。"}
+      accounting_period: {status: supported, normalized_value: "预计影响2022年业绩", unit: TEXT, evidence_quotes: ["上述补助的取得预计会对公司 2022 年业绩产生一定积", "极影响"]}
+
+  - audit_item_id: 4e410ac5d73d60b8cc96f3b35d43e0c1a1311632af09629cae3d21eda1c3ebff
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过为控股子公司增加担保额度", unit: TEXT, evidence_quotes: ["审议通过了《关于为子公司增加担保额度的议案》", "增加担保额度合计 500 万元"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["于 2023 年 1 月 11", "日召开第七届董事会第二十三次会议"]}
+      counterparty: {status: supported, normalized_value: "北京银行股份有限公司中关村分行", unit: TEXT, evidence_quotes: ["北京银行股份有限公司中关村分行"]}
+      subject_name: {status: supported, normalized_value: "北京科锐配电自动化股份有限公司", unit: TEXT, evidence_quotes: ["北京科锐配电自动化股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文称财务风险处于可控制范围，未披露本次担保的重大不确定性。"}
+      guarantor: {status: supported, normalized_value: "北京科锐配电自动化股份有限公司", unit: TEXT, evidence_quotes: ["北京科锐配电自动化股份有限公司"]}
+      guaranteed_party: {status: supported, normalized_value: "北京稳力科技有限公司", unit: TEXT, evidence_quotes: ["北京稳力科技有限公司"]}
+      guarantee_amount_cny: {status: supported, normalized_value: "5000000", unit: CNY, evidence_quotes: ["担保金额为 500 万元"]}
+      guarantee_type: {status: supported, normalized_value: "连带责任保证", unit: TEXT, evidence_quotes: ["提供连带责任保证"]}
+      guarantee_term: {status: supported, normalized_value: "自本次董事会审议通过之日起2年", unit: TEXT, evidence_quotes: ["期限为自本次董事会审议通过之日起 2 年"]}
+      cumulative_guarantee_ratio_pct: {status: supported, normalized_value: "6.11", unit: PCT, evidence_quotes: ["担保余额占公司最近一期经审计净资产的 6.11%"]}
+      overdue_guarantee_amount_cny: {status: supported, normalized_value: "0", unit: CNY, evidence_quotes: ["不存在逾期担保事项"]}
+
+  - audit_item_id: 64b737b07e5b86da3b0842e161a04a9716b45c63d01141b99b10a60965745ebd
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会和监事会审议通过2023年度金融衍生品交易计划，尚需股东大会审议", unit: TEXT, evidence_quotes: ["审议通过了《关于公司 2023 年度金融衍生品交易计划的议案》", "本议案尚需", "提交股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["于", "2023 年 1 月 11 日召开的第二届董事会第十八次会议"]}
+      counterparty: {status: ambiguous, reason: "正文仅限定为具备资质的金融机构类别，没有唯一已确定的交易对手。"}
+      subject_name: {status: supported, normalized_value: "无锡帝科电子材料股份有限公司", unit: TEXT, evidence_quotes: ["无锡帝科电子材料股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "存在市场、内部控制、客户或供应商违约、法律、交易对手违约、技术及资金风险", unit: TEXT, evidence_quotes: ["市场风险", "内部控制风险", "客户或供应商违约风险", "法律风险", "违约风险", "技术风险", "资金风险"]}
+      business_type: {status: supported, normalized_value: "外汇衍生产品交易和白银期货合约交易", unit: TEXT, evidence_quotes: ["外汇衍生产品交易", "白银期货合约交易"]}
+      instrument: {status: supported, normalized_value: "远期结售汇、外汇期权、外汇掉期及白银期货合约", unit: TEXT, evidence_quotes: ["远期结售汇、外汇期权、外汇掉期等外汇衍生产品以及白银期货合约"]}
+      maximum_amount_cny: {status: ambiguous, reason: "外汇衍生品20亿元为时点余额，白银期货6000万元为保证金额度，两种口径不能合并为一个金额。"}
+      hedged_exposure: {status: supported, normalized_value: "外币业务、进出口收付款及生产所需银粉原材料价格风险", unit: TEXT, evidence_quotes: ["公司在日常经营过程中涉及外币业务", "进出口业务主要结算币种是美元、日元等", "公司产品主要原材料为银粉"]}
+      business_period: {status: supported, normalized_value: "12", unit: MONTHS, evidence_quotes: ["自公司相关股东大会批准通过之日起十二个月内有效"]}
+      risk_controls: {status: supported, normalized_value: "以实际经营为基础并匹配敞口、限制品种和持仓、审查合约、分级监督", unit: TEXT, evidence_quotes: ["必须以正常的生产经营为基础", "必须与公司实际业务相匹配", "期货持仓量不超过风险对冲的现货需求量", "公司将审慎审查与对方签订的合约条款", "通过分级管理，形成监督机制"]}
+
+  - audit_item_id: ca53b9fe18d1c613280ba46f1ebdb42d5d42bdd5d98dd85ddc3f65c1acef5f8d
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "与中国科学院工程热物理研究所签订技术开发合同", unit: TEXT, evidence_quotes: ["国科学院工程热物理研究所签订了《技术开发合同书》"]}
+      event_date: {status: ambiguous, reason: "正文给出合同履行起始日和公告落款日，但未明确合同签署日。"}
+      counterparty: {status: supported, normalized_value: "中国科学院工程热物理研究所", unit: TEXT, evidence_quotes: ["中国科学院工程热物理研究所"]}
+      subject_name: {status: supported, normalized_value: "无锡华光环保能源集团股份有限公司", unit: TEXT, evidence_quotes: ["无锡华光环保能源集团股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "技术开发进度、成果及后期商业化应用进程存在不确定性", unit: TEXT, evidence_quotes: ["技术开发进度、成果，后期商业化应用进程等尚存在一定不确定性"]}
+      contract_amount_cny: {status: absent, reason: "合同仅说明研发经费分期支付方式，未披露具体金额。"}
+      annual_revenue_ratio_pct: {status: absent, reason: "合同未披露金额，也未披露占年度营业收入比例。"}
+      contract_period: {status: supported, normalized_value: "2022-12-30至2032-12-31，有效期10年", unit: TEXT, evidence_quotes: ["合同自 2022 年 12 月 30 日至 2032 年 12 月 31 日", "有效期十年"]}
+      performance_uncertainty: {status: supported, normalized_value: "研发结果和后期用户开发、商业化应用存在不确定性", unit: TEXT, evidence_quotes: ["研发结果和示范项目落地需要一定周期", "后期用户开发尚存在一定的不确定性"]}
+
+  - audit_item_id: 19cd5b49b1813ea2510e265c1cbd0a11657cac44101febac46ec73272dd097af
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "股东将所持公司的部分股份解除质押", unit: TEXT, evidence_quotes: ["将其所持有公司的部分股份解除质押"]}
+      event_date: {status: supported, normalized_value: "2023-02-06", unit: DATE, evidence_quotes: ["解除日期", "北京华建盈富", "2023.2.6"]}
+      counterparty: {status: ambiguous, reason: "本次三笔解除质押涉及阳光硅峰和光大兴陇信托两个质权人，没有唯一对手方。"}
+      subject_name: {status: supported, normalized_value: "晶澳太阳能科技股份有限公司", unit: TEXT, evidence_quotes: ["晶澳太阳能科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露解除质押事项存在重大不确定性。"}
+      holder_name: {status: supported, normalized_value: "北京华建盈富实业合伙企业（有限合伙）", unit: TEXT, evidence_quotes: ["北京华建盈富实业合伙企业（有限合伙）"]}
+      pledged_share_count: {status: ambiguous, reason: "正文分列398万股、56万股和187.6万股三笔解除数量，没有直接披露本次动作合计值，不能人工相加。"}
+      pledged_share_ratio_pct: {status: ambiguous, reason: "三笔解除股份各自占持有人持股比例为2.21%、0.31%和1.04%，没有唯一比例或正文合计比例。"}
+      pledge_purpose: {status: absent, reason: "解除质押公告未披露原质押用途。"}
+      pledgee: {status: ambiguous, reason: "三笔解除质押涉及阳光硅峰电子科技有限公司和光大兴陇信托有限责任公司两个质权人。"}
+      pledge_status: {status: supported, normalized_value: "解除质押", unit: TEXT, evidence_quotes: ["股东股份解除质押基本情况"]}
+      release_date: {status: supported, normalized_value: "2023-02-06", unit: DATE, evidence_quotes: ["解除日期", "北京华建盈富", "2023.2.6"]}
+
+  - audit_item_id: db226ddf12c892f537fbb969d63a3bc7236b1c966cd908a81b7050bb6c8bc75a
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "中标项目已签订采购业务合作协议", unit: TEXT, evidence_quotes: ["与安靠智电签订了《国网智联电商有限公司电商化采购业务合作协议-省管产业单位三级专区》"]}
+      event_date: {status: supported, normalized_value: "2022-12-30", unit: DATE, evidence_quotes: ["2022 年 12 月 30 日"]}
+      counterparty: {status: supported, normalized_value: "常州晋陵电力实业有限公司物资分公司国网智联电商有限公司", unit: TEXT, evidence_quotes: ["常州晋陵电力实业有限公司物资分公司", "国网智联电商有限公司"]}
+      subject_name: {status: supported, normalized_value: "江苏安靠智能输电工程科技股份有限公司", unit: TEXT, evidence_quotes: ["江苏安靠智能输电工程科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "不可抗力等不可预计因素可能导致协议不能正常履行", unit: TEXT, evidence_quotes: ["可能存在因不可抗力等不可预计因素的影响", "导致协议不能正常履行的风险"]}
+      bid_amount_cny: {status: supported, normalized_value: "72965331", unit: CNY, evidence_quotes: ["协议金额 72,965,331.00 元"]}
+      annual_revenue_ratio_pct: {status: supported, normalized_value: "9.06", unit: PCT, evidence_quotes: ["约占公司 2021 年度经审计的营业收入的", "9.06%"]}
+      project_name: {status: supported, normalized_value: "220千伏德龙、龙跃、宝润进线工程", unit: TEXT, evidence_quotes: ["220 千伏德龙、龙跃、宝润进线工程"]}
+      performance_uncertainty: {status: supported, normalized_value: "不可抗力等不可预计因素可能导致协议不能正常履行", unit: TEXT, evidence_quotes: ["可能存在因不可抗力等不可预计因素的影响", "导致协议不能正常履行的风险"]}
+
+  - audit_item_id: 153b73561b265e4792d85422f47d7b3164b8c18d689672ae3aeb1a8919aa3013
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "收到两名股东的集中竞价减持计划告知函", unit: TEXT, evidence_quotes: ["收到股东许琳、福建平潭利恒投资有限公司", "出具的《股份减持计划告知函》"]}
+      event_date: {status: supported, normalized_value: "2023-01-04", unit: DATE, evidence_quotes: ["于 2023 年 1 月 4", "日分别收到股东许琳"]}
+      counterparty: {status: absent, reason: "集中竞价减持计划尚未实施，不存在唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "新风光电子科技股份有限公司", unit: TEXT, evidence_quotes: ["新风光电子科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "是否实施、如何实施及减持数量和价格存在不确定性", unit: TEXT, evidence_quotes: ["选择是否实施及如何实施减持计划", "减持的数量和价格存在不确定性"]}
+      holder_name: {status: ambiguous, reason: "当前减持计划同时涉及许琳和平潭利恒两个独立股东。"}
+      planned_share_count: {status: ambiguous, reason: "两名股东计划减持上限分别为831276股和2799000股，正文没有唯一合计值。"}
+      planned_share_ratio_pct: {status: ambiguous, reason: "两名股东计划减持比例上限分别为0.5940%和2%，没有唯一比例。"}
+      completed_share_count: {status: absent, reason: "本公告披露的是新减持计划，当前计划尚未实施；历史减持数量不属于本次完成量。"}
+      completed_share_ratio_pct: {status: absent, reason: "当前计划尚未实施，历史减持比例不属于本次完成比例。"}
+      progress: {status: supported, normalized_value: "计划于2023-02-02至2023-07-31期间实施", unit: TEXT, evidence_quotes: ["2023/2/2～", "2023/7/31"]}
+
+  - audit_item_id: ba142d8122fd4b25ed034f7ccb6043d3ddca89f213aa42940dffe854e7d98686
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露公司及子公司连续十二个月新增累计诉讼及仲裁情况", unit: TEXT, evidence_quotes: ["对公司及子公司连续十二个月内累计发生的诉讼、仲裁", "现将有关情况公告如下"]}
+      event_date: {status: ambiguous, reason: "正文使用截至本公告披露日并列示不同立案日期，落款日不作为唯一事件日。"}
+      counterparty: {status: ambiguous, reason: "累计案件涉及多名被告或被申请人，且小额案件对手方未逐项披露。"}
+      subject_name: {status: supported, normalized_value: "上海摩恩电气股份有限公司", unit: TEXT, evidence_quotes: ["上海摩恩电气股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "部分案件尚未开庭或未结案，对本期及期后利润影响不确定", unit: TEXT, evidence_quotes: ["部分案件尚未开庭或尚未结案", "其对公司本期利润及期后利", "润的影响具有不确定性"]}
+      case_role: {status: ambiguous, reason: "累计案件中公司及子公司既作为原告也作为被告，无法归为单一诉讼角色。"}
+      case_stage: {status: ambiguous, reason: "多项案件分别处于民事一审、仲裁及其他未披露阶段，没有唯一案件阶段。"}
+      claim_amount_cny: {status: supported, normalized_value: "91958000", unit: CNY, evidence_quotes: ["涉案金额合计为 9,195.80 万元"]}
+      judgment_amount_cny: {status: absent, reason: "部分案件尚未开庭或未结案，正文未披露判决金额。"}
+      provision_amount_cny: {status: absent, reason: "正文未披露针对这些案件计提的预计负债金额。"}
+      enforceability_uncertainty: {status: absent, reason: "正文披露的是案件未决及利润影响不确定性，未披露判决执行或回款不确定性。"}
+
+  - audit_item_id: d494e58c5d5a29b53b1543f70b7e755e51403f884c27ba58e25a1a1744af98a7
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过控股子公司投资建设一体化新材料产业项目", unit: TEXT, evidence_quotes: ["审议通过《关于控股子公司投资建设广东宁德邦普一体化新材料产业项目的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-01-28", unit: DATE, evidence_quotes: ["2023 年 1 月 28 日", "召开的第三届董事会第十六次会议"]}
+      counterparty: {status: absent, reason: "本公告为公司自主投资建设项目，未披露双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "广东邦普循环科技有限公司", unit: TEXT, evidence_quotes: ["广东邦普循环科技有限公司"]}
+      uncertainty: {status: supported, normalized_value: "存在工期和成本超预期、市场需求与价格波动以及废旧电池来源不确定等风险", unit: TEXT, evidence_quotes: ["不能按期完成建设或建设成本高于预期的风险", "市场需求变化、成本上升及产品价格波动", "废旧动力电池的来源存在一定不确定性"]}
+      project_name: {status: supported, normalized_value: "广东宁德邦普一体化新材料产业项目", unit: TEXT, evidence_quotes: ["项目名称：广东宁德邦普一体化新材料产业项目"]}
+      investment_amount_cny: {status: supported, normalized_value: "23800000000", unit: CNY, evidence_quotes: ["项目总投资不超过人民币238亿元"]}
+      capacity: {status: supported, normalized_value: "50万吨废旧电池材料回收及相应正负极材料制造", unit: TEXT, evidence_quotes: ["50万吨废旧电池材料回收", "磷酸铁锂正极材料、三元正极材料及负极再生石墨制造"]}
+      construction_period: {status: supported, normalized_value: "4年", unit: YEARS, evidence_quotes: ["项目建设期：4年"]}
+      expected_operation_date: {status: absent, reason: "正文仅披露建设期4年，没有明确预计投产日期。"}

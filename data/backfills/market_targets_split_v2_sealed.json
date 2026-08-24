@@ -1,0 +1,66 @@
+{
+  "contract": "causal-market-target-v2",
+  "split_contract": "causal-impact-split-v2",
+  "split_source_sha256": "2e1c95f654e4cc36f111a7142fefd9a53b2c628b70194e3bf5355b42f7fd6d3d",
+  "created_at": "2026-08-21T01:39:25.126290+00:00",
+  "benchmark_code": "000300.SH",
+  "entry_rule": "first stock trading session strictly after publication; entry at open",
+  "exit_rule": "horizon-th stock trading session close",
+  "target_rule": "stock return minus benchmark return; sign gives actual direction",
+  "warning": "retrospective training targets, not historical predictions or accuracy",
+  "announcements": 165898,
+  "targets": 496397,
+  "by_horizon": {
+    "1": {
+      "matured": 165668,
+      "pending": 230
+    },
+    "3": {
+      "matured": 165464,
+      "pending": 434
+    },
+    "5": {
+      "matured": 165265,
+      "pending": 633
+    }
+  },
+  "by_dataset_role": {
+    "forward_validation": {
+      "1": 27223,
+      "3": 27019,
+      "5": 26820
+    },
+    "quarantine": {
+      "1": 19456,
+      "3": 19456,
+      "5": 19456
+    },
+    "test": {
+      "1": 28722,
+      "3": 28353,
+      "5": 28230
+    },
+    "test_outcome_after_cutoff": {
+      "1": 782,
+      "3": 1151,
+      "5": 1274
+    },
+    "train": {
+      "1": 87821,
+      "3": 87450,
+      "5": 87194
+    },
+    "train_outcome_after_cutoff": {
+      "1": 1664,
+      "3": 2035,
+      "5": 2291
+    }
+  },
+  "sealed_labels": [
+    "test",
+    "test_outcome_after_cutoff",
+    "quarantine",
+    "forward_validation"
+  ],
+  "label_visibility": "report exposes row counts only; direction labels remain sealed until the pre-registered one-time evaluation"
+}

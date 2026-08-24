@@ -1,0 +1,60 @@
+{
+  "contract": "announcement-source-archive-backfill-v1",
+  "development_contract_sha256": "493afeba96ff84d2efc143b3ff224f0fae1fc233c9bd890f7c7f80d2f1618f5c",
+  "last_announcement_db_id": 134292,
+  "processed": 170,
+  "failures": [
+    {
+      "announcement_db_id": 84958,
+      "announcement_id": "AN202310231602718242",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    },
+    {
+      "announcement_db_id": 89327,
+      "announcement_id": "AN202311291612752817",
+      "error_type": "ValueError",
+      "error": "static attachment response is not a PDF"
+    },
+    {
+      "announcement_db_id": 91139,
+      "announcement_id": "AN202312221614831776",
+      "error_type": "ValueError",
+      "error": "PDF page 15 has no extractable text"
+    },
+    {
+      "announcement_db_id": 112525,
+      "announcement_id": "AN202404261631444417",
+      "error_type": "ValueError",
+      "error": "PDF page 1 has no extractable text"
+    },
+    {
+      "announcement_db_id": 119693,
+      "announcement_id": "AN202407011637135123",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    },
+    {
+      "announcement_db_id": 126393,
+      "announcement_id": "AN202409091639801806",
+      "error_type": "ValueError",
+      "error": "PDF page 46 has no extractable text"
+    },
+    {
+      "announcement_db_id": 134292,
+      "announcement_id": "AN202412261641440775",
+      "error_type": "ValueError",
+      "error": "stored announcement title not found in first three PDF pages"
+    }
+  ],
+  "selection": {
+    "dataset_role": "train",
+    "only_accepted": true,
+    "relevances": [
+      "core_event"
+    ],
+    "explicit_announcement_ids_sha256": "8100809132dabded21ca703cfbb5906d5807438ad40b45298fdf262198f53f0a",
+    "content_source": "pdf"
+  },
+  "updated_at": "2026-08-21T04:22:37.782848+00:00"
+}

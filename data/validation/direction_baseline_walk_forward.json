@@ -1,0 +1,60 @@
+{
+  "contract": "walk-forward-direction-baseline-v1",
+  "created_at": "2026-08-20T11:41:30.816382+00:00",
+  "predictor": "frozen event_types direction_baseline sign",
+  "warning": "research baseline, not live historical predictions",
+  "minimum_matured_samples_per_subcategory": 20,
+  "ranking_rule": "bullish only; Wilson 95% historical hit-rate lower bound > 0.5",
+  "by_horizon": {
+    "1": {
+      "matured_targets": 2131,
+      "directional_predictions": 658,
+      "directional_accuracy": 0.5197568389057751,
+      "bullish_candidates": 573,
+      "bullish_hit_rate": 0.5235602094240838,
+      "ranked_bullish": 133,
+      "ranked_bullish_hit_rate": 0.5488721804511278,
+      "bullish_rejected_insufficient_history": 172,
+      "bullish_rejected_accuracy_lower_bound": 268,
+      "ranked_category_counts": {
+        "equity_incentive": 108,
+        "buyback": 20,
+        "convertible_bond": 5
+      }
+    },
+    "3": {
+      "matured_targets": 1927,
+      "directional_predictions": 606,
+      "directional_accuracy": 0.6105610561056105,
+      "bullish_candidates": 529,
+      "bullish_hit_rate": 0.6427221172022685,
+      "ranked_bullish": 206,
+      "ranked_bullish_hit_rate": 0.5631067961165048,
+      "bullish_rejected_insufficient_history": 202,
+      "bullish_rejected_accuracy_lower_bound": 121,
+      "ranked_category_counts": {
+        "buyback": 62,
+        "convertible_bond": 35,
+        "equity_incentive": 81,
+        "private_placement": 28
+      }
+    },
+    "5": {
+      "matured_targets": 1728,
+      "directional_predictions": 553,
+      "directional_accuracy": 0.6763110307414105,
+      "bullish_candidates": 483,
+      "bullish_hit_rate": 0.7267080745341615,
+      "ranked_bullish": 154,
+      "ranked_bullish_hit_rate": 0.6428571428571429,
+      "bullish_rejected_insufficient_history": 270,
+      "bullish_rejected_accuracy_lower_bound": 59,
+      "ranked_category_counts": {
+        "equity_incentive": 77,
+        "convertible_bond": 33,
+        "buyback": 41,
+        "private_placement": 3
+      }
+    }
+  }
+}
