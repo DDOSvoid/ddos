@@ -1,0 +1,92 @@
+{
+  "contract": "llm-extraction-prompt-development-review-v2",
+  "reviewed_at": "2026-08-24T09:07:33.7145314Z",
+  "eligible_for_model_selection_score": false,
+  "accuracy_estimate_reported": false,
+  "model": "deepseek-v4-flash",
+  "thinking": "disabled",
+  "final_prompt_version": "structured-extraction-prompt-v21",
+  "final_prompt_sha256": "189dc8f3b38596e247ffb2f515a9061c007325d8dfd22367dbda37c949b769f0",
+  "prompt_appendix_sha256": "342521a2dc7b117972b54bf7ed85e63c849169a0d985b89ce696e1af003bf22d",
+  "validator_contract_version": "evidence-validator-v17",
+  "schema_version": "announcement-structured-evidence-v2",
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "development_method": "two metadata-selected prompt-development batches plus zero-request replay of consumed v20 feedback",
+  "first_development_batch": {
+    "selection": "data/validation/llm_extraction_v21_development_selection.json",
+    "selection_sha256": "09f1cd3d22a36142c4a76e5a6e925e43f8468fd6c77281904c4a3dc5c4db1f24",
+    "prompt_sha256": "f255bd2a9d21223b4fa19d395ea3beb8ad1b0870f687510a39ab7a6c14f96f91",
+    "output": "data/llm_extraction/deepseek-v4-flash_f255bd2a9d21_evidence-validator-v17.jsonl",
+    "output_sha256": "0b7fa3b30fdca18972e1cef4801a9b004a6b4475610af96484635391ac0536ff",
+    "documents": 10,
+    "distinct_sub_categories": 10,
+    "fields": 97,
+    "supported": 66,
+    "absent": 23,
+    "ambiguous": 8,
+    "local_rejected_fields": 6,
+    "prompt_tokens": 96939,
+    "completion_tokens": 11108,
+    "total_tokens": 108047,
+    "development_feedback": [
+      "Treat operating-data reports as current disclosure documents.",
+      "Use current remediation rather than a future monthly-disclosure obligation for risk-warning progress.",
+      "Support lockup notices that disclose a current release/listing arrangement even when no unlock-condition sentence exists."
+    ]
+  },
+  "final_development_batch": {
+    "selection": "data/validation/llm_extraction_v21_final_development_selection.json",
+    "selection_sha256": "bcbcfebeb24e16eadf258fd708538fa3f392364aaa99c40969a88c6f98ec0a73",
+    "api_output": "data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17.jsonl",
+    "api_output_sha256": "2538cea68137545b423e0d63f0d54a11f3423f08924ad621733bba71de3dcbc7",
+    "final_validator_replay_output": "data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17-final2.jsonl",
+    "final_validator_replay_output_sha256": "e484fc298eb0e3fa8678ef3f51ae257e1c93d5ac1038395d32fb224113899bb8",
+    "documents": 10,
+    "distinct_sub_categories": 10,
+    "fields": 106,
+    "supported": 69,
+    "absent": 18,
+    "ambiguous": 19,
+    "local_rejected_fields": 7,
+    "new_api_requests": 10,
+    "replay_api_requests": 0,
+    "prompt_tokens": 104694,
+    "completion_tokens": 13360,
+    "total_tokens": 118054,
+    "normalized_values_with_layout_linebreaks": 0
+  },
+  "combined_api_usage": {
+    "new_api_requests": 20,
+    "prompt_tokens": 201633,
+    "completion_tokens": 24468,
+    "total_tokens": 226101
+  },
+  "consumed_v20_feedback_replay": {
+    "eligible_for_v21_score": false,
+    "new_model_requests": 0,
+    "changed_fields": 13,
+    "semantically_corrected_fields": 12,
+    "moved_to_safe_abstention_but_still_missing_gold_value": 1,
+    "remaining_prompt_only_error": "financial-report forward-looking uncertainty was absent in the saved v20 response and cannot be safely invented by the validator",
+    "note": "The v21 prompt explicitly addresses both the remaining uncertainty omission and the short-term treasury product-type omission. This replay is development evidence only."
+  },
+  "causal_integrity": {
+    "dataset_role": "train",
+    "development_period": "2023-H1",
+    "conversation_history_included": false,
+    "memory_included": false,
+    "human_review_included_in_prompt": false,
+    "market_targets_queried": false,
+    "deepseek_future_data_exposure": false,
+    "official_test_read_count": 0,
+    "future_data_used_for_development": false,
+    "v20_gold_or_review_included_in_model_prompt": false
+  },
+  "verification": {
+    "targeted_llm_tests": "110 passed",
+    "full_test_result": "403 passed, 2 skipped",
+    "lint_result": "57 existing E501 findings remain in the LLM source/tests; candidate runner and syntax checks pass",
+    "prompt_or_validator_changes_after_final_development_replay": false
+  },
+  "next_gate": "Freeze all implementation and artifact hashes, then select and annotate a fresh unrequested 2023 model-selection batch before any v21 model-selection request."
+}

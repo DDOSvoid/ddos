@@ -1,0 +1,90 @@
+{
+  "contract": "llm-extraction-historical-reflection-v1",
+  "created_on": "2026-08-24",
+  "source_review_path": "data/validation/llm_extraction_v18_model_selection_review_10.json",
+  "source_review_sha256": "c9ac382c65bc5ad3fbeace7b1d01acaa47db9bc39e51afec751d490c903ef01e",
+  "source_prompt_version": "structured-extraction-prompt-v18",
+  "source_validator_contract_version": "evidence-validator-v10",
+  "source_batch_state": "consumed_historical_model_selection_feedback",
+  "candidate_batch_reusable_for_scoring": false,
+  "applies_to_future_versions_only": true,
+  "future_data_read": false,
+  "market_targets_read": false,
+  "source_document_bodies_copied_into_reflection": false,
+  "outcome": {
+    "decision": "FAIL",
+    "documents": 10,
+    "fields": 105,
+    "incorrect_fields": 19,
+    "post_lock_human_semantic_field_accuracy": 0.819,
+    "supported_semantic_precision": 0.8421,
+    "supported_semantic_recall": 0.8767,
+    "abstention_recall": 0.7188,
+    "numeric_date_boolean_exact_accuracy": 0.875
+  },
+  "error_clusters": [
+    {
+      "cluster": "scalar_cardinality_and_multi_row_selection",
+      "lesson": "A scalar field must abstain when current rows disagree; a common value is allowed only when every relevant current row agrees.",
+      "fields": [
+        "19cd5b49:event_date",
+        "19cd5b49:counterparty",
+        "19cd5b49:pledged_share_ratio_pct",
+        "19cd5b49:release_date",
+        "153b7356:holder_name",
+        "153b7356:progress"
+      ]
+    },
+    {
+      "cluster": "unsupported_arithmetic_or_measurement_mixing",
+      "lesson": "Never synthesize totals, averages, ratios or dates across rows or measurement bases unless the document directly discloses the normalized value.",
+      "fields": [
+        "64b737b0:maximum_amount_cny",
+        "153b7356:planned_share_count"
+      ]
+    },
+    {
+      "cluster": "event_date_semantics",
+      "lesson": "Use the current action date, not a performance-period start, announcement footer or one date selected from an aggregate multi-event disclosure.",
+      "fields": [
+        "81e46b82:event_date",
+        "ca53b9fe:event_date",
+        "ba142d81:event_date"
+      ]
+    },
+    {
+      "cluster": "entity_role_and_alias_resolution",
+      "lesson": "Distinguish transaction counterparties from generic institution classes and selling holders; reconstruct explicit aliases and separately named agreement parties without inventing entities.",
+      "fields": [
+        "4e410ac5:guarantor",
+        "64b737b0:counterparty",
+        "db226ddf:counterparty",
+        "153b7356:counterparty"
+      ]
+    },
+    {
+      "cluster": "substantive_content_completeness",
+      "lesson": "Section headings and bare action verbs are not sufficient; supported outputs must include the identifiable object, exposure, control or concrete risk content.",
+      "fields": [
+        "64b737b0:hedged_exposure",
+        "64b737b0:risk_controls",
+        "d494e58c:event_stage",
+        "d494e58c:uncertainty"
+      ]
+    }
+  ],
+  "forward_actions": {
+    "target_prompt_version": "structured-extraction-prompt-v19",
+    "target_validator_contract_version": "evidence-validator-v11",
+    "required_controls": [
+      "explicit scalar-cardinality instruction",
+      "direct numeric provenance validation",
+      "event-date semantic rejection rules",
+      "counterparty-versus-holder role checks",
+      "multi-span named-party support",
+      "substantive risk and event-stage completeness checks"
+    ],
+    "evaluation_rule": "Freeze a new prompt and validator, create a fresh unread human gold lock before requests, and never reuse the consumed v18 batch for scoring.",
+    "holdout_rule": "Keep the extraction holdout locked until a fresh model-selection batch passes every predefined gate."
+  }
+}

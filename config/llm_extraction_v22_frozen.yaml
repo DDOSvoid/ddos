@@ -1,0 +1,85 @@
+contract: llm-extraction-frozen-candidate-v3
+frozen_at: "2026-08-25T01:32:28.0733400Z"
+status: awaiting_fresh_blind_gold_annotation_and_lock
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  consumed_feedback_allowed: "v21 formal review, saved raw responses, and validator-only replay"
+  fresh_model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v22_direct_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed_in_model_requests: false
+  market_targets_allowed_in_model_requests: false
+  causal_incident_file: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  causal_incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v22
+  prompt_sha256: 1a22485010737b85bab27f631fcf7e19919306eb7cd0b551b32643a1e3188eea
+  prompt_appendix_sha256: a05d8d41bf0bb5fe2efdb7aff5402c2e9abc9d0319f690fd61ee73b872b7e108
+  validator_contract_version: evidence-validator-v18
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: d4ebb8933b75a1f69479879094b41a1a063d2aafc6b3e0493d3a83d032a27170
+  src/ml/llm_client.py: 8cc7f5725360de5fd97400f6c315c38fff9670f521d34aa7481096e62ffe3304
+  scripts/run_llm_extraction_candidates.py: 6cf3bddf51cfc26ff51a56470fd1e66a0544f9f66936183f2bec38709f773a28
+  scripts/validate_llm_extraction_gold.py: e3d89629ef0e7d0a8e7f935f6e3b7d8936f45ac19ba0ae61d28480f7f89a5eb25
+  tests/test_llm_extraction.py: e33e25cc6573225ce2f4e011c926ca1f9ffac548488dd09dfe8c3a0d4ce597b9
+  tests/test_llm_candidate_runner.py: 2329339d677eb34080757fb371a2dcf45bae6eab951fd6714a03295a4c5297f8
+  tests/test_validate_llm_extraction_gold.py: 51d972f4f3cc0901e5939f4fd0cb4c338ce1f262abdc013981d99a31f485e247
+
+development_validation:
+  selection: data/validation/llm_extraction_v22_development_selection.json
+  selection_sha256: 70f2abe1a8a2c2e5a4c723eb92a47d7b137f0f5ad116cb7342650d30b607ab4b
+  review: data/validation/llm_extraction_v22_development_review_10.json
+  api_output: data/llm_extraction/deepseek-v4-flash_v22_development.jsonl
+  api_output_sha256: 9ec63b002a407c86fed493d696e78b2a62fe27048743a12c0171456cbefbd8c0
+  final_validator_replay_output: data/llm_extraction/deepseek-v4-flash_v22_development_final.jsonl
+  final_validator_replay_output_sha256: b63a9f68ee8b5b9e57b2911d0d4445315257a37ac39b01a90e3ade7a9cc059ec
+  documents: 10
+  fields: 108
+  supported: 75
+  absent: 22
+  ambiguous: 11
+  new_api_requests: 10
+  prompt_tokens: 107069
+  completion_tokens: 12376
+  total_tokens: 119445
+  conversation_history_included: false
+  memory_included: false
+  human_review_included_in_prompt: false
+  market_targets_queried: false
+  deepseek_future_data_exposure: false
+  accuracy_estimate_reported: false
+  strict_gold_normalized_value_unit_check: implemented_and_tested
+  targeted_test_result: "114 passed"
+
+fresh_blind_gold_batch_13:
+  role: model_selection_validation
+  status: not_selected
+  selection_method: deterministic_metadata_only_hash_ranking
+  source_bodies_semantically_read_before_candidate_freeze: 0
+  candidate_requests_sent_before_gold_freeze: 0
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_v22_batch13_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_v22_batch13.lock.json
+  gold_lock_requires_normalized_value_unit_match: true
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  extraction_holdout_eligible_for_v22_score: false
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_or_validator_tuning_after_fresh_gold_lock: false

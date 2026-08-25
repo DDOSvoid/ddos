@@ -1,0 +1,86 @@
+{
+  "contract": "metadata-only-blind-model-selection-selection-v1",
+  "selected_at": "2026-08-24T08:18:09.3956672Z",
+  "prompt_version": "structured-extraction-prompt-v20",
+  "prompt_sha256": "65285315d191412f658643c34d213ce9a597f43e56401f5d65f6f7967a8fa843",
+  "validator_contract_version": "evidence-validator-v16",
+  "dataset_role": "train",
+  "evaluation_role": "model_selection_validation",
+  "source_period": "2023 only",
+  "selection_algorithm": "Exclude every audit_item_id present in any saved LLM candidate or model-selection gold artifact. For each remaining sub_category, retain the item with the smallest SHA256(prompt_sha256 + ':' + audit_item_id), then take the ten smallest category-winner hashes.",
+  "selection_used_source_metadata_only": true,
+  "selected_source_bodies_read": false,
+  "selected_candidate_outputs_seen": false,
+  "selected_candidate_requests_sent": 0,
+  "market_targets_read": false,
+  "future_data_read_for_selection": false,
+  "used_audit_item_id_count": 129,
+  "eligible_unrequested_item_count": 30,
+  "eligible_distinct_sub_categories": 17,
+  "selected_document_count": 10,
+  "selected_field_count": 108,
+  "selected_distinct_sub_categories": 10,
+  "items": [
+    {
+      "audit_item_id": "6a6a770a3e385cac96be6f34b6a92cac47cb567ea3b32d0e1d3745ba4cec4d3d",
+      "sub_category": "judicial_equity_action",
+      "field_count": 12,
+      "rank_sha256": "00615f64239180b3b886a3faafbe43e8351caf8b8f4a6e2024ec16460969fb81"
+    },
+    {
+      "audit_item_id": "42b353a29a34bf698d0531764f0d0331abcbf56c3d5428ecc7f0fe0c2d877ee3",
+      "sub_category": "fundraising_usage",
+      "field_count": 11,
+      "rank_sha256": "11e7acc12f2b89832f5e53202db19bf0ec4c929da4e599dfc3a8e285f77808ae"
+    },
+    {
+      "audit_item_id": "1f2cc0bde3c593541e40688b7ca0d10e2192416f5248938e4f3c66bc4b09a43e",
+      "sub_category": "lockup_expiry",
+      "field_count": 9,
+      "rank_sha256": "1c4c1e2bc9c2fe5e9a86be91423733ae959a6cafce7b9b54811a89cd1a7288c4"
+    },
+    {
+      "audit_item_id": "086b7d8a511e5122e5e9176ced236404a943278454177223822cd38ea903171d",
+      "sub_category": "major_contract",
+      "field_count": 9,
+      "rank_sha256": "1e5292896433479fe4a67b01fb6a2c073335015d20f06b2625b048a53a7da263"
+    },
+    {
+      "audit_item_id": "2a59d7d2a21dcf6ce3b64c88141be59a396d8f61aa8a1e4d3a5b9ee676444caa",
+      "sub_category": "earnings_h1",
+      "field_count": 11,
+      "rank_sha256": "39cb4022153ef3a3fdb5b395869d6bb174677c0c23e2dabbacea080917e30d6d"
+    },
+    {
+      "audit_item_id": "f013a120f91e235fc217baa650edf10478ac1936da1dc563d10c40c166bb5360",
+      "sub_category": "intellectual_property",
+      "field_count": 10,
+      "rank_sha256": "4fa1d9327aafd2e818bdffb105147dc85eb4ad1eb3294b9485d140862023b776"
+    },
+    {
+      "audit_item_id": "e22747ed83685d4659e0fee0c508149a04054998fb4e59e39f78fdf807e2d93a",
+      "sub_category": "treasury_management",
+      "field_count": 11,
+      "rank_sha256": "5b9700f84d37d7e5431be5238fd40d51290207c0cead17cd453a8960694396d1"
+    },
+    {
+      "audit_item_id": "f84e662aaa851af37a932e3e98b9fdd7fa3f8c5dbb5cf7287af748ed27c4cc81",
+      "sub_category": "equity_incentive",
+      "field_count": 11,
+      "rank_sha256": "5bd46520225b6e4cbc18960aae3301465febe0d0ee4291b07b954ebbd9c159ea"
+    },
+    {
+      "audit_item_id": "d0f2800eb979909d25e723163ed9a41a6709c528b185ec1f59ddcb782fa1b6a9",
+      "sub_category": "private_placement",
+      "field_count": 12,
+      "rank_sha256": "65c976df3e1a3abe08799386c7fd6a82aae0fea7f111bc53530affb511af6f02"
+    },
+    {
+      "audit_item_id": "d27b79e556c059042c7ba3395b96f8c46ecebdf919592eda8e4ee1f507474364",
+      "sub_category": "buyback",
+      "field_count": 12,
+      "rank_sha256": "672b40a737cb802f329954855b5ab6cc76bd2f89100304d15ffef3f655272303"
+    }
+  ],
+  "next_gate": "Read and annotate only these ten 2023 source bodies, validate every supported quote against the frozen v20 validator, and freeze model_selection_gold_v20_batch11.lock.json before any v20 model-selection request."
+}

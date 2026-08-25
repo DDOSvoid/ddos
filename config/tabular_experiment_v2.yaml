@@ -1,0 +1,71 @@
+contract: tabular-internal-experiment-v2
+dataset_contract: causal-tabular-train-dataset-v2
+feature_catalog_contract: causal-tabular-feature-catalog-v2
+output_contract: tabular-component-oof-v2
+development_contract: causal-multimodel-development-v1
+dataset_role: train
+official_test_allowed: false
+
+seed: 20260824
+classifier_threshold: 0.50
+round_trip_cost_bps: 20
+
+tasks:
+  return_target: future_excess_return
+  direction_target: actual_direction
+  risk_target: future_absolute_excess_return
+  horizons_sessions: [1, 3, 5]
+
+calibration:
+  method: platt
+  chronological_tail_fraction: 0.25
+  minimum_inner_train_samples: 1000
+  minimum_calibration_samples: 500
+  probability_clip_epsilon: 0.000001
+
+candidates:
+  linear:
+    ridge_alpha: 1.0
+    logistic_c: 1.0
+    logistic_max_iter: 1000
+  lightgbm:
+    n_estimators: 240
+    learning_rate: 0.03
+    num_leaves: 31
+    max_depth: -1
+    min_child_samples: 40
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_lambda: 1.0
+  catboost:
+    iterations: 240
+    learning_rate: 0.03
+    depth: 6
+    l2_leaf_reg: 3.0
+
+feature_sets:
+  full_v2:
+    include_groups:
+      - prediction_context
+      - announcement_context
+      - lagged_daily_market
+      - lagged_intraday_aggregates
+      - valuation_liquidity
+    candidates: [linear, lightgbm, catboost]
+  without_valuation_liquidity:
+    include_groups:
+      - prediction_context
+      - announcement_context
+      - lagged_daily_market
+      - lagged_intraday_aggregates
+    candidates: [catboost]
+
+selection_policy:
+  random_split_allowed: false
+  fit_preprocessors_on_fold_train_only: true
+  calibrator_uses_outer_train_only: true
+  choose_on_internal_oof_only: true
+  official_test_read_before_freeze: false
+  require_return_mae_to_beat_fold_train_median: true
+  require_primary_risk_mae_to_beat_fold_train_median: true
+  require_calibration_not_to_worsen_brier: true

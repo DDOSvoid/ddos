@@ -1,0 +1,102 @@
+contract: llm-extraction-frozen-candidate-v3
+frozen_at: "2026-08-24T09:07:33.7145314Z"
+status: awaiting_fresh_blind_gold_annotation_and_lock
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  consumed_feedback_allowed: "v20 batch 11 review and saved raw responses only"
+  fresh_model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v21_as_direct_v19_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed_in_model_requests: false
+  market_targets_allowed_in_model_requests: false
+  causal_incident_file: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  causal_incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v21
+  prompt_sha256: 189dc8f3b38596e247ffb2f515a9061c007325d8dfd22367dbda37c949b769f0
+  prompt_appendix_sha256: 342521a2dc7b117972b54bf7ed85e63c849169a0d985b89ce696e1af003bf22d
+  validator_contract_version: evidence-validator-v17
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: da8df018525ab39b1302f196e119b9b44f8d072a460b8fa0bea4f55e18988a24
+  src/ml/llm_client.py: 8cc7f5725360de5fd97400f6c315c38fff9670f521d34aa7481096e62ffe3304
+  scripts/run_llm_extraction_candidates.py: 191aa390735b262646d92f03c864b8b8d5b8504a1d52465744c43da5dd207f5d
+  scripts/validate_llm_extraction_gold.py: 89c4d0ec969de10cab60a3137dcffff929cfb06af0656c38637c6a09c1adebb8
+  tests/test_llm_extraction.py: 71b0bb1d8fde37639e8c0bbc6eee7af219edeba31188b06c5bb77a53ba608bff
+  tests/test_llm_candidate_runner.py: f55994625fca7c17411aa120365ac8941b73b85b87e70c2c1751de50c0365269
+
+development_validation:
+  review: data/validation/llm_extraction_v21_development_review_20.json
+  review_sha256: bb7380f8e5c510adebc9655f7a74ac35b10a7ba38c0e13434c78ba73a7c0a3f1
+  first_selection: data/validation/llm_extraction_v21_development_selection.json
+  first_selection_sha256: 09f1cd3d22a36142c4a76e5a6e925e43f8468fd6c77281904c4a3dc5c4db1f24
+  first_api_output: data/llm_extraction/deepseek-v4-flash_f255bd2a9d21_evidence-validator-v17.jsonl
+  first_api_output_sha256: 0b7fa3b30fdca18972e1cef4801a9b004a6b4475610af96484635391ac0536ff
+  final_selection: data/validation/llm_extraction_v21_final_development_selection.json
+  final_selection_sha256: bcbcfebeb24e16eadf258fd708538fa3f392364aaa99c40969a88c6f98ec0a73
+  final_api_output: data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17.jsonl
+  final_api_output_sha256: 2538cea68137545b423e0d63f0d54a11f3423f08924ad621733bba71de3dcbc7
+  final_validator_replay_output: data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17-final2.jsonl
+  final_validator_replay_output_sha256: e484fc298eb0e3fa8678ef3f51ae257e1c93d5ac1038395d32fb224113899bb8
+  documents: 20
+  final_batch_fields: 106
+  final_batch_supported: 69
+  final_batch_absent: 18
+  final_batch_ambiguous: 19
+  final_batch_local_rejected_fields: 7
+  normalized_values_with_layout_linebreaks: 0
+  new_api_requests: 20
+  prompt_tokens: 201633
+  completion_tokens: 24468
+  total_tokens: 226101
+  conversation_history_included: false
+  memory_included: false
+  human_review_included_in_prompt: false
+  market_targets_queried: false
+  deepseek_future_data_exposure: false
+  accuracy_estimate_reported: false
+  targeted_llm_test_result: "110 passed"
+  full_test_result: "403 passed, 2 skipped"
+  lint_result: "57 existing E501 findings remain in the LLM source/tests; candidate runner and syntax checks pass"
+
+consumed_v20_feedback_replay:
+  eligible_for_v21_score: false
+  new_model_requests: 0
+  changed_fields: 13
+  semantically_corrected_fields: 12
+  moved_to_safe_abstention_but_still_missing_gold_value: 1
+  remaining_saved_response_issue: "financial-report forward-looking uncertainty was absent and cannot be invented by the validator"
+  review: data/validation/llm_extraction_v21_development_review_20.json
+
+fresh_blind_gold_batch_12:
+  role: model_selection_validation
+  status: not_selected
+  selection_method: deterministic_metadata_only_hash_ranking
+  source_bodies_semantically_read_before_candidate_freeze: 0
+  candidate_requests_sent_before_gold_freeze: 0
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_v21_batch12_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_v21_batch12.lock.json
+  consumed_v20_batch_reuse_allowed: false
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  extraction_holdout_eligible_for_v21_score: false
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_or_validator_tuning_after_freeze: false
+  prompt_or_validator_tuning_after_fresh_gold_lock: false

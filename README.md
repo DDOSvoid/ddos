@@ -57,10 +57,10 @@ copy .env.example .env
 | 变量 | 说明 |
 |------|------|
 | `TUSHARE_TOKEN` | Tushare Pro token（https://tushare.pro），初始化股票列表用 |
-| `OPENAI_API_KEY` | **DeepSeek** API key（OpenAI 兼容），字段提取 + 深度分析用 |
-| `OPENAI_BASE_URL` | `https://api.deepseek.com`（模板已填） |
+| `DEEPSEEK_API_KEY` | DeepSeek API key，字段提取 + 深度分析用；只保存在本地 `.env` |
+| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com`（模板已填） |
 
-> 模型名（`deepseek-v4-flash`）在 `config/config.yaml` 的 `models.extraction` / `models.analysis` 配置，**不在** `.env` 中改。`OPENAI_API_KEY` 留空也能跑通除 extract/report 之外的阶段（调用时给出清晰报错）。
+> 模型名（默认 `deepseek-v4-flash`）和思考模式（默认 `disabled`）在 `config/config.yaml` 的 `models.extraction` / `models.analysis` 配置，**不在** `.env` 中改。客户端也兼容旧的 `OPENAI_API_KEY` / `OPENAI_BASE_URL` 变量，当前本地 `.env` 无需重新录入 key。不要在聊天、日志或提交中粘贴 API key；key 留空也能跑通除 extract/report 之外的阶段（调用时给出清晰报错）。
 
 ### 3. 构建分类模型（首次/新机器必做）
 
@@ -262,7 +262,7 @@ ddos/
 │   │   └── static/              # CSS / JS / vendor echarts
 │   ├── ml/                      # ML 模块
 │   │   ├── classifier_wrapper.py  # BERT 推理封装（温度校准）
-│   │   └── llm_client.py          # LLM 客户端（OpenAI 兼容/DeepSeek）
+│   │   └── llm_client.py          # DeepSeek/OpenAI-compatible LLM 客户端
 │   ├── training/                # 模型训练
 │   │   ├── dataset.py           # PyTorch Dataset
 │   │   ├── train_classifier.py  # 微调脚本

@@ -51,12 +51,14 @@ models:
   # 提取模型（DeepSeek，批量结构化字段提取）
   extraction:
     model: "deepseek-v4-flash"
+    thinking: "disabled"
     temperature: 0.0
     max_tokens: 8192
     request_timeout: 60
   # 分析模型（DeepSeek，深度分析高影响事件）
   analysis:
     model: "deepseek-v4-flash"
+    thinking: "disabled"
     temperature: 0.3
     max_tokens: 2048
     request_timeout: 120

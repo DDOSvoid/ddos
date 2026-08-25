@@ -1,4 +1,4 @@
-"""统一 LLM 客户端 — 支持 OpenAI 及兼容 API（vLLM, Ollama, Qwen API）。
+"""统一 LLM 客户端 — 使用 DeepSeek 的 OpenAI-compatible API。
 
 双层策略:
   - 提取模型（DeepSeek）: 批量提取字段
@@ -8,8 +8,11 @@
 import json
 import os
 import time
+from typing import Literal
 
 from openai import OpenAI, OpenAIError
+
+ThinkingMode = Literal["enabled", "disabled"]
 
 
 class LlmClient:
@@ -26,17 +29,27 @@ class LlmClient:
         api_key: str | None = None,
         base_url: str | None = None,
         default_model: str | None = None,
+        default_thinking: ThinkingMode = "disabled",
         timeout: float | None = None,
         max_retries: int | None = None,
     ) -> None:
         """
         Args:
-            api_key: OpenAI API key（默认从 OPENAI_API_KEY 环境变量读取）
+            api_key: DeepSeek API key（优先从 DEEPSEEK_API_KEY 读取）
             base_url: API 基础 URL（默认从 OPENAI_BASE_URL 环境变量读取）
             default_model: 默认模型名
+            default_thinking: 默认思考模式
         """
-        api_key = api_key or os.getenv("OPENAI_API_KEY", "")
-        base_url = base_url or os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
+        api_key = (
+            api_key
+            or os.getenv("DEEPSEEK_API_KEY")
+            or os.getenv("OPENAI_API_KEY", "")
+        )
+        base_url = (
+            base_url
+            or os.getenv("DEEPSEEK_BASE_URL")
+            or os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
+        )
 
         try:
             client_options = {
@@ -52,6 +65,7 @@ class LlmClient:
             # （保持 .env 中 key 可暂留空、代码可导入/可测试）
             self.client = None
         self.default_model = default_model or "deepseek-v4-flash"
+        self.default_thinking = default_thinking
 
     def complete(
         self,
@@ -61,6 +75,7 @@ class LlmClient:
         max_tokens: int = 1024,
         temperature: float = 0.0,
         response_format: str | None = None,  # "json_object"
+        thinking: ThinkingMode | None = None,
     ) -> str:
         """发送请求，返回原始文本。
 
@@ -71,13 +86,14 @@ class LlmClient:
             max_tokens: 最大输出 token 数
             temperature: 温度（0=确定性输出）
             response_format: 输出格式 "json_object" 等
+            thinking: 思考模式；默认使用构造时配置
 
         Returns:
             模型返回的文本
         """
         if self.client is None:
             raise RuntimeError(
-                "LLM API key 未配置：请在 .env 中设置 OPENAI_API_KEY（DeepSeek key）"
+                "DeepSeek API key 未配置：请在 .env 中设置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY"
             )
 
         model = model or self.default_model
@@ -86,11 +102,13 @@ class LlmClient:
             {"role": "user", "content": user_prompt},
         ]
 
+        effective_thinking = thinking or self.default_thinking
         kwargs = {
             "model": model,
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": temperature,
+            "extra_body": {"thinking": {"type": effective_thinking}},
         }
         if response_format:
             kwargs["response_format"] = {"type": response_format}
@@ -106,6 +124,7 @@ class LlmClient:
         max_tokens: int = 1024,
         temperature: float = 0.0,
         retries: int = 3,
+        thinking: ThinkingMode | None = None,
     ) -> dict:
         """请求并解析 JSON 响应（自动重试格式错误）。
 
@@ -127,6 +146,7 @@ class LlmClient:
                     max_tokens=max_tokens,
                     temperature=temperature,
                     response_format="json_object",
+                    thinking=thinking,
                 )
                 return json.loads(raw)
             except (json.JSONDecodeError, KeyError) as e:
@@ -145,24 +165,25 @@ class LlmClient:
         model: str,
         max_tokens: int,
         temperature: float = 0.0,
-        thinking: str = "disabled",
+        thinking: ThinkingMode = "disabled",
     ) -> tuple[dict, dict]:
         """Make one stateless JSON request and return reproducibility metadata."""
         if self.client is None:
             raise RuntimeError(
-                "LLM API key 未配置：请在 .env 中设置 OPENAI_API_KEY（DeepSeek key）"
+                "DeepSeek API key 未配置：请在 .env 中设置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY"
             )
-        response = self.client.chat.completions.create(
-            model=model,
-            messages=[
+        kwargs = {
+            "model": model,
+            "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            max_tokens=max_tokens,
-            temperature=temperature,
-            response_format={"type": "json_object"},
-            extra_body={"thinking": {"type": thinking}},
-        )
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "response_format": {"type": "json_object"},
+            "extra_body": {"thinking": {"type": thinking}},
+        }
+        response = self.client.chat.completions.create(**kwargs)
         choice = response.choices[0]
         if choice.finish_reason != "stop":
             raise ValueError(f"LLM response did not finish normally: {choice.finish_reason}")
@@ -189,6 +210,7 @@ class LlmClient:
         max_tokens: int = 1024,
         temperature: float = 0.0,
         max_retries: int = 3,
+        thinking: ThinkingMode | None = None,
     ) -> str:
         """带自动重试的 API 调用（处理速率限制和瞬时错误）。"""
         for attempt in range(max_retries):
@@ -199,6 +221,7 @@ class LlmClient:
                     model=model,
                     max_tokens=max_tokens,
                     temperature=temperature,
+                    thinking=thinking,
                 )
             except Exception:
                 if attempt < max_retries - 1:

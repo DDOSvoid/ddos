@@ -10,7 +10,7 @@ from src.prediction.development_contract import CausalDevelopmentContract
 from src.prediction.tabular.contract import TabularModelContract
 
 LAGGED_MARKET_SOURCES = frozenset(
-    {"market_daily", "market_intraday_aggregate"}
+    {"market_daily", "market_intraday_aggregate", "tushare_daily_basic"}
 )
 
 

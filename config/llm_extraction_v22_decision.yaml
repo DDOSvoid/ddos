@@ -1,0 +1,54 @@
+contract: llm-extraction-model-selection-decision-v1
+decided_at: "2026-08-25T02:35:00.0000000Z"
+status: model_selection_batch13_failed_do_not_promote
+frozen_candidate_config: config/llm_extraction_v22_frozen.yaml
+frozen_candidate_config_sha256: 829c9e0e8b6bc29daeedbf6f133c98e1845e56896e4bf25f69ab70e4f4be298a
+model: deepseek-v4-flash
+prompt_version: structured-extraction-prompt-v22
+prompt_sha256: 1a22485010737b85bab27f631fcf7e19919306eb7cd0b551b32643a1e3188eea
+validator_contract_version: evidence-validator-v18
+gold_lock: data/human_validation/model_selection_gold_v22_batch13.lock.json
+gold_lock_sha256: 2d1ce0d88ceaa3c191fee53daa4a7fc2348551d6125cd6f61dff536babf11083
+selection: data/validation/llm_extraction_v22_blind_batch13_selection.json
+selection_sha256: 9edb9967334f09e9b0771ef1adc7d2a3d32ac6c216addcf83d0f7251d498e00f
+candidate: data/llm_extraction/deepseek-v4-flash_v22_model_selection_batch13.jsonl
+candidate_sha256: bf76ab6fa96534fb26927ffda338c730e0904bb2605e81827b87a8f2d1413223
+review: data/validation/llm_extraction_v22_model_selection_review_10.json
+review_sha256: c78786263862b3d32dc5b7f0650e9811f952162e9cbf7c9ec092e77a1629c21a
+batch:
+  documents: 10
+  fields: 110
+  gold_supported: 58
+  gold_absent: 27
+  gold_ambiguous: 25
+  candidate_supported: 73
+  candidate_absent: 23
+  candidate_ambiguous: 14
+  api_attempts: 10
+  completed_documents: 10
+  prompt_tokens: 112019
+  completion_tokens: 11632
+  total_tokens: 123651
+metrics:
+  status_exact_accuracy: 0.8
+  support_vs_abstain_accuracy: 0.8090909091
+  strict_field_accuracy: 0.5818181818
+  post_lock_human_semantic_field_accuracy: 0.7636363636
+  supported_semantic_precision: 0.6849315068
+  supported_semantic_recall: 0.8620689655
+  abstention_precision: 0.9189189189
+  abstention_recall: 0.6538461538
+  numeric_date_boolean_exact_accuracy: 0.5833333333
+gate:
+  required:
+    post_lock_human_semantic_field_accuracy_min: 0.9
+    supported_semantic_precision_min: 0.9
+    abstention_recall_min: 0.9
+    numeric_date_boolean_exact_accuracy_min: 0.95
+  decision: FAIL
+  downstream_promotion: blocked
+  representativeness: "qualification-only; all ten documents are fundraising_usage"
+  holdout_2024: disqualified_for_v22_direct_lineage
+  official_test_2025_read_count: 0
+  forward_validation_2026_read_count: 0
+  next_step: "Do not reuse batch13. Add automatic source-number/unit checks, then freeze a new prompt and a diverse unseen 2023 gold batch."

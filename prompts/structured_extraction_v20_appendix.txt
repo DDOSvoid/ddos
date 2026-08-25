@@ -1,0 +1,11 @@
+以下规则补充并覆盖前述规则；重点处理当前动作、复合事项、监管角色和程序性日期：
+1. event_stage 必须覆盖本文件同时披露的全部并列当前动作，不能只保留其中一个任命、辞任、代行、批准、收到或完成事项。每个动作都使用原文中真实存在的逐字 quote；若需要多段证据，按原文顺序分别引用，禁止先改写成一句话再把改写文本当 quote。
+2. event_date 只属于已经发生的当前动作。计划实施期限的开始日或结束日、未来上市流通日、可交易日、申诉期限和合同履行期都不是当前事件日期。equity_increase 的计划窗口应进入 progress，lockup_expiry 的未来上市流通日期应进入对应进度或生效字段；正文没有当前动作日期时 event_date 返回 ambiguous，不得用未来日期补位。
+3. equity_increase 中，“拟增持/计划增持”“增持计划实施完毕”“增持期限届满”是不同阶段。event_stage 必须引用正文中的当前动作句，不能只引用公告标题；event_date 必须与该当前动作直接绑定，不能选择计划期限终点。
+4. executive_change 中，event_stage、position 和 change_type 必须覆盖同一次公告中的全部当前人事动作，包括辞职、聘任、解聘、补选以及指定人员代行董事会秘书等职责。临时代行是当前职位动作，应进入 position/change_type，但不等同于正式 successor；多个动作使用多段逐字证据。
+5. financing_credit 的 financing_type 表示正文明确列出的授信或融资品种，例如流动资金贷款、银行承兑汇票、信用证、保函、票据贴现或贸易融资。“综合授信额度”只是总括名称；当正文列出具体品种时，不能只返回该总括名称，必须完整覆盖已披露的主要品种并逐项引用。financial_institution 只有具体机构名称明确时才 supported。
+6. intellectual_property 的 event_stage 使用本次“收到/取得专利证书、商标注册证或著作权登记证”等当前动作。优先复制包含动作和证书对象的短而完整原句；专利类型、证书号和预期影响不能替代当前收到或授权阶段。
+7. private_placement、convertible_bond 等审核流程中，approval_status 必须表示最新程序状态，例如“收到问询函、尚待回复”“已回复、尚待审核/注册”；不能因为尚无最终批准结论而返回 absent。uncertainty 只提取正文明确披露的审核结果、注册结果、时间或后续推进风险；单纯“需要回复问询”是程序状态，不自动等于不确定性。
+8. regulatory_action 和 penalty 是单方监管或行政行为：authority 是作出行为的机关，action_type 是问询、警示、责令改正、处罚等行为，subject 是被监管或被处罚的直接对象。监管机关不是 counterparty；股东、董事等个人应放入 subject，不能再复制到公共 subject_name，除非 subject_name 另有明确的上市公司、子公司或唯一标的主体。
+9. reply_deadline 只表示监管文件要求提交回复、说明、补正材料的明确日期或期间。行政复议、行政诉讼、听证或申诉的法定期限不是 reply_deadline。remedy_requirement 只提取“责令、要求、应当、限期整改/改正/补正/停止”等强制义务；“如不服可申请复议或提起诉讼”是可选救济权利，remedy_requirement 和 uncertainty 均应为 absent。
+10. 输出前逐字段执行角色和时点检查：该值属于当前动作还是未来计划；属于交易相对方、监管机关还是被监管对象；属于强制义务还是可选权利；属于总括名称还是正文已列出的完整类型。无法唯一确认时拒判，不得用相邻日期、通用术语或其他字段的实体补位。

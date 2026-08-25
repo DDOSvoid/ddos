@@ -1,0 +1,73 @@
+contract: llm-extraction-model-selection-decision-v2
+decided_at: "2026-08-24T07:45:35.2837522Z"
+candidate: structured-extraction-prompt-v19
+model: deepseek-v4-flash
+validator_contract_version: evidence-validator-v14
+decision: FAIL
+promotion_allowed: false
+downstream_feature_use_allowed: false
+model_selection_batch_consumed: true
+extraction_holdout_read_allowed: false
+extraction_holdout_score_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  candidate_outputs_seen_before_gold_freeze: false
+  prompt_tuned_after_candidate_read: false
+  validator_tuned_after_candidate_read: false
+  gold_annotation_method: codex-assisted-source-only-review
+  dual_human_review_completed: false
+  operator_future_data_read: true
+  future_data_used_for_gold_labels: false
+  future_data_used_for_scoring: false
+  deepseek_future_data_exposure: false
+  market_targets_read: false
+  official_test_read_count: 0
+
+causal_boundary:
+  incident: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v19_and_direct_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  official_test_status: sealed
+  forward_validation_period: "2026 onward"
+  forward_validation_status: sealed
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v19_frozen.yaml
+  pre_annotation_freeze_sha256: cbc739aac058139db2474b5073cd02c6e1ab42886c44e3d16f6996fb44b0adce
+  gold_lock: data/human_validation/model_selection_gold_v19_batch10.lock.json
+  gold_lock_sha256: 54c41295bb67bdb1a9232f88ddee72655d2635d0b55faabdda86a46b03bc27f6
+  gold_draft: data/human_validation/model_selection_gold_v19_batch10_draft.yaml
+  gold_draft_sha256: 6de9437aa23a302b351ddb256883f3a637505aa02164951847bd3faf38b56b75
+  candidate: data/llm_extraction/deepseek-v4-flash_13981a36fc79_evidence-validator-v14_blind-batch10.jsonl
+  candidate_sha256: 56f97d978f4abf7f82dba5fb1e11754b27dd85fda30d2cd00f8b63d38dd20581
+  review: data/validation/llm_extraction_v19_model_selection_review_10.json
+  review_sha256: f1f32324eee0e515bcee3c4fe7257cfac82a2380972d07371d76c1f4bb0427a1
+  frozen_candidate_runner_sha256: 1fcb51b6bfc0d31bffb31d48acbafa3f284bf3a7e3a23c0fd60d5dc9a3793c78
+  post_evaluation_consumed_gate_runner_sha256: 6cebb4f4fb7e257e7000831fb56553d244c030278125174f018f8c3121fd9799
+
+metrics:
+  post_lock_human_semantic_field_accuracy: 0.8584905660
+  supported_semantic_precision: 0.7796610169
+  supported_semantic_recall: 0.8181818182
+  abstention_precision: 0.9574468085
+  abstention_recall: 0.8823529412
+  numeric_date_boolean_exact_accuracy: 0.9333333333
+
+passed_gates: []
+
+failed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+next_action: >-
+  Keep v19 immutable and do not promote it. Retire batch 10 from independent
+  scoring. Any v20 work may use this consumed error analysis only as development
+  feedback, must freeze a new prompt and validator before evaluation, and must use
+  a fresh eligible validation contract. Do not use the disqualified 2024 holdout,
+  the sealed 2025 official test, or 2026 forward data for prompt development.

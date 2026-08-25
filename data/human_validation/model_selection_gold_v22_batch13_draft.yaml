@@ -1,0 +1,170 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-25T10:00:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: true
+future_data_read_during_gold_annotation: false
+future_data_used_for_gold_labels: false
+deepseek_future_data_exposure: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v22
+prompt_sha256: 1a22485010737b85bab27f631fcf7e19919306eb7cd0b551b32643a1e3188eea
+validator_contract_version: evidence-validator-v18
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: fe3fbdd5dcf40a0f2fe06009e172317e2e548f7bb69364350445683c59a820e4
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "使用闲置募集资金18,000万元购买了", unit: TEXT, evidence_quotes: ["使用闲置募集资金18,000万元购买了"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["2023年1月11日"]}
+      counterparty: {status: ambiguous, reason: "正文同时披露中国农业银行和中国工商银行等多个受托方，无法为当前公告给出唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "江苏通灵电器股份有限公司", unit: TEXT, evidence_quotes: ["江苏通灵电器股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "该项投资受到市场波动的影响", unit: TEXT, evidence_quotes: ["该项投资受到市场波动的影响"]}
+      project_name: {status: absent, reason: "公告披露的是多笔现金管理产品，没有唯一的募投项目名称。"}
+      fund_source: {status: supported, normalized_value: "闲置募集资金", unit: TEXT, evidence_quotes: ["闲置募集资金"]}
+      fund_amount_cny: {status: ambiguous, reason: "正文在同一公告中披露18,000万元、2,500万元和10,000万元等多笔金额，无法确定唯一公告级当前金额。"}
+      project_status: {status: supported, normalized_value: "未到期", unit: TEXT, evidence_quotes: ["未到期"]}
+      expected_benefit: {status: supported, normalized_value: "更好的实现公司现金的保值增值", unit: TEXT, evidence_quotes: ["更好的实现公司现金的保值增值"]}
+      subsidiary_target: {status: supported, normalized_value: "江苏通行新能源有限公司", unit: TEXT, evidence_quotes: ["江苏通行新能源有限公司"]}
+
+  - audit_item_id: e73a497e6d4e95602004c0c1f558c96c3b17637f3ba1fc8ca2e0816a6e1dc172
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "募集资金具体运用情况", unit: TEXT, evidence_quotes: ["募集资金具体运用情况"]}
+      event_date: {status: ambiguous, reason: "正文说明的是募集资金运用概况和项目计划，没有当前事项的明确公告或决策日期。"}
+      counterparty: {status: absent, reason: "该公告披露募集资金项目计划，不构成当前双边交易或协议事项。"}
+      subject_name: {status: supported, normalized_value: "深圳市联域光电股份有限公司", unit: TEXT, evidence_quotes: ["深圳市联域光电股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前项目级重大不确定性。"}
+      project_name: {status: ambiguous, reason: "正文同时列示智能照明生产总部基地、研发中心建设和补充流动资金三个项目。"}
+      fund_source: {status: supported, normalized_value: "募集资金", unit: TEXT, evidence_quotes: ["募集资金"]}
+      fund_amount_cny: {status: supported, normalized_value: "659086500", unit: CNY, evidence_quotes: ["募集资金投资项目计划总投资为 65,908.65 万元"]}
+      project_status: {status: ambiguous, reason: "三个募投项目分别有不同的投资额和备案状态，无法归并为唯一项目状态。"}
+      expected_benefit: {status: ambiguous, reason: "正文分别描述多个项目的建设目的，未形成唯一当前事项预期收益。"}
+      subsidiary_target: {status: absent, reason: "正文未披露当前事项对应的具体子公司实施主体。"}
+
+  - audit_item_id: ba1172522d4ef459c3a134568506e8039ffdefb76c03e7c8041852743ee58016
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "审议通过《关于使用部分闲置募集资金", unit: TEXT, evidence_quotes: ["审议通过《关于使用部分闲置募集资金"]}
+      event_date: {status: supported, normalized_value: "2023-01-09", unit: DATE, evidence_quotes: ["2023 年 1 月 9 日"]}
+      counterparty: {status: absent, reason: "暂时补充流动资金是公司内部募集资金使用安排，不构成双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "锦浪科技股份有限公司", unit: TEXT, evidence_quotes: ["锦浪科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前事项的重大不确定性。"}
+      project_name: {status: supported, normalized_value: "补充流动资金", unit: TEXT, evidence_quotes: ["暂时补充流动资金"]}
+      fund_source: {status: supported, normalized_value: "闲置募集资金", unit: TEXT, evidence_quotes: ["闲置募集资金"]}
+      fund_amount_cny: {status: supported, normalized_value: "300000000", unit: CNY, evidence_quotes: ["公司拟使用 30,000 万元闲置募集资金"]}
+      project_status: {status: supported, normalized_value: "暂时补充流动资金", unit: TEXT, evidence_quotes: ["暂时补充流动资金"]}
+      expected_benefit: {status: supported, normalized_value: "降低公司财务费用", unit: TEXT, evidence_quotes: ["降低公司财务费用"]}
+      subsidiary_target: {status: ambiguous, reason: "正文仅写明公司及子公司，未给出本次安排对应的唯一子公司名称。"}
+
+  - audit_item_id: 0ce387ad3ae9374bf41176b87a7008eba3a8604e7bf1c54cbadfdb09f09d8f9a
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "部分理财产品进行了赎回", unit: TEXT, evidence_quotes: ["部分理财产品进行了赎回"]}
+      event_date: {status: ambiguous, reason: "正文给出的是产品购买日2023年7月5日，未明确披露本次赎回发生日。"}
+      counterparty: {status: supported, normalized_value: "中国光大银行股份有限公司无锡分行", unit: TEXT, evidence_quotes: ["中国光大银行股份有限公司无锡分行"]}
+      subject_name: {status: supported, normalized_value: "弘元绿色能源股份有限公司", unit: TEXT, evidence_quotes: ["弘元绿色能源股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露本次赎回事项的重大不确定性。"}
+      project_name: {status: absent, reason: "正文披露的是理财产品赎回，不对应唯一募投项目名称。"}
+      fund_source: {status: supported, normalized_value: "募集资金专户", unit: TEXT, evidence_quotes: ["募集资金专户"]}
+      fund_amount_cny: {status: supported, normalized_value: "1610000000", unit: CNY, evidence_quotes: ["赎回本金16,100 万元"]}
+      project_status: {status: supported, normalized_value: "已全额存入募集资金专户", unit: TEXT, evidence_quotes: ["已全额存入募集资金专户"]}
+      expected_benefit: {status: absent, reason: "正文披露的是已实现理财收益，不是当前事项的预期收益。"}
+      subsidiary_target: {status: absent, reason: "正文未披露当前赎回事项对应的具体子公司。"}
+
+  - audit_item_id: ee9f28c2bdcb5074ebfff033beb294e1b148671660addc26d3f3c71fdae3134f
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "调整部分募投项目募集资金使用计划明细", unit: TEXT, evidence_quotes: ["调整部分募投项目募集资金使用计划明细"]}
+      event_date: {status: supported, normalized_value: "2023-08-31", unit: DATE, evidence_quotes: ["2023年8月31日"]}
+      counterparty: {status: absent, reason: "募投项目名称和使用计划调整是公司内部事项，不构成双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "深圳市华宝新能源股份有限公司", unit: TEXT, evidence_quotes: ["深圳市华宝新能源股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前调整事项的重大不确定性。"}
+      project_name: {status: ambiguous, reason: "正文同时调整便携储能产品扩产、研发中心和品牌数据中心（更名后品牌数字化）多个项目。"}
+      fund_source: {status: supported, normalized_value: "募集资金", unit: TEXT, evidence_quotes: ["募集资金"]}
+      fund_amount_cny: {status: ambiguous, reason: "正文列示多个项目的计划金额和总额，当前调整没有唯一适用的单项金额。"}
+      project_status: {status: ambiguous, reason: "正文涉及多个项目的名称与计划明细调整，未给出唯一项目状态。"}
+      expected_benefit: {status: absent, reason: "正文说明不影响正常经营，但未披露可归属于唯一当前项目的预期收益。"}
+      subsidiary_target: {status: absent, reason: "正文未披露当前调整事项对应的具体子公司实施主体。"}
+
+  - audit_item_id: 496d219453d4ac8c7c99f29187105fa5ce730d580e5349efcd6241ad4d84cf17
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司可转债募投项目已全部完成", unit: TEXT, evidence_quotes: ["公司可转债募投项目已全部完成"]}
+      event_date: {status: ambiguous, reason: "正文未明确披露项目结项或完成的具体日期。"}
+      counterparty: {status: absent, reason: "募投项目结项及节余资金使用是公司内部事项，不构成双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "明阳智慧能源集团股份公司", unit: TEXT, evidence_quotes: ["明阳智慧能源集团股份公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前结项事项的重大不确定性。"}
+      project_name: {status: supported, normalized_value: "MySE10MW 级海上风电整机及关键部件研制项目", unit: TEXT, evidence_quotes: ["MySE10MW 级海上风电整机及关键部件研制项目"]}
+      fund_source: {status: supported, normalized_value: "节余募集资金", unit: TEXT, evidence_quotes: ["节余募集资金"]}
+      fund_amount_cny: {status: supported, normalized_value: "78234500", unit: CNY, evidence_quotes: ["节余募集资金 7,823.45 万元"]}
+      project_status: {status: supported, normalized_value: "公司可转债募投项目已全部完成", unit: TEXT, evidence_quotes: ["公司可转债募投项目已全部完成"]}
+      expected_benefit: {status: supported, normalized_value: "有效提高资金使用效率", unit: TEXT, evidence_quotes: ["有效提高资金使用效率"]}
+      subsidiary_target: {status: absent, reason: "正文未披露当前结项事项对应的具体子公司。"}
+
+  - audit_item_id: a47dc2020b506396915bd8b1ab9b5df4ff8710ec5d726754a0b831384e8df61d
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "全部归还至募集资金专户", unit: TEXT, evidence_quotes: ["全部归还至募集资金专户"]}
+      event_date: {status: supported, normalized_value: "2023-07-21", unit: DATE, evidence_quotes: ["2023 年 7 月 21 日"]}
+      counterparty: {status: absent, reason: "募集资金归还至专户是公司内部资金安排，不构成双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "孚能科技（赣州）股份有限公司", unit: TEXT, evidence_quotes: ["孚能科技（赣州）股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前归还事项的重大不确定性。"}
+      project_name: {status: supported, normalized_value: "临时补充流动资金", unit: TEXT, evidence_quotes: ["用于临时补充流动资金"]}
+      fund_source: {status: supported, normalized_value: "闲置募集资金", unit: TEXT, evidence_quotes: ["闲置募集资金"]}
+      fund_amount_cny: {status: supported, normalized_value: "400000000", unit: CNY, evidence_quotes: ["40,000 万元全部归还至募集资金专户"]}
+      project_status: {status: supported, normalized_value: "全部归还至募集资金专户", unit: TEXT, evidence_quotes: ["全部归还至募集资金专户"]}
+      expected_benefit: {status: absent, reason: "正文披露的是资金归还结果，没有当前事项的预期收益。"}
+      subsidiary_target: {status: absent, reason: "正文未披露当前归还事项对应的具体子公司。"}
+
+  - audit_item_id: 2b630f2ab66f5fe8c25f8cf2de2a36d19035d8f3be2497f9cb61df3006eaadb0
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "签署了定期存款的协议", unit: TEXT, evidence_quotes: ["签署了定期存款的协议"]}
+      event_date: {status: ambiguous, reason: "正文仅以近日描述签署时间，表格起息日不能替代协议签署日。"}
+      counterparty: {status: supported, normalized_value: "工商银行", unit: TEXT, evidence_quotes: ["工商银行"]}
+      subject_name: {status: supported, normalized_value: "上海良信电器股份有限公司", unit: TEXT, evidence_quotes: ["上海良信电器股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "金融市场受宏观经济的影响较大", unit: TEXT, evidence_quotes: ["金融市场受宏观经济的影响较大"]}
+      project_name: {status: absent, reason: "正文披露的是定期存款产品，不对应唯一募投项目名称。"}
+      fund_source: {status: supported, normalized_value: "闲置募集资金", unit: TEXT, evidence_quotes: ["闲置募集资金"]}
+      fund_amount_cny: {status: ambiguous, reason: "金额仅在多行表格中以万元列示，且当前公告按产品表披露，未形成可唯一绑定的公告级金额。"}
+      project_status: {status: absent, reason: "正文没有对该定期存款给出募投项目状态字段。"}
+      expected_benefit: {status: supported, normalized_value: "结构性存款可以提高资金使用效率", unit: TEXT, evidence_quotes: ["结构性存款可以提高资金使用效率"]}
+      subsidiary_target: {status: supported, normalized_value: "良信电器（海盐）有限公司", unit: TEXT, evidence_quotes: ["良信电器（海盐）有限公司"]}
+
+  - audit_item_id: 276202a10bf7b06f1071eb354fbab1070936a3258e92131b8841576dedee1e5c
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "签署募集资金三方、四方监管协议", unit: TEXT, evidence_quotes: ["签署募集资金三方、四方监管协议"]}
+      event_date: {status: ambiguous, reason: "正文仅以近日描述协议签订时间，公告落款日期不能替代签订日。"}
+      counterparty: {status: ambiguous, reason: "协议涉及募集资金账户银行和保荐机构国泰君安等多个相对方，无法归并为唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "四川英杰电气股份有限公司", unit: TEXT, evidence_quotes: ["四川英杰电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前监管协议事项的重大不确定性。"}
+      project_name: {status: ambiguous, reason: "协议覆盖新能源汽车充电桩扩产项目和补充流动资金等多个账户用途。"}
+      fund_source: {status: supported, normalized_value: "募集资金", unit: TEXT, evidence_quotes: ["募集资金"]}
+      fund_amount_cny: {status: ambiguous, reason: "正文同时披露募集资金总额、净额和多个账户金额，无法确定唯一当前协议金额。"}
+      project_status: {status: ambiguous, reason: "多个监管账户分别对应不同项目用途，正文未给出唯一项目状态。"}
+      expected_benefit: {status: absent, reason: "正文主要说明监管协议和专户管理，未披露当前事项预期收益。"}
+      subsidiary_target: {status: supported, normalized_value: "四川英杰新能源有限公司", unit: TEXT, evidence_quotes: ["四川英杰新能源有限公司"]}
+
+  - audit_item_id: 0e9d2e50807593036542c17f5f15cf88de6abcdffdc5f845a0178c0db7a3956d
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "签署募集资金三方和四方监管协议", unit: TEXT, evidence_quotes: ["签署募集资金三方和四方监管协议"]}
+      event_date: {status: ambiguous, reason: "正文仅以近日描述协议签订时间，董事会召开日和验资日均不能替代签订日。"}
+      counterparty: {status: ambiguous, reason: "协议涉及招商银行、浦发银行、农业银行及保荐机构等多个相对方，无法归并为唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "伊戈尔电气股份有限公司", unit: TEXT, evidence_quotes: ["伊戈尔电气股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文未披露当前监管协议事项的重大不确定性。"}
+      project_name: {status: ambiguous, reason: "监管账户覆盖中压直流、智能箱变及储能、研发中心和补充流动资金等多个项目。"}
+      fund_source: {status: supported, normalized_value: "募集资金", unit: TEXT, evidence_quotes: ["募集资金"]}
+      fund_amount_cny: {status: ambiguous, reason: "正文同时披露募集资金总额、净额和多个账户存放金额，无法确定唯一当前协议金额。"}
+      project_status: {status: ambiguous, reason: "多个监管账户分别对应不同项目用途，正文未给出唯一项目状态。"}
+      expected_benefit: {status: absent, reason: "正文主要说明募集资金监管和专户存放，未披露当前事项预期收益。"}
+      subsidiary_target: {status: ambiguous, reason: "正文列示伊戈尔数字能源和伊戈尔电碳科技两个实施主体，无法确定唯一子公司。"}

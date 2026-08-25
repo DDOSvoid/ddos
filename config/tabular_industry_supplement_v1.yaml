@@ -1,0 +1,54 @@
+contract: tabular-industry-supplement-v1
+dataset_role: train
+official_test_allowed: false
+universe:
+  source: data/tabular/intraday_15m/state.amazingdata.json
+  expected_role: train
+
+classification:
+  endpoint: index_classify
+  sources: [SW2014, SW2021]
+  levels: [L1, L2, L3]
+  fields:
+    - index_code
+    - industry_name
+    - level
+    - industry_code
+    - is_pub
+    - parent_code
+    - src
+
+membership:
+  endpoint: index_member
+  query_field: ts_code
+  fields:
+    - index_code
+    - con_code
+    - in_date
+    - out_date
+    - is_new
+  interval_semantics: "[in_date, out_date)"
+membership_all:
+  endpoint: index_member_all
+  fields:
+    - l1_code
+    - l1_name
+    - l2_code
+    - l2_name
+    - l3_code
+    - l3_name
+    - ts_code
+    - name
+    - in_date
+    - out_date
+    - is_new
+  interval_semantics: "[in_date, out_date)"
+
+release_policy:
+  l1_codes_must_exist_in_classification: true
+  prefer_index_member_l1_interval: true
+  fallback_to_index_member_all_l1: true
+  reject_ambiguous_train_date_membership: true
+  reject_missing_train_date_membership: true
+  allow_explicit_taxonomy_not_yet_effective_state: true
+  current_snapshot_backfill_forbidden: true

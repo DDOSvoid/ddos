@@ -1,0 +1,34 @@
+contract: causal-tabular-feature-catalog-v3
+dataset_contract: causal-tabular-train-dataset-v3
+base_catalog: config/tabular_feature_catalog_v2.yaml
+dataset_role: train
+official_test_allowed: false
+new_feature_groups:
+  historical_industry_context:
+    source: historical_industry_supplement_v1
+    available_at_column: industry_features_available_at_utc
+    missing_policy: explicit_taxonomy_not_yet_effective_state
+    features:
+      industry_l1_code_id: {unit: category_id, transformation: deterministic_codebook}
+      industry_taxonomy_not_yet_effective: {unit: boolean, transformation: identity}
+      industry_membership_ambiguous: {unit: boolean, transformation: identity}
+  point_in_time_financials:
+    source: point_in_time_financial_revision_evidence_v1
+    missing_policy: preserve_null_train_only
+    endpoints:
+      income:
+        available_at_column: pit_income_features_available_at_utc
+        features:
+          pit_income_basic_eps: {unit: cny_per_share, transformation: identity}
+          pit_income_total_revenue: {unit: cny, transformation: identity}
+          pit_income_n_income: {unit: cny, transformation: identity}
+      balancesheet:
+        available_at_column: pit_balancesheet_features_available_at_utc
+        features:
+          pit_balancesheet_total_assets: {unit: cny, transformation: identity}
+          pit_balancesheet_total_liab: {unit: cny, transformation: identity}
+      cashflow:
+        available_at_column: pit_cashflow_features_available_at_utc
+        features:
+          pit_cashflow_n_cashflow_act: {unit: cny, transformation: identity}
+          pit_cashflow_free_cashflow: {unit: cny, transformation: identity}

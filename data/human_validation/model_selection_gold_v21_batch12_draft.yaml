@@ -1,0 +1,171 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-24T17:16:05.6978271+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: true
+future_data_read_during_gold_annotation: false
+future_data_used_for_gold_labels: false
+deepseek_future_data_exposure: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v21
+prompt_sha256: 189dc8f3b38596e247ffb2f515a9061c007325d8dfd22367dbda37c949b769f0
+validator_contract_version: evidence-validator-v17
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 4663b1cec185447439e60cf05a8c2a9030b9ec1ad6a6a1113e07b101def2213b
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "制定募集资金管理办法", unit: TEXT, evidence_quotes: ["结合公司实际情况,特制定本办法"]}
+      event_date: {status: absent, reason: "正文仅在落款处披露2023年7月，未披露制度制定、审议通过或生效的精确日期。"}
+      counterparty: {status: absent, reason: "公司内部管理制度不构成双边交易事项。"}
+      subject_name: {status: supported, normalized_value: "无锡市金杨新材料股份有限公司", unit: TEXT, evidence_quotes: ["无锡市金杨新材料股份有限公司"]}
+      uncertainty: {status: absent, reason: "制度条款未披露当前具体事项的重大不确定性。"}
+      project_name: {status: absent, reason: "制度只规定一般募投项目管理规则，没有当前具体项目名称。"}
+      fund_source: {status: absent, reason: "制度只定义一般募集资金，没有当前具体项目的资金来源。"}
+      fund_amount_cny: {status: absent, reason: "制度未披露当前具体募集资金或项目金额。"}
+      project_status: {status: absent, reason: "制度未披露当前具体募投项目进度。"}
+      expected_benefit: {status: absent, reason: "提高资金使用效率和效益是制度目的，不是当前项目的预期收益。"}
+      subsidiary_target: {status: absent, reason: "制度仅规定子公司实施项目时同样适用，没有当前具体实施主体。"}
+
+  - audit_item_id: 607dab45d1571110674e62621937ca67143f8d4171fac7b7fdcf5704bf6a4675
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过全资子公司签订战略合作意向书事项，意向书已签订，尚需股东大会审议", unit: TEXT, evidence_quotes: ["与苏州科技城管理委员会签订《战略合作意向书》", "本次投资需提交公司股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-02-20", unit: DATE, evidence_quotes: ["于 2023年 2 月 20 日召开第六届董事会第十九次会议"]}
+      counterparty: {status: supported, normalized_value: "苏州科技城管理委员会", unit: TEXT, evidence_quotes: ["苏州科技城管理委员会"]}
+      subject_name: {status: supported, normalized_value: "苏州英威腾电力电子有限公司", unit: TEXT, evidence_quotes: ["苏州英威腾电力电子有限公司"]}
+      uncertainty: {status: supported, normalized_value: "项目用地可能竞买不成功，且立项、环保、规划和施工等事项尚需主管部门批复，投入产出可能不达预期", unit: TEXT, evidence_quotes: ["可能存在竞买不成功而无法取得建设用地的风险", "还需获得有关主管部门批复", "投入产出比和实际效用性不达预期的风险"]}
+      partner_name: {status: supported, normalized_value: "苏州科技城管理委员会", unit: TEXT, evidence_quotes: ["苏州科技城管理委员会"]}
+      cooperation_scope: {status: supported, normalized_value: "在苏州高新区科技城投资建设英威腾苏州产业园三期，建设智能化生产厂房及配套设施", unit: TEXT, evidence_quotes: ["拟在苏州高新区科技城投资建设英威腾苏州产业园三期项目", "建设智能化生产厂房及配套设施"]}
+      cooperation_period: {status: absent, reason: "正文未披露战略合作期限或意向书有效期。"}
+      partner_type: {status: supported, normalized_value: "园区管理委员会", unit: TEXT, evidence_quotes: ["苏州科技城管理委员会"]}
+      exclusivity: {status: absent, reason: "正文未披露排他或独家合作安排。"}
+      binding_status: {status: supported, normalized_value: "战略合作意向，投资事项尚需股东大会审议", unit: TEXT, evidence_quotes: ["签订《战略合作意向书》", "本次投资需提交公司股东大会审议"]}
+
+  - audit_item_id: 38bc080dc4f097c59b9707d18eeaac3bd71d197490839be04555807fabc875ab
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过为全资子公司提供非融资性履约担保，尚需股东大会审议", unit: TEXT, evidence_quotes: ["议通过了《关于 2023 年度中国西电为西电国际提供非融资性担", "本议案尚需提交股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-11-30", unit: DATE, evidence_quotes: ["2023 年 11 月 30 日"]}
+      counterparty: {status: absent, reason: "担保函受益业主未具名，南网国际是联合体成员而非当前担保受益方。"}
+      subject_name: {status: supported, normalized_value: "中国西电电气股份有限公司", unit: TEXT, evidence_quotes: ["中国西电电气股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "被担保人资产负债率超过70%", unit: TEXT, evidence_quotes: ["本次被担保人资产负债率超 70%"]}
+      guarantor: {status: supported, normalized_value: "中国西电电气股份有限公司", unit: TEXT, evidence_quotes: ["担保人名称：中国西电电气股份有限公司"]}
+      guaranteed_party: {status: supported, normalized_value: "西安西电国际工程有限责任公司", unit: TEXT, evidence_quotes: ["西安西电国际工程有限责任公司"]}
+      guarantee_amount_cny: {status: supported, normalized_value: "2773000000", unit: CNY, evidence_quotes: ["3.85 亿美元，折合约 27.73 亿元人民币"]}
+      guarantee_type: {status: supported, normalized_value: "母公司履约保证（非融资性担保）", unit: TEXT, evidence_quotes: ["提供履约保证担保", "非融资性担保"]}
+      guarantee_term: {status: supported, normalized_value: "EPC取得项目接受证书后24个月为止", unit: TEXT, evidence_quotes: ["担保期限：该担保函的担保期间为该合同项下 EPC 取得项", "目接受证书 后 24 个月为止"]}
+      cumulative_guarantee_ratio_pct: {status: supported, normalized_value: "7.54", unit: PCT, evidence_quotes: ["比例分别为\n7.54%、7.54%"]}
+      overdue_guarantee_amount_cny: {status: supported, normalized_value: "0", unit: CNY, evidence_quotes: ["无逾期担保"]}
+
+  - audit_item_id: 8569692b943d5b0b2ff2a00cd1c96f2b52ec0afe1c7a98a50932f41d26067ceb
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会和监事会审议通过2023年第三季度计提信用减值损失和资产减值准备", unit: TEXT, evidence_quotes: ["审议通\n过了《关于 2023 年第三季度计提信用减值损失和资产减值准备的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-10-27", unit: DATE, evidence_quotes: ["于 2023 年 10 月 27\n日召开"]}
+      counterparty: {status: absent, reason: "计提减值准备是会计处理事项，不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "无锡帝科电子材料股份有限公司", unit: TEXT, evidence_quotes: ["无锡帝科电子材料股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "计提结果未经审计，最终以年度审计会计师确认结果为准", unit: TEXT, evidence_quotes: ["未经审计， 最终以年度审计会计师事务所确认后\n的结果为准"]}
+      asset_type: {status: supported, normalized_value: "应收票据、应收账款、其他应收款、存货", unit: TEXT, evidence_quotes: ["应收票据、 应收账款、 其他应收\n款、存货"]}
+      impairment_amount_cny: {status: supported, normalized_value: "30663037.05", unit: CNY, evidence_quotes: ["计提信用减值损失和资产减值准备共计 30,663,037.05 元"]}
+      profit_effect_cny: {status: supported, normalized_value: "-30663037.05", unit: CNY, evidence_quotes: ["减少 2023 年度\n第三季度合并报表利润总额 30,663,037.05 元"]}
+      impairment_reason: {status: supported, normalized_value: "对可能发生减值迹象的资产进行评估和减值测试，基于谨慎性原则计提", unit: TEXT, evidence_quotes: ["对可能发生减值迹象的资产进行了充分的\n评估和分析并进行资产减值测试", "基于谨慎性原则"]}
+      reversibility: {status: absent, reason: "正文未明确披露本次计提的减值准备以后是否可以转回。"}
+
+  - audit_item_id: 39a6c408c0fed4d14e382d27a57ef3078ee5cbb0270226b0f7a5c496f94e1845
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "世纪证券同意推荐豪鹏科技可转换公司债券在深圳证券交易所上市交易", unit: TEXT, evidence_quotes: ["世纪证券同意推荐豪鹏科技向不特定对象发行可转换\n公司债券在深圳证券交易所上市交易"]}
+      event_date: {status: absent, reason: "保荐书封面仅披露2023年7月，签署页未填写保荐书出具日期；发行人历史审议和交易所审核日期不能替代。"}
+      counterparty: {status: absent, reason: "可转债发行审核和上市保荐不构成当前双边交易。"}
+      subject_name: {status: supported, normalized_value: "深圳市豪鹏科技股份有限公司", unit: TEXT, evidence_quotes: ["深圳市豪鹏科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "本次发行尚需中国证监会注册批复", unit: TEXT, evidence_quotes: ["本次发行尚需中国证监会注册批复"]}
+      bond_amount_cny: {status: supported, normalized_value: "1100000000", unit: CNY, evidence_quotes: ["拟募集资金总额不超过人民币 110,000.00 万元"]}
+      bond_term_years: {status: supported, normalized_value: "6", unit: YEARS, evidence_quotes: ["本次发行的可转换公司债券期限为发行之日起 6 年"]}
+      coupon_rate_pct: {status: ambiguous, reason: "票面利率尚未确定，将在发行前由董事会或授权人士与保荐机构协商确定。"}
+      conversion_price_cny_per_share: {status: ambiguous, reason: "正文只披露初始转股价格的确定下限和机制，具体数值尚未确定。"}
+      use_of_proceeds: {status: supported, normalized_value: "广东豪鹏新能源研发生产基地建设项目（一期）", unit: TEXT, evidence_quotes: ["广东豪鹏新能源研发生产基地建设项目\n（一期）"]}
+      credit_rating: {status: supported, normalized_value: "AA-", unit: TEXT, evidence_quotes: ["本次发\n行的可转债信用等级为 AA-"]}
+
+  - audit_item_id: 57297c95f3d1cfd27d5b0b9d423bea5f23d8140ab48c0b5f1c05c9c08b57ffa6
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露2023年半年度报告摘要", unit: TEXT, evidence_quotes: ["聆达集团股份有限公司 2023 年半年度报告摘要"]}
+      event_date: {status: absent, reason: "摘要正文未披露报告披露日、董事会批准日或报告报出日。"}
+      counterparty: {status: absent, reason: "半年度报告披露不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "聆达集团股份有限公司", unit: TEXT, evidence_quotes: ["聆达集团股份有限公司"]}
+      uncertainty: {status: absent, reason: "摘要未披露当前报告事项的重大不确定性。"}
+      revenue_cny: {status: supported, normalized_value: "497268915.76", unit: CNY, evidence_quotes: ["营业收入（元） 497,268,915.76 682,705,259.81 -27.16%"]}
+      revenue_yoy_pct: {status: supported, normalized_value: "-27.16", unit: PCT, evidence_quotes: ["营业收入（元） 497,268,915.76 682,705,259.81 -27.16%"]}
+      net_profit_cny: {status: supported, normalized_value: "-3243353.13", unit: CNY, evidence_quotes: ["归属于上市公司股东的净利润（元） -3,243,353.13 -42,396,109.13 92.35%"]}
+      net_profit_yoy_pct: {status: supported, normalized_value: "92.35", unit: PCT, evidence_quotes: ["归属于上市公司股东的净利润（元） -3,243,353.13 -42,396,109.13 92.35%"]}
+      non_gaap_profit_cny: {status: supported, normalized_value: "-8028527.33", unit: CNY, evidence_quotes: ["-8,028,527.33", "归属于上市公司股东的扣除非经常性损益的净", "利润（元）"]}
+      operating_cashflow_cny: {status: supported, normalized_value: "80196536.66", unit: CNY, evidence_quotes: ["经营活动产生的现金流量净额（元） 80,196,536.66 165,578,843.88 -51.57%"]}
+
+  - audit_item_id: 2cbe65eba16fed44830ab14db0273e77995f997c07ae029686a65b808f172346
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "深圳证券交易所向公司出具监管函并要求及时整改", unit: TEXT, evidence_quotes: ["关于对河南易成新能源股份有限公司的 \n监管函", "取教训，及时整改，杜绝上述问题的再次发生"]}
+      event_date: {status: ambiguous, reason: "2023年12月5日只出现在监管函落款处，正文未明确标注监管函发出或送达日期。"}
+      counterparty: {status: absent, reason: "证券交易所监管措施是单方监管程序，不构成双边交易。"}
+      subject_name: {status: absent, reason: "监管对象由专用subject字段承载，通用subject_name按冻结分类规则留空。"}
+      uncertainty: {status: absent, reason: "监管函已确认违规事实并提出整改要求，未披露处理结果的重大不确定性。"}
+      authority: {status: supported, normalized_value: "深圳证券交易所创业板公司管理部", unit: TEXT, evidence_quotes: ["深圳证券交易所 \n创业板公司管理部"]}
+      action_type: {status: supported, normalized_value: "监管函", unit: TEXT, evidence_quotes: ["监管函"]}
+      subject: {status: supported, normalized_value: "河南易成新能源股份有限公司", unit: TEXT, evidence_quotes: ["河南易成新能源股份有限公司"]}
+      issue_summary: {status: supported, normalized_value: "关联销售和向外部单位提供借款未履行审议及信息披露义务，经营管理独立性不足", unit: TEXT, evidence_quotes: ["相关交易未履行审议程序和信息披\n露义务", "相关交易未\n履行审议程序和信息披露义务", "你公司经营管理独立性存在\n不足"]}
+      reply_deadline: {status: absent, reason: "监管函未要求公司在具体期限内提交书面回复。"}
+      remedy_requirement: {status: supported, normalized_value: "吸取教训，及时整改，杜绝上述问题再次发生", unit: TEXT, evidence_quotes: ["取教训，及时整改，杜绝上述问题的再次发生"]}
+
+  - audit_item_id: f92b8764892999216a52c040ba346003cf51bc4d5716b28c1c06abf97b5e0475
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会和监事会审议通过2024年度日常关联交易预计，尚需股东大会审议", unit: TEXT, evidence_quotes: ["审议通过了 《关于公司2024 年度日常关联交易预计的议案》", "需提交公司股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-11-14", unit: DATE, evidence_quotes: ["公司于 2023 年 11 月 14 日召开"]}
+      counterparty: {status: supported, normalized_value: "中国五矿集团有限公司及其控制下的企业", unit: TEXT, evidence_quotes: ["中国五矿集团有限公司及其\n控制下的企业"]}
+      subject_name: {status: supported, normalized_value: "湖南长远锂科股份有限公司", unit: TEXT, evidence_quotes: ["湖南长远锂科股份有限公司"]}
+      uncertainty: {status: absent, reason: "尚需股东大会审议是审批状态，正文未披露当前关联交易事项的重大不确定性。"}
+      related_party: {status: supported, normalized_value: "中国五矿集团有限公司及其控制下的企业", unit: TEXT, evidence_quotes: ["中国五矿集团有限公司及其\n控制下的企业"]}
+      relationship: {status: supported, normalized_value: "中国五矿集团有限公司是公司实际控制人", unit: TEXT, evidence_quotes: ["中国五矿是公司的实际控制人"]}
+      transaction_type: {status: supported, normalized_value: "采购原材料、采购商品、接受劳务、项目建设、租赁房屋、出售商品及代收电费", unit: TEXT, evidence_quotes: ["采购原材料", "采购商品", "接受劳务", "项目建设", "租赁房屋", "出售商品", "其他（代收\n电费）"]}
+      transaction_amount_cny: {status: supported, normalized_value: "1613327300", unit: CNY, evidence_quotes: ["日常性关联交易金额不超过 161,332.73 万元"]}
+      pricing_basis: {status: supported, normalized_value: "按照交易发生时的市场价格确定", unit: TEXT, evidence_quotes: ["定价原\n则按照当时市场价格确定"]}
+      approval_status: {status: supported, normalized_value: "董事会和监事会已审议通过，尚需股东大会审议", unit: TEXT, evidence_quotes: ["分别审议通过了 《关于公司2024 年度日常关联交易预计的议案》", "需提交公司股东大会审议"]}
+
+  - audit_item_id: 716121463befc9741caf9776578df206d1e11c0e5c2773072ce47472897920a8
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "控股股东部分股份已解除质押", unit: TEXT, evidence_quotes: ["将其所持有的本公司部分股份解除质押"]}
+      event_date: {status: supported, normalized_value: "2023-08-03", unit: DATE, evidence_quotes: ["2023 年 8\n月 3 日"]}
+      counterparty: {status: supported, normalized_value: "招商证券股份有限公司", unit: TEXT, evidence_quotes: ["招商证券股\n份有限公司"]}
+      subject_name: {status: supported, normalized_value: "东方日升新能源股份有限公司", unit: TEXT, evidence_quotes: ["东方日升新能源股份有限公司"]}
+      uncertainty: {status: absent, reason: "解除质押已经完成，正文并称剩余质押股份不存在平仓或被强制过户风险。"}
+      holder_name: {status: supported, normalized_value: "林海峰", unit: TEXT, evidence_quotes: ["林海峰先生"]}
+      pledged_share_count: {status: supported, normalized_value: "5880000", unit: SHARES, evidence_quotes: ["5,880,000", "本次解除质\n押股份数量", "林海峰"]}
+      pledged_share_ratio_pct: {status: supported, normalized_value: "2.08", unit: PCT, evidence_quotes: ["2.08%"]}
+      pledge_purpose: {status: absent, reason: "解除质押公告未披露原质押用途。"}
+      pledgee: {status: supported, normalized_value: "招商证券股份有限公司", unit: TEXT, evidence_quotes: ["招商证券股\n份有限公司"]}
+      pledge_status: {status: supported, normalized_value: "解除质押", unit: TEXT, evidence_quotes: ["股东股份解除质押基本情况"]}
+      release_date: {status: supported, normalized_value: "2023-08-03", unit: DATE, evidence_quotes: ["2023 年 8\n月 3 日"]}
+
+  - audit_item_id: f5b1c6b06337598d0e4f8d66d19865bb614da4e9c714516da446618ab3e7bc47
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会和监事会审议通过使用不超过30亿元闲置自有资金开展委托理财，尚需股东大会审议", unit: TEXT, evidence_quotes: ["审议通过《关于2023年度使用闲置自有资金开展委托理财的议案》", "该议案尚需提交公司股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["于2023年1月11日召开了第一届董事会第二十七次会议"]}
+      counterparty: {status: absent, reason: "委托理财计划尚未确定唯一具体产品或受托金融机构。"}
+      subject_name: {status: supported, normalized_value: "石家庄尚太科技股份有限公司", unit: TEXT, evidence_quotes: ["石家庄尚太科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文仅说明低风险产品和风险控制措施，未披露当前事项的具体重大不确定性。"}
+      fund_amount_cny: {status: supported, normalized_value: "3000000000", unit: CNY, evidence_quotes: ["使用不超过人民币30亿元的自有闲置资金"]}
+      product_type: {status: supported, normalized_value: "安全性高、流动性好、低风险的稳健型理财产品", unit: TEXT, evidence_quotes: ["安全性高、流动性好、低风险的稳健型产品"]}
+      financial_institution: {status: ambiguous, reason: "正文只列银行、证券公司等合法金融机构类别，未确定唯一具体机构。"}
+      investment_period: {status: supported, normalized_value: "12", unit: MONTHS, evidence_quotes: ["自公司股东大会审议通过之日12个月内"]}
+      funding_source: {status: supported, normalized_value: "阶段性闲置自有资金（不含募集资金）", unit: TEXT, evidence_quotes: ["阶段性闲置自有资金（不含募集资金）"]}
+      expected_yield_pct: {status: absent, reason: "正文未披露具体预期收益率。"}

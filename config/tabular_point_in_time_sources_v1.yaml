@@ -1,0 +1,136 @@
+contract: tabular-point-in-time-sources-v1
+dataset_role: train
+official_test_allowed: false
+split_contract: causal-impact-split-v2
+development_contract: causal-multimodel-development-v1
+tabular_contract: causal-tabular-model-v1
+
+universe:
+  source: data/tabular/intraday_15m/state.amazingdata.json
+  expected_role: train
+
+company_industry:
+  source: tushare
+  stock_basic:
+    endpoint: stock_basic
+    list_statuses: [L, D, P, G]
+    fields:
+      - ts_code
+      - symbol
+      - name
+      - area
+      - industry
+      - market
+      - exchange
+      - list_status
+      - list_date
+      - delist_date
+  sw_industry_membership:
+    endpoint: index_member_all
+    queries:
+      - {is_new: Y, meaning: current_membership}
+      - {is_new: N, meaning: historical_membership}
+    fields:
+      - l1_code
+      - l1_name
+      - l2_code
+      - l2_name
+      - l3_code
+      - l3_name
+      - ts_code
+      - name
+      - in_date
+      - out_date
+      - is_new
+  release_policy:
+    stock_basic_industry_is_current_snapshot_only: true
+    require_historical_effective_interval: true
+    interval_semantics: "[in_date, out_date)"
+    reject_overlapping_memberships: true
+    reject_missing_train_date_membership: true
+
+fundamentals:
+  source: tushare
+  source_start: 2020-01-01
+  source_end: 2024-12-31
+  availability_rule: f_ann_date_fallback_ann_date_end_of_day_asia_shanghai
+  prediction_join_rule: actual_disclosure_date_strictly_before_published_date
+  preserve_all_returned_versions: true
+  identity_fields:
+    - ts_code
+    - ann_date
+    - f_ann_date
+    - end_date
+    - report_type
+    - comp_type
+    - end_type
+    - update_flag
+  endpoints:
+    income:
+      fields:
+        - ts_code
+        - ann_date
+        - f_ann_date
+        - end_date
+        - report_type
+        - comp_type
+        - end_type
+        - basic_eps
+        - diluted_eps
+        - total_revenue
+        - revenue
+        - total_cogs
+        - oper_cost
+        - sell_exp
+        - admin_exp
+        - fin_exp
+        - operate_profit
+        - total_profit
+        - n_income
+        - n_income_attr_p
+        - ebit
+        - ebitda
+        - rd_exp
+        - update_flag
+    balancesheet:
+      fields:
+        - ts_code
+        - ann_date
+        - f_ann_date
+        - end_date
+        - report_type
+        - comp_type
+        - end_type
+        - total_share
+        - money_cap
+        - accounts_receiv
+        - inventories
+        - total_cur_assets
+        - total_assets
+        - total_cur_liab
+        - total_liab
+        - total_hldr_eqy_exc_min_int
+        - total_hldr_eqy_inc_min_int
+        - update_flag
+    cashflow:
+      fields:
+        - ts_code
+        - ann_date
+        - f_ann_date
+        - end_date
+        - report_type
+        - comp_type
+        - end_type
+        - n_cashflow_act
+        - n_cashflow_inv_act
+        - n_cash_flows_fnc_act
+        - free_cashflow
+        - n_incr_cash_cash_equ
+        - c_cash_equ_end_period
+        - update_flag
+  release_policy:
+    require_actual_disclosure_date: true
+    allow_ann_date_fallback_with_flag: true
+    require_revision_provenance_audit: true
+    reject_same_identity_conflicting_values: true
+    current_database_latest_value_is_forbidden: true

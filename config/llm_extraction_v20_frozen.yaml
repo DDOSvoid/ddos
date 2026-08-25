@@ -1,0 +1,109 @@
+contract: llm-extraction-frozen-candidate-v3
+frozen_at: "2026-08-24T08:18:09.3956672Z"
+status: awaiting_fresh_blind_gold_annotation_and_lock
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  consumed_feedback_allowed: "v19 batch 10 review and saved raw responses only"
+  fresh_model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v20_as_direct_v19_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed_in_model_requests: false
+  market_targets_allowed_in_model_requests: false
+  causal_incident_file: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  causal_incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v20
+  prompt_sha256: 65285315d191412f658643c34d213ce9a597f43e56401f5d65f6f7967a8fa843
+  prompt_appendix_sha256: 5712384510ba56dcaaf8436395c8447bb7e5c0554e70506749a60d10b9f198a0
+  validator_contract_version: evidence-validator-v16
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: 7a374a86d6faf8fda3e5dbf7f55d5085cf508d19814def0977e90b9e4f76612e
+  src/ml/llm_client.py: 8cc7f5725360de5fd97400f6c315c38fff9670f521d34aa7481096e62ffe3304
+  scripts/run_llm_extraction_candidates.py: 5ca8274e44dedc231086c9dfb9a54f11766b7cd645fabd2c0019b148dcda6f57
+  scripts/validate_llm_extraction_gold.py: 89c4d0ec969de10cab60a3137dcffff929cfb06af0656c38637c6a09c1adebb8
+  tests/test_llm_extraction.py: 633ba0f11322466f901adb053a0d5f6d7e50d2658ff01e2fce05e075f1d20a78
+  tests/test_llm_candidate_runner.py: bf1f1dc031ab9024be97a274b5fe5afca11ba91b30c5854aa46f1aacc85b0e80
+
+development_validation:
+  initial_api_output: data/llm_extraction/deepseek-v4-flash_65285315d191_evidence-validator-v15.jsonl
+  initial_api_output_sha256: 036a9d96006d4855d2c975829c5ae1d23436df8b8a9b5924b3900c34d2396e12
+  final_output: data/llm_extraction/deepseek-v4-flash_65285315d191_evidence-validator-v16.jsonl
+  final_output_sha256: 89488eca38f68158a3c71b0a3fd9b583bc8d19934482ccc9b3bbb5ff9cb9eb26
+  review: data/validation/llm_extraction_v20_development_review_10.json
+  review_sha256: 8f0e661131446d761a2021d95c057dbddeac9cbfc409fb4caebe4411620d1550
+  documents: 10
+  fields: 107
+  supported: 71
+  absent: 29
+  ambiguous: 7
+  local_rejected_fields: 4
+  normalized_values_with_layout_linebreaks: 0
+  new_api_requests_for_v20_prompt_hash: 10
+  new_api_requests_after_validator_v15: 0
+  prompt_tokens: 88533
+  completion_tokens: 11931
+  total_tokens: 100464
+  conversation_history_included: false
+  memory_included: false
+  human_review_included_in_prompt: false
+  market_targets_queried: false
+  deepseek_future_data_exposure: false
+  accuracy_estimate_reported: false
+  full_test_result: "383 passed, 2 skipped"
+  lint_result: "60 pre-existing E501 findings remain; no new v20 E501 finding"
+
+consumed_v19_feedback_replay:
+  eligible_for_v20_score: false
+  new_model_requests: 0
+  changed_fields: 9
+  corrected_to_absent: 5
+  moved_to_safe_abstention: 4
+  review: data/validation/llm_extraction_v20_development_review_10.json
+
+fresh_blind_gold_batch_11:
+  role: model_selection_validation
+  selection_file: data/validation/llm_extraction_v20_blind_batch11_selection.json
+  selection_file_sha256: 2d21fafa4612ad4931ebad308f421f5a94722999638837107e6307427224617a
+  selection_method: deterministic_metadata_only_hash_ranking
+  source_bodies_semantically_read_before_candidate_freeze: 0
+  candidate_requests_sent_before_gold_freeze: 0
+  target_documents: 10
+  target_fields: 108
+  distinct_sub_categories: 10
+  audit_item_ids:
+    - 6a6a770a3e385cac96be6f34b6a92cac47cb567ea3b32d0e1d3745ba4cec4d3d
+    - 42b353a29a34bf698d0531764f0d0331abcbf56c3d5428ecc7f0fe0c2d877ee3
+    - 1f2cc0bde3c593541e40688b7ca0d10e2192416f5248938e4f3c66bc4b09a43e
+    - 086b7d8a511e5122e5e9176ced236404a943278454177223822cd38ea903171d
+    - 2a59d7d2a21dcf6ce3b64c88141be59a396d8f61aa8a1e4d3a5b9ee676444caa
+    - f013a120f91e235fc217baa650edf10478ac1936da1dc563d10c40c166bb5360
+    - e22747ed83685d4659e0fee0c508149a04054998fb4e59e39f78fdf807e2d93a
+    - f84e662aaa851af37a932e3e98b9fdd7fa3f8c5dbb5cf7287af748ed27c4cc81
+    - d0f2800eb979909d25e723163ed9a41a6709c528b185ec1f59ddcb782fa1b6a9
+    - d27b79e556c059042c7ba3395b96f8c46ecebdf919592eda8e4ee1f507474364
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_v20_batch11_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_v20_batch11.lock.json
+  consumed_v19_batch_reuse_allowed: false
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  extraction_holdout_eligible_for_v20_score: false
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_or_validator_tuning_after_fresh_gold_lock: false

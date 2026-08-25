@@ -28,6 +28,31 @@ def daily_v1_prediction_as_of(
     )
 
 
+def next_trading_preopen_prediction_as_of(
+    published_date: date,
+    *,
+    trading_days: Iterable[date],
+    development: CausalDevelopmentContract,
+) -> datetime:
+    """Return the first trading-session pre-open strictly after the date label.
+
+    Historical announcement timestamps are only date-precise.  The LSTM branch
+    therefore keeps market inputs strictly before ``published_date`` while using
+    the following trading session's 08:30 pre-open as the shared component/fusion
+    prediction timestamp.
+    """
+    candidates = sorted({day for day in trading_days if day > published_date})
+    if not candidates:
+        raise ValueError(
+            "trading calendar has no session strictly after publication date"
+        )
+    return datetime.combine(
+        candidates[0],
+        development.decision_time,
+        tzinfo=development.zone,
+    )
+
+
 def daily_bar_available_at(
     trade_date: date,
     *,

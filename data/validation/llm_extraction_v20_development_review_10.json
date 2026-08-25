@@ -1,0 +1,123 @@
+{
+  "contract": "llm-extraction-development-assisted-review-v3",
+  "created_at": "2026-08-24T08:18:09.3956672Z",
+  "evaluation_role": "prompt_development",
+  "dataset_period": "2023-H1",
+  "eligible_for_model_selection_score": false,
+  "eligible_for_extraction_holdout_score": false,
+  "prompt_version": "structured-extraction-prompt-v20",
+  "prompt_sha256": "65285315d191412f658643c34d213ce9a597f43e56401f5d65f6f7967a8fa843",
+  "prompt_appendix_sha256": "5712384510ba56dcaaf8436395c8447bb7e5c0554e70506749a60d10b9f198a0",
+  "validator_contract_version": "evidence-validator-v16",
+  "model": "deepseek-v4-flash",
+  "thinking": "disabled",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_65285315d191_evidence-validator-v16.jsonl",
+  "candidate_sha256": "89488eca38f68158a3c71b0a3fd9b583bc8d19934482ccc9b3bbb5ff9cb9eb26",
+  "initial_api_candidate_path": "data/llm_extraction/deepseek-v4-flash_65285315d191_evidence-validator-v15.jsonl",
+  "initial_api_candidate_sha256": "036a9d96006d4855d2c975829c5ae1d23436df8b8a9b5924b3900c34d2396e12",
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "documents": 10,
+  "fields": 107,
+  "status_counts": {
+    "supported": 71,
+    "absent": 29,
+    "ambiguous": 7
+  },
+  "request_audit": {
+    "new_api_requests_for_v20_prompt_hash": 10,
+    "request_success_rate": 1.0,
+    "finish_reason_stop_rate": 1.0,
+    "model_returned": "deepseek-v4-flash",
+    "prompt_tokens": 88533,
+    "completion_tokens": 11931,
+    "total_tokens": 100464,
+    "validator_v16_replayed_from_saved_responses": 10,
+    "new_api_requests_after_validator_v15": 0,
+    "conversation_history_included": false,
+    "memory_included": false,
+    "human_review_included_in_prompt": false,
+    "market_targets_queried": false,
+    "future_returns_or_direction_labels_exposed": false,
+    "deepseek_future_data_exposure": false
+  },
+  "structural_results": {
+    "complete_field_sets": 10,
+    "failure_records": 0,
+    "normalized_values_with_layout_linebreaks": 0,
+    "local_rejected_fields": 4,
+    "full_test_result": "383 passed, 2 skipped"
+  },
+  "v20_development_changes": [
+    "Reject share-increase plan windows and future lockup listing dates as current event_date.",
+    "Require executive event_stage, position and change_type to cover a parallel acting-board-secretary action.",
+    "Reject a generic comprehensive-credit label when detailed financing types are disclosed.",
+    "Route regulatory authority, regulated subject, common subject_name and counterparty into non-overlapping roles.",
+    "Treat statutory appeal rights as neither reply_deadline, remedy_requirement nor uncertainty.",
+    "Recover one exact intellectual-property certificate-receipt stage and one exact buyback-cancellation date only under unique source anchors.",
+    "Reject selection of one project_name when multiple independent labelled bid projects are disclosed."
+  ],
+  "consumed_v19_feedback_replay": {
+    "eligible_for_accuracy_score": false,
+    "new_model_requests_sent": 0,
+    "source": "Saved v19 batch-10 raw responses were revalidated with evidence-validator-v16 only.",
+    "old_status_counts": {"supported": 59, "absent": 35, "ambiguous": 12},
+    "replayed_status_counts": {"supported": 50, "absent": 40, "ambiguous": 16},
+    "changed_fields": 9,
+    "corrected_to_absent_under_field_taxonomy": [
+      "f764992aed52:counterparty",
+      "f764992aed52:subject_name",
+      "f764992aed52:uncertainty",
+      "f764992aed52:reply_deadline",
+      "f764992aed52:remedy_requirement"
+    ],
+    "moved_from_partial_or_invalid_support_to_safe_abstention": [
+      "df74a30ca178:event_stage",
+      "df74a30ca178:change_type",
+      "a4e662d66e1b:financing_type",
+      "1f4083f9b617:event_date"
+    ],
+    "note": "This replay is development feedback from an already consumed batch. It is not a v20 model-selection result and cannot be reported as independent accuracy."
+  },
+  "remaining_local_rejections": [
+    {
+      "audit_item_id_prefix": "a9896b461da7",
+      "field": "event_date",
+      "reason": "A multi-day abnormal-volatility period has no unique current event date."
+    },
+    {
+      "audit_item_id_prefix": "69a25b812dfb",
+      "field": "event_stage",
+      "reason": "The extracted sentence describes event scope but no unique current action."
+    },
+    {
+      "audit_item_id_prefix": "547e3567f965",
+      "field": "project_name",
+      "reason": "Two independently labelled bid projects cannot fill one scalar project_name."
+    },
+    {
+      "audit_item_id_prefix": "de189d93430e",
+      "field": "event_date",
+      "reason": "A shareholder-list record date is not the current disclosure action date."
+    }
+  ],
+  "fresh_blind_selection": {
+    "path": "data/validation/llm_extraction_v20_blind_batch11_selection.json",
+    "sha256": "2d21fafa4612ad4931ebad308f421f5a94722999638837107e6307427224617a",
+    "documents": 10,
+    "fields": 108,
+    "distinct_sub_categories": 10,
+    "source_bodies_read": false,
+    "candidate_requests_sent": 0
+  },
+  "accuracy_statement": "No independent accuracy estimate is reported because the API batch is prompt-development data and the v19 replay is consumed feedback.",
+  "causal_incident": {
+    "path": "data/validation/llm_extraction_v19_causal_incident_20260824.json",
+    "sha256": "b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d",
+    "operator_context_future_data_read": true,
+    "deepseek_future_data_exposure": false,
+    "market_targets_read": false,
+    "consequence": "The 2024 extraction holdout remains disqualified for v20 as a direct descendant of v19 and remains runner-locked."
+  },
+  "decision": "FREEZE_FOR_FRESH_UNREAD_GOLD_PREPARATION",
+  "next_gate": "Annotate only the ten metadata-frozen 2023 batch-11 items, validate every supported quote against the frozen v20 implementation, and create model_selection_gold_v20_batch11.lock.json before any candidate request."
+}

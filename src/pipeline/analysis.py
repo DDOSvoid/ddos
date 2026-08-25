@@ -91,4 +91,5 @@ class DeepAnalysisStep:
             model=self.model,
             max_tokens=config.models.analysis.max_tokens,
             temperature=config.models.analysis.temperature,
+            thinking=config.models.analysis.thinking,
         )

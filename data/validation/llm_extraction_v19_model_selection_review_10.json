@@ -1,0 +1,191 @@
+{
+  "contract": "llm-extraction-model-selection-review-v2",
+  "reviewed_at": "2026-08-24T07:45:35.2837522Z",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "validator_tuned_after_candidate_read": false,
+  "gold_annotation_method": "codex-assisted-source-only-review",
+  "dual_human_review_completed": false,
+  "future_data_read": true,
+  "future_data_used_for_gold_labels": false,
+  "future_data_used_for_scoring": false,
+  "deepseek_future_data_exposure": false,
+  "market_targets_read": false,
+  "official_test_read_count": 0,
+  "causal_incident": {
+    "path": "data/validation/llm_extraction_v19_causal_incident_20260824.json",
+    "sha256": "b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d",
+    "operator_context_exposed_to_2024_snippets": true,
+    "model_exposed_to_2024_content": false,
+    "market_target_exposure": false,
+    "consequence": "The 2024 extraction holdout is permanently ineligible for v19 and its direct prompt lineage. It was not used in this score."
+  },
+  "model": "deepseek-v4-flash",
+  "thinking": "disabled",
+  "prompt_version": "structured-extraction-prompt-v19",
+  "prompt_sha256": "13981a36fc793992528cf9073eec0d47fb235bec57fd3ec4bf877d553f367e1e",
+  "validator_contract_version": "evidence-validator-v14",
+  "pre_annotation_freeze_sha256": "cbc739aac058139db2474b5073cd02c6e1ab42886c44e3d16f6996fb44b0adce",
+  "gold_draft_sha256": "6de9437aa23a302b351ddb256883f3a637505aa02164951847bd3faf38b56b75",
+  "gold_lock_sha256": "54c41295bb67bdb1a9232f88ddee72655d2635d0b55faabdda86a46b03bc27f6",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_13981a36fc79_evidence-validator-v14_blind-batch10.jsonl",
+  "candidate_sha256": "56f97d978f4abf7f82dba5fb1e11754b27dd85fda30d2cd00f8b63d38dd20581",
+  "candidate_file_contains_prompt_development_records": false,
+  "model_selection_records_selected_by_locked_ids": 10,
+  "documents": 10,
+  "fields": 106,
+  "gold_counts": {
+    "supported": 55,
+    "absent": 38,
+    "ambiguous": 13
+  },
+  "candidate_counts": {
+    "supported": 59,
+    "absent": 35,
+    "ambiguous": 12
+  },
+  "request_success_rate": 1.0,
+  "validator_accepted_document_rate": 1.0,
+  "local_field_rejections": 4,
+  "normalized_values_with_layout_linebreaks": 0,
+  "usage": {
+    "prompt_tokens": 114551,
+    "completion_tokens": 10431,
+    "total_tokens": 124982
+  },
+  "metrics": {
+    "status_exact_accuracy": 0.8962264151,
+    "support_vs_abstain_accuracy": 0.9245283019,
+    "strict_field_accuracy": 0.6509433962,
+    "post_lock_human_semantic_field_accuracy": 0.8584905660,
+    "supported_semantic_precision": 0.7796610169,
+    "supported_semantic_recall": 0.8181818182,
+    "abstention_precision": 0.9574468085,
+    "abstention_recall": 0.8823529412,
+    "numeric_date_boolean_exact_accuracy": 0.9333333333
+  },
+  "metric_counts": {
+    "status_exact": {"correct": 95, "total": 106},
+    "support_vs_abstain": {"correct": 98, "total": 106},
+    "strict_field": {"correct": 69, "total": 106},
+    "post_lock_semantic": {"correct": 91, "total": 106},
+    "supported_precision": {"correct_candidate_supported": 46, "candidate_supported": 59},
+    "supported_recall": {"correct_gold_supported": 45, "gold_supported": 55},
+    "abstention_precision": {"correct_candidate_abstentions": 45, "candidate_abstentions": 47},
+    "abstention_recall": {"correct_gold_abstentions": 45, "gold_abstentions": 51},
+    "numeric_date_boolean_exact": {"correct": 14, "total": 15}
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 69,
+    "semantically_equivalent_non_exact_fields": 22,
+    "incorrect_fields": 15,
+    "equivalent": [
+      "65a848849183:event_stage",
+      "39644cb7a07e:progress",
+      "a4e662d66e1b:event_stage",
+      "a4e662d66e1b:counterparty",
+      "a4e662d66e1b:uncertainty",
+      "a4e662d66e1b:financial_institution",
+      "af3731cfb660:property_type",
+      "af3731cfb660:expected_business_effect",
+      "b96c8d89509c:event_stage",
+      "b96c8d89509c:transaction_asset",
+      "b96c8d89509c:transaction_stage",
+      "0e73d2530a1d:event_stage",
+      "0e73d2530a1d:subject_name",
+      "0e73d2530a1d:penalty_reason",
+      "0e73d2530a1d:operational_effect",
+      "e534015a6016:event_stage",
+      "e534015a6016:counterparty",
+      "e534015a6016:purpose",
+      "f764992aed52:event_stage",
+      "f764992aed52:authority",
+      "f764992aed52:action_type",
+      "f764992aed52:issue_summary"
+    ],
+    "incorrect": [
+      {
+        "field": "39644cb7a07e:event_stage",
+        "reason": "The current share-increase plan stage was lost after relying on a title-like span rather than returning a self-contained current-action statement."
+      },
+      {
+        "field": "39644cb7a07e:event_date",
+        "reason": "Selected the plan-period end date as the current event date."
+      },
+      {
+        "field": "df74a30ca178:event_stage",
+        "reason": "The stage summary omitted the acting board-secretary appointment disclosed in the current personnel action."
+      },
+      {
+        "field": "df74a30ca178:change_type",
+        "reason": "The change type omitted the acting board-secretary appointment and therefore did not cover the full current action."
+      },
+      {
+        "field": "a4e662d66e1b:financing_type",
+        "reason": "Reduced the disclosed financing arrangement to the generic phrase 'comprehensive credit line' and omitted its substantive facility types."
+      },
+      {
+        "field": "af3731cfb660:event_stage",
+        "reason": "Lost the current patent-certificate receipt stage because the submitted quote did not satisfy the exact evidence contract."
+      },
+      {
+        "field": "1f4083f9b617:event_stage",
+        "reason": "Used the future listing-and-circulation step instead of the current approval or release action."
+      },
+      {
+        "field": "1f4083f9b617:event_date",
+        "reason": "Used the future listing date rather than the date of the current lockup-release action."
+      },
+      {
+        "field": "e534015a6016:uncertainty",
+        "reason": "Did not preserve the material response and follow-up uncertainty stated in the inquiry event."
+      },
+      {
+        "field": "e534015a6016:approval_status",
+        "reason": "Did not represent the pending response or review status of the inquiry process."
+      },
+      {
+        "field": "f764992aed52:counterparty",
+        "reason": "Misclassified the regulatory authority as a transaction counterparty."
+      },
+      {
+        "field": "f764992aed52:subject_name",
+        "reason": "Duplicated the regulated shareholder as a generic scalar subject instead of respecting the field-role boundary."
+      },
+      {
+        "field": "f764992aed52:uncertainty",
+        "reason": "Treated ordinary administrative appeal rights as event uncertainty."
+      },
+      {
+        "field": "f764992aed52:reply_deadline",
+        "reason": "Treated an appeal-right time limit as a regulatory reply deadline."
+      },
+      {
+        "field": "f764992aed52:remedy_requirement",
+        "reason": "Treated optional appeal rights as a mandatory remedial requirement."
+      }
+    ]
+  },
+  "frozen_validator_audit": {
+    "gold_supported_fields_rejected_before_candidate_requests": 0,
+    "changed_after_candidate_review": false,
+    "note": "All 55 supported gold fields passed the frozen evidence validator and taxonomy before candidate requests. No prompt or validator behavior was changed after candidate review."
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "failed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "supported_semantic_precision_min",
+      "abstention_recall_min",
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not promote v19 to downstream prediction features. Batch 10 is consumed. Do not open or score the disqualified 2024 holdout; any successor must be frozen as a new version and use a fresh eligible validation contract."
+  }
+}

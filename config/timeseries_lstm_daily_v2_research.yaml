@@ -1,0 +1,77 @@
+contract: causal-timeseries-lstm-daily-v2-research
+parent_contract: causal-timeseries-lstm-daily-v1
+parent_contract_path: config/timeseries_lstm_daily_v1.yaml
+parent_contract_sha256: ce3f577687d50162f15a1e9e7a43f8c6989a8793c195480882fc7471299cbc5f
+status: hypothesis_only
+dataset_role: train
+official_test_read_allowed: false
+quarantine_read_allowed: false
+forward_validation_read_allowed: false
+
+# v2 is an independent research branch.  The parent v1 contract remains
+# immutable and supplies the dates, identities, features, folds, and gates.
+inherit:
+  dates_and_split: exact_parent_contract
+  sequence_identity: exact_parent_contract
+  feature_columns: exact_parent_contract
+  sample_and_fold_set: exact_parent_contract
+  evaluation_gates: exact_parent_contract
+
+candidate_space:
+  lookback_sessions: [20, 60]
+  hidden_size: [16, 32]
+  horizon_sessions: [1, 3, 5]
+  num_layers: 1
+  bidirectional: false
+  attention_allowed: false
+  transformer_allowed: false
+  external_dropout: [0.10]
+  recurrent_dropout: 0.0
+  hyperparameter_search: false
+
+# The v2 objective is range-based.  Return bounds are estimated separately
+# inside each outer-fold training segment; they are never a project-wide
+# constant and never use outer validation or sealed partitions.
+objective:
+  target_representation: fold_local_empirical_return_range
+  return_range:
+    lower_quantile: 0.10
+    upper_quantile: 0.90
+    fit_scope: outer_fold_train_only
+    minimum_samples: 100
+  acceptable_metric_ranges:
+    interval_coverage: [0.80, 0.95]
+    interval_width_ratio_to_constant: [0.80, 1.00]
+    brier_improvement_over_constant: [0.00, 1.00]
+    return_mae_improvement_over_fold_median: [0.00, 1.00]
+  range_inclusive: true
+
+hypotheses:
+  target_scale:
+    registered_order: 1
+    hypothesis: fold-local target centering and scaling will reduce multi-task loss imbalance without changing the model family
+    implementation: fit expected-return and interval target mean/scale on inner model-fit only; invert outputs before scoring
+    fit_scope: inner_model_fit_only
+    complexity_change: none
+  shrinkable_interval:
+    registered_order: 2
+    hypothesis: symmetric residual calibration can shrink as well as expand intervals and improve the width gate
+    implementation: fit a symmetric split-conformal residual radius around expected return on inner calibration only
+    fit_scope: inner_calibration_only
+    complexity_change: calibration_only
+  brier_temperature:
+    registered_order: 3
+    hypothesis: Brier-optimized temperature is better aligned with the registered probability gate than NLL-optimized temperature
+    implementation: bounded temperature optimization on inner calibration Brier with identity fallback when calibration worsens
+    fit_scope: inner_calibration_only
+    complexity_change: calibration_only
+
+research_rules:
+  one_change_at_a_time: true
+  all_registered_candidates_must_run: true
+  outer_validation_fit_allowed: false
+  official_test_read_limit: 0
+  freeze_allowed: false
+  table_oof_read_allowed: false
+  release_allowed: false
+  parent_v1_rewrite_allowed: false

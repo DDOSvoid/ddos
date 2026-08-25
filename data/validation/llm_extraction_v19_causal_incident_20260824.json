@@ -1,0 +1,40 @@
+{
+  "contract": "llm-extraction-causal-incident-v1",
+  "detected_at": "2026-08-24T07:13:12.1837938Z",
+  "prompt_version_at_detection": "structured-extraction-prompt-v19",
+  "prompt_sha256_at_detection": "3c0bc31d3cb2d63d72ea24eea46b023420143e36168d9a3df6888e8a946cbd6a",
+  "validator_contract_version_at_detection": "evidence-validator-v11",
+  "model": "deepseek-v4-flash",
+  "event": "An over-broad local field-definition search printed excerpts from records assigned to the 2024 extraction holdout into the developer terminal context.",
+  "cause": "The search scope included the complete structured-extraction audit JSONL instead of being restricted to prompts, source code, tests and known 2023 prompt-development item IDs.",
+  "operator_context_future_data_read": true,
+  "deepseek_future_data_exposure": false,
+  "deepseek_requests_completed_before_incident": 10,
+  "deepseek_request_roles": [
+    "prompt_development"
+  ],
+  "deepseek_request_period": "2023-H1",
+  "conversation_history_included_in_requests": false,
+  "memory_included_in_requests": false,
+  "human_review_included_in_requests": false,
+  "market_targets_queried_or_exposed": false,
+  "future_returns_or_direction_labels_exposed": false,
+  "candidate_outputs_sent_to_holdout": false,
+  "containment": [
+    "Do not use any accidentally displayed holdout excerpt as prompt, validator, taxonomy or field-definition feedback.",
+    "Keep extraction_holdout locked in the runner.",
+    "Do not report a 2024 holdout score for v19 or any prompt directly descended from this developer context.",
+    "Restrict subsequent document inspection to explicit prompt_development IDs or already consumed historical review artifacts.",
+    "Use a fresh unread gold batch outside the exposed 2024 holdout for the next eligible blind model-selection decision."
+  ],
+  "pre_incident_development_findings_allowed_for_follow_up": [
+    "PDF layout line breaks leaked into normalized_value.",
+    "retrospective_adjustment returned descriptive TEXT instead of an explicit boolean.",
+    "a scope description was returned as event_stage without a current action.",
+    "a qualitative no-material-profit-impact statement was mapped to numeric zero.",
+    "ordinary pending shareholder approval was returned as uncertainty.",
+    "validated evidence in another field could safely recover bankruptcy stage facts after a non-exact model quote.",
+    "an explicitly defined legal-name alias was not reconstructed for new_controller."
+  ],
+  "status": "contained_2024_holdout_disqualified_for_this_prompt_lineage"
+}

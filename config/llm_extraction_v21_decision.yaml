@@ -1,0 +1,103 @@
+contract: llm-extraction-model-selection-decision-v2
+decided_at: "2026-08-24T09:26:29.9823526Z"
+candidate: structured-extraction-prompt-v21
+model: deepseek-v4-flash
+validator_contract_version: evidence-validator-v17
+decision: FAIL
+promotion_allowed: false
+downstream_feature_use_allowed: false
+model_selection_batch_consumed: true
+extraction_holdout_read_allowed: false
+extraction_holdout_score_allowed: false
+
+integrity:
+  independent_gold_frozen_before_candidate_requests: true
+  model_requests_before_gold_freeze: 0
+  candidate_outputs_seen_before_gold_freeze: false
+  prompt_tuned_after_candidate_read: false
+  validator_tuned_after_candidate_read: false
+  gold_annotation_method: codex-assisted-source-only-review
+  dual_human_review_completed: false
+  operator_future_data_read: true
+  future_data_read_during_gold_annotation: false
+  future_data_used_for_gold_labels: false
+  future_data_used_for_scoring: false
+  deepseek_future_data_exposure: false
+  market_targets_read: false
+  official_test_read_count: 0
+
+causal_boundary:
+  incident: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v21_as_direct_v19_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  official_test_status: sealed
+  forward_validation_period: "2026 onward"
+  forward_validation_status: sealed
+
+artifacts:
+  pre_annotation_freeze: config/llm_extraction_v21_frozen.yaml
+  pre_annotation_freeze_sha256: 71200ccdd75f27161cfd6b139cf9c42693f70c60fbca2b70897150e2582026a0
+  selection: data/validation/llm_extraction_v21_blind_batch12_selection.json
+  selection_sha256: e899daa3716fbbbec2b3d3ec6a1df981918f28a9bdbdb72779deb8027a43c5a3
+  gold_lock: data/human_validation/model_selection_gold_v21_batch12.lock.json
+  gold_lock_sha256: 768fa468af44a7fb9514d31ef9f0f07c7a5159fdbfc8d40302deff8fb4742a9b
+  gold_draft: data/human_validation/model_selection_gold_v21_batch12_draft.yaml
+  gold_draft_sha256: deea2c5187b3b7e69c7e99ffd545d421b77bf4d735b1e0398a81d1b8ec773e44
+  candidate: data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17_blind-batch12.jsonl
+  candidate_sha256: 6f38b3861d0991f8782dbf40f5300844b0acd302f21db919266900670db5d846
+  discarded_format_failure: data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17_blind-batch12.failures-attempt1.jsonl
+  discarded_format_failure_sha256: 4716d25baef80296caa33089327986930d7581e2346475af259117a704b3ae46
+  review: data/validation/llm_extraction_v21_model_selection_review_10.json
+  review_sha256: 100d62a34b15e0395573db00b6435ac74ce2759ac4b933e9cb129a533d82bb46
+  frozen_candidate_runner_sha256: 191aa390735b262646d92f03c864b8b8d5b8504a1d52465744c43da5dd207f5d
+  post_evaluation_consumed_gate_runner_sha256: f564f3008b443390279cfdd6198397f3ce8aea177b0abf01edd888e0bd414b2e
+  post_evaluation_runner_test_sha256: 486e72ae881b273353b45e18b0df7403c2bffd38f50bea38cae3639f28bf027b
+
+execution:
+  completed_documents: 10
+  api_attempts: 11
+  successful_api_attempts: 10
+  discarded_format_failures: 1
+  retries: 1
+  prompt_or_validator_changed_for_retry: false
+  all_api_attempt_tokens: 140723
+
+metrics:
+  post_lock_human_semantic_field_accuracy: 0.9369369369
+  supported_semantic_precision: 0.9729729730
+  supported_semantic_recall: 0.9230769231
+  abstention_precision: 0.8648648649
+  abstention_recall: 0.9696969697
+  numeric_date_boolean_exact_accuracy: 0.8800000000
+
+gold_annotation_audit:
+  post_lock_defect_found: true
+  field: 8569692b943d:profit_effect_cny
+  locked_value: "-30663037.05"
+  frozen_validator_canonical_value: "30663037.05"
+  corrected_numeric_sensitivity_accuracy: 0.92
+  decision_robust_to_defect: true
+  gold_lock_modified_after_candidate_read: false
+
+passed_gates:
+  - post_lock_human_semantic_field_accuracy_min_0_90
+  - supported_semantic_precision_min_0_90
+  - abstention_recall_min_0_90
+
+failed_gates:
+  - numeric_date_boolean_exact_accuracy_min_0_95
+
+verification:
+  targeted_llm_tests: "111 passed"
+  full_test_result: "404 passed, 2 skipped"
+  consumed_gate_verified: true
+
+next_action: >-
+  Keep v21 immutable and do not promote it. Retire batch 12 from independent
+  scoring. Any v22 work may use this consumed error analysis only as development
+  feedback, must validate normalized gold values after frozen-validator replay
+  before locking, must freeze a new prompt and validator before evaluation, and
+  must use a fresh eligible validation contract. Do not use the disqualified 2024
+  holdout, the sealed 2025 official test, or 2026 forward data for prompt development.

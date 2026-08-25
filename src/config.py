@@ -65,6 +65,7 @@ class ClassifierModelConfig(BaseModel):
 
 class ExtractionModelConfig(BaseModel):
     model: str = "deepseek-v4-flash"
+    thinking: Literal["enabled", "disabled"] = "disabled"
     temperature: float = 0.0
     max_tokens: int = 1024
     request_timeout: int = 60
@@ -72,6 +73,7 @@ class ExtractionModelConfig(BaseModel):
 
 class AnalysisModelConfig(BaseModel):
     model: str = "deepseek-v4-flash"
+    thinking: Literal["enabled", "disabled"] = "disabled"
     temperature: float = 0.3
     max_tokens: int = 2048
     request_timeout: int = 120

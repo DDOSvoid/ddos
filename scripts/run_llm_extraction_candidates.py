@@ -35,6 +35,44 @@ MODEL_SELECTION_GOLD_LOCK = (
     / "human_validation"
     / "model_selection_gold_batch1.lock.json"
 )
+MODEL_SELECTION_GOLD_LOCK_BY_PROMPT_VERSION = {
+    "structured-extraction-prompt-v19": (
+        PROJECT_ROOT
+        / "data"
+        / "human_validation"
+        / "model_selection_gold_v19_batch10.lock.json"
+    ),
+    "structured-extraction-prompt-v20": (
+        PROJECT_ROOT
+        / "data"
+        / "human_validation"
+        / "model_selection_gold_v20_batch11.lock.json"
+    ),
+    "structured-extraction-prompt-v21": (
+        PROJECT_ROOT
+        / "data"
+        / "human_validation"
+        / "model_selection_gold_v21_batch12.lock.json"
+    ),
+    "structured-extraction-prompt-v22": (
+        PROJECT_ROOT
+        / "data"
+        / "human_validation"
+        / "model_selection_gold_v22_batch13.lock.json"
+    ),
+}
+LOCKED_MODEL_BY_PROMPT_VERSION = {
+    # The legacy v18 gold lock predates an explicit model field. Preserve its
+    # frozen model here so a provider switch cannot silently reuse that batch.
+    "structured-extraction-prompt-v18": "deepseek-v4-flash",
+}
+CONSUMED_MODEL_SELECTION_PROMPT_VERSIONS = {
+    "structured-extraction-prompt-v18",
+    "structured-extraction-prompt-v19",
+    "structured-extraction-prompt-v20",
+    "structured-extraction-prompt-v21",
+    "structured-extraction-prompt-v22",
+}
 
 
 def _sha256_path(path: Path) -> str:
@@ -42,14 +80,23 @@ def _sha256_path(path: Path) -> str:
 
 
 def _assert_model_selection_gold_lock(
-    *, audit_sha256: str, prompt_version: str, prompt_sha256: str
+    *, audit_sha256: str, prompt_version: str, prompt_sha256: str, model: str
 ) -> tuple[str, ...]:
-    if not MODEL_SELECTION_GOLD_LOCK.exists():
+    if prompt_version in CONSUMED_MODEL_SELECTION_PROMPT_VERSIONS:
         raise PermissionError(
-            "model-selection candidates are locked until blind gold batch 1 is frozen"
+            f"model-selection batch for {prompt_version} is already consumed; "
+            "freeze a new prompt and fresh gold lock before evaluation"
+        )
+    gold_lock_path = MODEL_SELECTION_GOLD_LOCK_BY_PROMPT_VERSION.get(
+        prompt_version, MODEL_SELECTION_GOLD_LOCK
+    )
+    if not gold_lock_path.exists():
+        raise PermissionError(
+            "model-selection candidates are locked until the prompt-specific "
+            "blind gold batch is frozen"
         )
     try:
-        lock = json.loads(MODEL_SELECTION_GOLD_LOCK.read_text(encoding="utf-8"))
+        lock = json.loads(gold_lock_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise PermissionError("model-selection gold lock is unreadable") from exc
     required = {
@@ -67,19 +114,36 @@ def _assert_model_selection_gold_lock(
         for key, expected in required.items()
         if lock.get(key) != expected
     }
+    locked_model = lock.get("model") or LOCKED_MODEL_BY_PROMPT_VERSION.get(
+        prompt_version
+    )
+    if locked_model != model:
+        mismatches["model"] = {
+            "expected": locked_model or "a model recorded in a new gold lock",
+            "actual": model,
+        }
     draft_relative = lock.get("gold_draft_path")
     if not isinstance(draft_relative, str):
-        mismatches["gold_draft_path"] = {"expected": "project-relative path", "actual": draft_relative}
+        mismatches["gold_draft_path"] = {
+            "expected": "project-relative path",
+            "actual": draft_relative,
+        }
     else:
         draft_path = (PROJECT_ROOT / draft_relative).resolve()
         gold_root = (PROJECT_ROOT / "data" / "human_validation").resolve()
         try:
             draft_path.relative_to(gold_root)
         except ValueError:
-            mismatches["gold_draft_path"] = {"expected": "inside data/human_validation", "actual": str(draft_path)}
+            mismatches["gold_draft_path"] = {
+                "expected": "inside data/human_validation",
+                "actual": str(draft_path),
+            }
         else:
             if not draft_path.exists() or lock.get("gold_draft_sha256") != _sha256_path(draft_path):
-                mismatches["gold_draft_sha256"] = {"expected": "current draft hash", "actual": lock.get("gold_draft_sha256")}
+                mismatches["gold_draft_sha256"] = {
+                    "expected": "current draft hash",
+                    "actual": lock.get("gold_draft_sha256"),
+                }
     if mismatches:
         raise PermissionError(f"model-selection gold lock contract mismatch: {mismatches}")
     document_count = lock.get("document_count")
@@ -182,6 +246,7 @@ def run(
             audit_sha256=audit_sha256,
             prompt_version=prompt.version,
             prompt_sha256=prompt.sha256,
+            model=model,
         )
     items = [item for item in _load_items(audit_path) if item.evaluation_role.value in roles]
     if locked_model_selection_ids:
@@ -207,7 +272,7 @@ def run(
         "prompt_sha256": prompt.sha256,
         "validator_contract_version": VALIDATOR_CONTRACT_VERSION,
         "model": model,
-        "thinking": "disabled",
+        "thinking": config.models.extraction.thinking,
         "temperature": 0.0,
         "max_tokens": config.models.extraction.max_tokens,
         "roles": sorted(roles),
@@ -228,8 +293,10 @@ def run(
     if dry_run:
         plan["dry_run"] = True
         return plan
-    if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is not configured; no LLM requests were sent")
+    if not (os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")):
+        raise RuntimeError(
+            "DeepSeek API key is not configured; no LLM requests were sent"
+        )
     existing = _load_existing(output_path)
     existing_ids = {record["candidate_id"] for record in existing}
     reusable_responses = {}
@@ -294,7 +361,7 @@ def run(
                     model=model,
                     max_tokens=config.models.extraction.max_tokens,
                     temperature=0.0,
-                    thinking="disabled",
+                    thinking=config.models.extraction.thinking,
                 )
                 facts = validate_model_response(
                     item, response, abstain_invalid_supported_fields=True

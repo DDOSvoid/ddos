@@ -1,0 +1,110 @@
+{
+  "contract": "llm-extraction-development-assisted-review-v2",
+  "created_at": "2026-08-24T07:27:12.0790083Z",
+  "evaluation_role": "prompt_development",
+  "dataset_period": "2023-H1",
+  "eligible_for_model_selection_score": false,
+  "eligible_for_extraction_holdout_score": false,
+  "prompt_version": "structured-extraction-prompt-v19",
+  "prompt_sha256": "13981a36fc793992528cf9073eec0d47fb235bec57fd3ec4bf877d553f367e1e",
+  "validator_contract_version": "evidence-validator-v14",
+  "model": "deepseek-v4-flash",
+  "thinking": "disabled",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_13981a36fc79_evidence-validator-v14.jsonl",
+  "candidate_sha256": "15f62f4e4aa945a237a65557a64015926827207617acdeaca74b60e1c51ba6f8",
+  "audit_sha256": "1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a",
+  "documents": 10,
+  "fields": 107,
+  "status_counts": {
+    "supported": 71,
+    "absent": 29,
+    "ambiguous": 7
+  },
+  "request_audit": {
+    "new_api_requests_for_final_prompt_hash": 10,
+    "request_success_rate": 1.0,
+    "finish_reason_stop_rate": 1.0,
+    "model_returned": "deepseek-v4-flash",
+    "total_tokens": 92813,
+    "validator_v14_replayed_from_saved_responses": 10,
+    "new_api_requests_after_validator_v12": 0,
+    "conversation_history_included": false,
+    "memory_included": false,
+    "human_review_included_in_prompt": false,
+    "market_targets_queried": false,
+    "future_returns_or_direction_labels_exposed": false
+  },
+  "structural_results": {
+    "complete_field_sets": 10,
+    "failure_records": 0,
+    "normalized_values_with_layout_linebreaks": 0,
+    "local_rejected_fields": 4
+  },
+  "known_development_issue_resolution": [
+    {
+      "issue": "accounting-change scope description used as event_stage",
+      "result": "resolved_to_ambiguous"
+    },
+    {
+      "issue": "announcement footer used as accounting-change or impairment event_date",
+      "result": "resolved_to_ambiguous"
+    },
+    {
+      "issue": "qualitative no-material-profit-impact mapped to numeric zero",
+      "result": "resolved_to_absent"
+    },
+    {
+      "issue": "retrospective_adjustment returned descriptive text",
+      "result": "resolved_to_boolean_false"
+    },
+    {
+      "issue": "ordinary pending shareholder approval treated as uncertainty",
+      "result": "resolved_to_absent"
+    },
+    {
+      "issue": "defined controller alias could not support the full legal name",
+      "result": "resolved_with_exact_definition_and_current_alias_evidence"
+    },
+    {
+      "issue": "non-exact long quotes caused supported bankruptcy and bid stages to be lost",
+      "result": "resolved_only_from_separately_validated_or_unique_exact_source_evidence"
+    },
+    {
+      "issue": "company self-check inquiry confused with regulatory inquiry",
+      "result": "resolved_to_absent"
+    }
+  ],
+  "remaining_local_rejections": [
+    {
+      "audit_item_id_prefix": "a9896b461da7",
+      "field": "event_date",
+      "reason": "Multi-day abnormal-volatility period has no unique current event date."
+    },
+    {
+      "audit_item_id_prefix": "69a25b812dfb",
+      "field": "event_stage",
+      "reason": "The extracted sentence describes scope but no unique current action."
+    },
+    {
+      "audit_item_id_prefix": "547e3567f965",
+      "field": "project_name",
+      "reason": "Two independent bid project names cannot fill one scalar field."
+    },
+    {
+      "audit_item_id_prefix": "de189d93430e",
+      "field": "event_date",
+      "reason": "A shareholder-list record date is not the current disclosure action date."
+    }
+  ],
+  "accuracy_statement": "No independent accuracy estimate is reported because this is an assisted prompt-development batch whose historical outputs and review notes were already consumed.",
+  "causal_incident": {
+    "path": "data/validation/llm_extraction_v19_causal_incident_20260824.json",
+    "sha256": "b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d",
+    "operator_context_future_data_read": true,
+    "deepseek_future_data_exposure": false,
+    "market_targets_read": false,
+    "consequence": "The 2024 extraction holdout is disqualified for this prompt lineage and remains runner-locked."
+  },
+  "decision": "FREEZE_FOR_FRESH_UNREAD_GOLD_PREPARATION",
+  "next_gate": "Create and freeze a new 2023-only, previously unrequested human gold batch before sending any model-selection request."
+}

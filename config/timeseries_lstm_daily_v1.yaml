@@ -1,0 +1,197 @@
+contract: causal-timeseries-lstm-daily-v1
+parent_contract: causal-timeseries-daily-v1
+parent_contract_sha256: 0536f34c00d0e6a1ce375d31996af7f00cf9bb3dc179ab206e69141ad76d2f0c
+split_contract: causal-impact-split-v2
+split_contract_sha256: b9887dc395fb7e42581ae3330ece5d817f47764ce2d07c87992e5a3246dd2c62
+development_contract: causal-multimodel-development-v1
+development_contract_sha256: 208b2aade40e3c8acec11bb323199537ed4de3c523720fcc87a5d8be6e05aa3f
+
+directories:
+  source: src/prediction/timeseries
+  data: data/timeseries/lstm_daily_v1
+  models: models/timeseries/lstm_daily_v1
+
+sampling:
+  feature_frequency: daily_direct_sequence
+  decision_point: daily_preopen
+  prediction_as_of_rule: next_trading_session_preopen_strictly_after_published_date
+  historical_announcement_time_precision: date_only
+  market_daily_rule: "trade_date must be strictly earlier than announcement published_date"
+  daily_bar_available_time: "15:05:00"
+  lookback_candidates_sessions: [20, 60]
+  maximum_sequence_sessions: 60
+  minimum_valid_stock_sessions: 15
+  prehistory_required_start: "2022-09-01"
+  publication_day_bars_allowed: false
+  future_padding_allowed: false
+
+identity:
+  company_day_id_algorithm: sha256_pipe_join_company_day_stock_code_published_date
+  sample_id_algorithm: sha256_pipe_join_sample_company_day_id_horizon
+  horizons_sessions: [1, 3, 5]
+  missing_sequence_policy: preserve_identity_and_mark_unavailable
+
+features:
+  sequence_columns:
+    - stock_return_1d
+    - benchmark_return_1d
+    - excess_return_1d
+    - stock_range_1d
+    - stock_gap_1d
+    - stock_log_volume
+    - stock_log_amount
+    - stock_tradable_mask
+    - stock_volume_mask
+    - stock_amount_mask
+  required_availability_metadata: true
+  normalization:
+    fit_on_outer_fold_train_only: true
+    causal_per_sequence_allowed: true
+    full_sample_fitted_allowed: false
+  labels_stored_separately: true
+  forbidden_exact:
+    - target
+    - actual_direction
+    - entry_date
+    - exit_date
+    - entry_price
+    - exit_price
+    - stock_return
+    - benchmark_return
+    - excess_return
+    - outcome_available_at
+    - future_return
+    - future_excess_return
+    - future_high
+    - future_low
+    - future_realized_volatility
+    - future_downside_return
+  forbidden_prefixes:
+    - target_
+    - label_
+    - future_
+    - outcome_
+    - post_announcement_
+
+model:
+  family: small_single_layer_lstm
+  num_layers: 1
+  hidden_size_candidates: [16, 32]
+  external_dropout_candidates: [0.10]
+  recurrent_dropout: 0.0
+  bidirectional: false
+  attention_allowed: false
+  transformer_allowed: false
+  horizon_training: separate_models
+  heads:
+    - bullish_probability
+    - expected_excess_return
+    - return_interval_lower
+    - return_interval_upper
+  interval_quantiles: [0.10, 0.90]
+
+baselines:
+  pooled_sequence_statistics: [last, mean, std, minimum, maximum, slope]
+  logistic_c: 0.1
+  ridge_alpha: 1.0
+  random_state: 20260824
+  hyperparameter_selection: no_search_report_all_registered_lookbacks
+  fit_preprocessors_on_outer_fold_train_only: true
+  use_identical_samples_across_lookbacks: true
+
+training:
+  eligible_role: train
+  date_start: "2023-01-01"
+  date_end: "2024-12-31"
+  split_strategy: expanding_window
+  random_split_allowed: false
+  fit_preprocessors_on_outer_fold_train_only: true
+  outcome_must_mature_by_fold_end: true
+  device: cpu
+  cpu_threads: 4
+  deterministic_algorithms: true
+  seed: 20260824
+  batch_size: 256
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  minimum_epochs: 5
+  maximum_epochs: 50
+  early_stopping_patience: 5
+  early_stopping_metric: weighted_multi_head_loss
+  refit_after_early_stopping: false
+  huber_delta: 0.02
+  loss_weights:
+    direction_bce: 1.0
+    return_huber: 100.0
+    interval_pinball: 10.0
+  inner_temporal_partitions:
+    split_unit: unique_published_date
+    outcome_maturity_required: true
+    model_fit_fraction: 0.70
+    early_stop_fraction: 0.15
+    calibration_fraction: 0.15
+
+calibration:
+  probability_method: temperature_scaling
+  probability_temperature_bounds: [0.05, 10.0]
+  identity_fallback_if_calibration_brier_worsens: true
+  interval_method: split_conformal_interval_expansion
+  interval_target_coverage: 0.80
+  interval_quantile_method: finite_sample_higher
+  outer_validation_fit_allowed: false
+
+outputs:
+  required:
+    - sample_id
+    - company_day_id
+    - stock_code
+    - published_date
+    - prediction_as_of
+    - horizon_sessions
+    - bullish_probability
+    - expected_excess_return
+    - return_interval_lower
+    - return_interval_upper
+    - risk_scale
+    - sequence_available
+    - unavailable_reason
+    - model_version
+    - data_as_of
+    - evidence_sha256
+  risk_scale_definition: half_width_of_calibrated_return_interval
+
+evaluation:
+  horizons_sessions: [1, 3, 5]
+  bullish_threshold: 0.50
+  round_trip_cost_bps: 20
+  minimum_oof_bullish_signals_per_horizon: 300
+  bullish_wilson_lower_must_exceed: 0.50
+  minimum_folds_with_bullish_hit_rate_above_half: 2
+  minimum_worst_fold_bullish_hit_rate: 0.48
+  cost_adjusted_mean_excess_return_ci_lower_must_exceed: 0.0
+  brier_score_must_beat_constant_base_rate: true
+  return_mae_must_beat_fold_train_median: true
+  interval_coverage_must_beat_constant_width_baseline: true
+  simple_sequence_increment_required: true
+  table_increment_required: true
+  identical_samples_and_folds_required: true
+
+official_test:
+  date_start: "2025-01-01"
+  date_end: "2025-08-19"
+  requires_frozen_model_features_preprocessors_calibrators_thresholds: true
+  read_limit: 1
+  tuning_after_read_allowed: false
+
+quarantine:
+  date_start: "2025-08-20"
+  date_end: "2025-12-31"
+  fitting_allowed: false
+  model_selection_allowed: false
+
+forward_validation:
+  date_start: "2026-01-01"
+  training_allowed: false
+  model_selection_allowed: false

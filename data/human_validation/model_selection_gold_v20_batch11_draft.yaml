@@ -1,0 +1,168 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-24T16:25:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: true
+future_data_read_during_gold_annotation: false
+future_data_used_for_gold_labels: false
+deepseek_future_data_exposure: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v20
+prompt_sha256: 65285315d191412f658643c34d213ce9a597f43e56401f5d65f6f7967a8fa843
+validator_contract_version: evidence-validator-v16
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 6a6a770a3e385cac96be6f34b6a92cac47cb567ea3b32d0e1d3745ba4cec4d3d
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "司法拍卖完成的1000万股股份已完成过户登记", unit: TEXT, evidence_quotes: ["上述竞拍完成的部分股份 1,000 万股亦已完成过户登记"]}
+      event_date: {status: ambiguous, reason: "当前过户登记只表述为近日，公告落款日不能替代过户完成日期。"}
+      counterparty: {status: absent, reason: "司法拍卖后的登记过户不是当前双边协议，正文未披露交易相对方。"}
+      subject_name: {status: supported, normalized_value: "江苏中利集团股份有限公司", unit: TEXT, evidence_quotes: ["江苏中利集团股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文明确本次过户不改变控制权且不对生产经营和治理造成重大影响。"}
+      holder_name: {status: supported, normalized_value: "王柏兴", unit: TEXT, evidence_quotes: ["王柏兴先生"]}
+      action_type: {status: supported, normalized_value: "司法拍卖股份完成过户登记", unit: TEXT, evidence_quotes: ["上述竞拍完成的部分股份 1,000 万股亦已完成过户登记"]}
+      affected_share_count: {status: supported, normalized_value: "10000000", unit: SHARES, evidence_quotes: ["部分股份 1,000 万股亦已完成过户登记"]}
+      affected_share_ratio_pct: {status: absent, reason: "正文披露过户前后持股比例，但未直接披露本次1000万股占总股本的比例。"}
+      court: {status: absent, reason: "正文未披露执行拍卖或过户的法院名称。"}
+      auction_date: {status: absent, reason: "正文只回顾7月15日披露竞拍完成公告，未披露实际司法拍卖日期。"}
+      control_effect: {status: supported, normalized_value: "控制权不变，王柏兴仍为实际控制人", unit: TEXT, evidence_quotes: ["仍为公司实际控制人", "不会导致公司控制权发生变更"]}
+
+  - audit_item_id: 42b353a29a34bf698d0531764f0d0331abcbf56c3d5428ecc7f0fe0c2d877ee3
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "制定募集资金管理制度", unit: TEXT, evidence_quotes: ["特制定本制\n度"]}
+      event_date: {status: absent, reason: "制度正文未披露制定、修订或审议通过日期。"}
+      counterparty: {status: absent, reason: "公司内部管理制度不构成双边交易事项。"}
+      subject_name: {status: supported, normalized_value: "西安高压电器研究院股份有限公司", unit: TEXT, evidence_quotes: ["西安高压电器研究院股份有限公司"]}
+      uncertainty: {status: absent, reason: "制度条款未披露当前事项的重大不确定性。"}
+      project_name: {status: absent, reason: "制度只定义一般募投项目规则，没有当前具体项目名称。"}
+      fund_source: {status: absent, reason: "制度列举一般证券发行募集资金定义，不是当前项目的资金来源。"}
+      fund_amount_cny: {status: absent, reason: "制度未披露当前募集资金或项目金额。"}
+      project_status: {status: absent, reason: "制度未披露当前具体募投项目进度。"}
+      expected_benefit: {status: absent, reason: "提高资金使用效益是制度目的，不是当前项目的预期收益。"}
+      subsidiary_target: {status: absent, reason: "制度只规定子公司实施项目时同样适用，没有当前实施主体。"}
+
+  - audit_item_id: 1f2cc0bde3c593541e40688b7ca0d10e2192416f5248938e4f3c66bc4b09a43e
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "剩余限售股份解锁条件成就并申请上市流通", unit: TEXT, evidence_quotes: ["义乌奇光所持剩余限售股份解锁条件已成就，现申请上市流通"]}
+      event_date: {status: ambiguous, reason: "正文只披露未来上市流通日和公告落款日，没有当前解锁条件成就或申请动作日期。"}
+      counterparty: {status: absent, reason: "限售股解锁和上市流通不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "上海爱旭新能源股份有限公司", unit: TEXT, evidence_quotes: ["上海爱旭新能源股份有限公司"]}
+      uncertainty: {status: absent, reason: "解锁条件已经成就且财务顾问无异议，正文未披露重大不确定性。"}
+      unlock_share_count: {status: supported, normalized_value: "79910991", unit: SHARES, evidence_quotes: ["本次限售股上市流通数量为 79,910,991 股"]}
+      unlock_share_ratio_pct: {status: supported, normalized_value: "6.14", unit: PCT, evidence_quotes: ["6.14%"]}
+      listing_date: {status: supported, normalized_value: "2023-01-13", unit: DATE, evidence_quotes: ["本次限售股上市流通日期为 2023 年 1 月 13 日"]}
+      holder_count: {status: absent, reason: "明细表仅列一行持有人，但正文未直接披露持有人数量，禁止按表格行数推算。"}
+
+  - audit_item_id: 086b7d8a511e5122e5e9176ced236404a943278454177223822cd38ea903171d
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "控股子公司签订储能系统设备采购合同", unit: TEXT, evidence_quotes: ["公司控股子公司领储宇能近日与西安西电新能源有限公司签订了", "储能系统设备的采购合同"]}
+      event_date: {status: ambiguous, reason: "签订动作仅表述为近日，公告落款日和合同履行期限不能替代签订日期。"}
+      counterparty: {status: supported, normalized_value: "西安西电新能源有限公司", unit: TEXT, evidence_quotes: ["西安西电新能源有限公司"]}
+      subject_name: {status: supported, normalized_value: "江苏领储宇能科技有限公司", unit: TEXT, evidence_quotes: ["江苏领储宇能科技有限公司"]}
+      uncertainty: {status: supported, normalized_value: "宏观环境、市场、不可抗力、延迟和质量违约风险", unit: TEXT, evidence_quotes: ["外部宏观环境、市场等不确定", "其他不可抗力因素的影响", "延迟责任、质量违约责任等风险"]}
+      contract_amount_cny: {status: supported, normalized_value: "91580550", unit: CNY, evidence_quotes: ["合同金额为91,580,550.00 元人民币(含税)"]}
+      annual_revenue_ratio_pct: {status: absent, reason: "正文未披露合同金额占公司年度营业收入的比例。"}
+      contract_period: {status: ambiguous, reason: "正文只称按照合同规定期限内交货，未披露具体起止日期或期限长度。"}
+      performance_uncertainty: {status: supported, normalized_value: "合同履行受宏观环境、市场、不可抗力及延迟和质量违约风险影响", unit: TEXT, evidence_quotes: ["外部宏观环境、市场等不确定", "其他不可抗力因素的影响", "延迟责任、质量违约责任等风险"]}
+
+  - audit_item_id: 2a59d7d2a21dcf6ce3b64c88141be59a396d8f61aa8a1e4d3a5b9ee676444caa
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露2023年半年度报告", unit: TEXT, evidence_quotes: ["积成电子股份有限公司 2023 年半年度报告"]}
+      event_date: {status: ambiguous, reason: "封面只披露2023年8月，没有精确到日的报告披露或审议日期。"}
+      counterparty: {status: absent, reason: "半年度报告披露不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "积成电子股份有限公司", unit: TEXT, evidence_quotes: ["积成电子股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "未来计划等前瞻性陈述不构成承诺，计划、预测与承诺可能存在差异", unit: TEXT, evidence_quotes: ["本报告中涉及的公司未来计划等前瞻性陈述", "预测与承诺之间的差异"]}
+      revenue_cny: {status: supported, normalized_value: "779609020.27", unit: CNY, evidence_quotes: ["营业收入（元） 779,609,020.27 756,304,868.14 3.08%"]}
+      revenue_yoy_pct: {status: supported, normalized_value: "3.08", unit: PCT, evidence_quotes: ["营业收入（元） 779,609,020.27 756,304,868.14 3.08%"]}
+      net_profit_cny: {status: supported, normalized_value: "-66183051.96", unit: CNY, evidence_quotes: ["润（元） -66,183,051.96 -37,583,867.72 -76.09%"]}
+      net_profit_yoy_pct: {status: supported, normalized_value: "-76.09", unit: PCT, evidence_quotes: ["润（元） -66,183,051.96 -37,583,867.72 -76.09%"]}
+      non_gaap_profit_cny: {status: supported, normalized_value: "-68844764.07", unit: CNY, evidence_quotes: ["归属于上市公司股东的扣除", "非经常性损益的净利润\n（元）", "-68,844,764.07 -49,763,644.22 -38.34%"]}
+      operating_cashflow_cny: {status: supported, normalized_value: "-143870799.43", unit: CNY, evidence_quotes: ["额（元） -143,870,799.43 -191,616,982.57 24.92%"]}
+
+  - audit_item_id: f013a120f91e235fc217baa650edf10478ac1936da1dc563d10c40c166bb5360
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司及子公司取得发明、实用新型和外观设计专利证书", unit: TEXT, evidence_quotes: ["于近日取得国家知识产权局颁发的 2 项发明专利证书、22 项实用", "新型专利证书、12 项外观设计专利证书"]}
+      event_date: {status: ambiguous, reason: "取得动作只表述为近日，申请日和公告落款日不是专利证书取得日期。"}
+      counterparty: {status: absent, reason: "国家知识产权局是行政授权机关，不是双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "上海良信电器股份有限公司", unit: TEXT, evidence_quotes: ["上海良信电器股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文明确不会对生产经营产生重大影响，未披露取得专利事项的不确定性。"}
+      property_name: {status: ambiguous, reason: "公告包含36项独立专利名称，单值字段不能任选一项。"}
+      property_type: {status: supported, normalized_value: "发明专利；实用新型专利；外观设计专利", unit: TEXT, evidence_quotes: ["2 项发明专利证书、22 项实用", "新型专利证书、12 项外观设计专利证书"]}
+      authorization_date: {status: absent, reason: "表格披露申请日而非授权日，正文未披露专利授权日期。"}
+      application_area: {status: ambiguous, reason: "多项专利涉及断路器、开关、图形界面和插座面板等不同应用，无法形成唯一应用领域。"}
+      expected_business_effect: {status: supported, normalized_value: "不会对生产经营产生重大影响，有利于发挥自主知识产权优势、促进创新和提升竞争能力", unit: TEXT, evidence_quotes: ["上述专利的取得不会对我公司生产经营产生重大影响", "促进技术创新，提升公司的竞争能力"]}
+
+  - audit_item_id: e22747ed83685d4659e0fee0c508149a04054998fb4e59e39f78fdf807e2d93a
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过使用不超过3亿元闲置自有资金进行现金管理", unit: TEXT, evidence_quotes: ["召开了第五届董事会第十四次会议，审议通", "使用最高额度不超过人民币3 亿元的闲置自有资金进", "行现金管理"]}
+      event_date: {status: supported, normalized_value: "2023-08-25", unit: DATE, evidence_quotes: ["2023 年 8 月 25 日召开了第五届董事会第十四次会议"]}
+      counterparty: {status: absent, reason: "现金管理尚未确定具体产品或受托机构，不存在当前唯一交易对手。"}
+      subject_name: {status: supported, normalized_value: "无锡新宏泰电器科技股份有限公司", unit: TEXT, evidence_quotes: ["无锡新宏泰电器科技股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "政策、市场、信用、流动性、信息传递和不可抗力风险可能导致收益波动", unit: TEXT, evidence_quotes: ["政策风险、市场风险、信用风险、流动性风险、信息传递风险", "不可抗力风险等因素"]}
+      fund_amount_cny: {status: supported, normalized_value: "300000000", unit: CNY, evidence_quotes: ["最高额度不超过人民币 3 亿元"]}
+      product_type: {status: supported, normalized_value: "安全性高、流动性好、风险较低的短期理财产品", unit: TEXT, evidence_quotes: ["安全性高、流动性好、单项产品期限不超过 12 个月的", "短期理财产品"]}
+      financial_institution: {status: ambiguous, reason: "正文仅列银行、证券公司等机构类别，未确定唯一具体机构。"}
+      investment_period: {status: supported, normalized_value: "1", unit: YEARS, evidence_quotes: ["自董事会审议通过之日起一年内有效"]}
+      funding_source: {status: supported, normalized_value: "闲置自有资金", unit: TEXT, evidence_quotes: ["本次现金管理的资金来源于公司闲置自有资金"]}
+      expected_yield_pct: {status: absent, reason: "正文只称收益率相对稳定，未披露具体预期收益率。"}
+
+  - audit_item_id: f84e662aaa851af37a932e3e98b9fdd7fa3f8c5dbb5cf7287af748ed27c4cc81
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "2023年股票期权激励计划首次授予登记完成", unit: TEXT, evidence_quotes: ["已完成 2023年股票期权激励计划", "首次授予登记工作"]}
+      event_date: {status: supported, normalized_value: "2023-11-27", unit: DATE, evidence_quotes: ["首次授予登记完成时间：2023 年 11 月 27 日"]}
+      counterparty: {status: absent, reason: "股票期权授予登记不构成双边交易，正文未披露交易相对方。"}
+      subject_name: {status: supported, normalized_value: "金雷科技股份公司", unit: TEXT, evidence_quotes: ["金雷科技股份公司"]}
+      uncertainty: {status: absent, reason: "首次授予登记已经完成，未来业绩考核条件不是当前登记结果的不确定性。"}
+      incentive_share_count: {status: supported, normalized_value: "1601700", unit: COUNT, evidence_quotes: ["首次授予登记数量：160.17 万份"]}
+      incentive_share_ratio_pct: {status: supported, normalized_value: "0.49", unit: PCT, evidence_quotes: ["合计 160.17 100.00% 0.49%"]}
+      grant_price_cny_per_share: {status: supported, normalized_value: "29.77", unit: CNY_PER_SHARE, evidence_quotes: ["首次授予部分行权价格：29.77 元/份"]}
+      performance_targets: {status: supported, normalized_value: "2024年营收增长不低于25%或净利润增长不低于15%；2025年37.5%或30%；2026年50%或45%", unit: TEXT, evidence_quotes: ["第一个行权期 2024 年", "率不低于 25%", "低于 15%", "第二个行权期 2025 年", "率不低于 37.5%", "低于 30%", "第三个行权期 2026 年", "率不低于 50%", "低于 45%"]}
+      recipient_count: {status: supported, normalized_value: "53", unit: COUNT, evidence_quotes: ["首次授予登记人数：53 人"]}
+      vesting_schedule: {status: supported, normalized_value: "等待期12/24/36个月，三个行权期比例40%/30%/30%", unit: TEXT, evidence_quotes: ["首次授予的股票期权的等待期为自首次授予之日起 12 个月、24 个月、36", "第一个行权期", "40%", "第二个行权期", "第三个行权期"]}
+
+  - audit_item_id: d0f2800eb979909d25e723163ed9a41a6709c528b185ec1f59ddcb782fa1b6a9
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "深圳证券交易所对向特定对象发行股票申请发出审核问询", unit: TEXT, evidence_quotes: ["申请文\n件进行了审核，并形成如下审核问询问题", "请对上述问题逐项落实并在十五个工作日内提交对问询函"]}
+      event_date: {status: ambiguous, reason: "问询函日期只出现在签署页，未明确标注为审核问询发出日期。"}
+      counterparty: {status: absent, reason: "证券交易所审核问询是单方监管程序，不是双边交易。"}
+      subject_name: {status: supported, normalized_value: "福建星云电子股份有限公司", unit: TEXT, evidence_quotes: ["福建星云电子股份有限公司"]}
+      uncertainty: {status: absent, reason: "问询函要求说明和披露风险，但未确认这些风险已经发生，也未直接披露审核结果或时间的不确定性。"}
+      placement_amount_cny: {status: supported, normalized_value: "1200000000", unit: CNY, evidence_quotes: ["本次发行拟募集资金总额不超过 120,000.00 万元"]}
+      placement_share_count: {status: absent, reason: "问询函未披露拟发行股份数量。"}
+      placement_price_cny_per_share: {status: absent, reason: "问询函未披露发行价格。"}
+      purpose: {status: supported, normalized_value: "星云储能系统及电池关键部件制造和检测中心项目；补充流动资金", unit: TEXT, evidence_quotes: ["86,500.00 万元用于星云储能系统及电池关键部件制造和检测中", "心项目，33,500.00 万元用于补充流动资金"]}
+      subscribers: {status: absent, reason: "问询函未披露最终发行对象或认购方。"}
+      lockup_period: {status: absent, reason: "问询函未披露发行对象限售期。"}
+      approval_status: {status: supported, normalized_value: "申请文件已进入审核问询阶段，发行人须在15个工作日内回复", unit: TEXT, evidence_quotes: ["申请文\n件进行了审核，并形成如下审核问询问题", "十五个工作日内提交对问询函\n的回复"]}
+
+  - audit_item_id: d27b79e556c059042c7ba3395b96f8c46ecebdf919592eda8e4ee1f507474364
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "披露回购决议前一交易日的前十名股东及前十名无限售条件股东持股情况", unit: TEXT, evidence_quotes: ["现将公司董事会公告回购股份决议前一个交易", "登记在册的前十名股东和前十名无限售条件股东的名", "称及持股数量、比例的情况公告如下"]}
+      event_date: {status: ambiguous, reason: "2023年12月5日是股东名册登记日，公告落款日不能替代当前披露动作日期。"}
+      counterparty: {status: absent, reason: "披露股东名册不构成双边交易。"}
+      subject_name: {status: supported, normalized_value: "国轩高科股份有限公司", unit: TEXT, evidence_quotes: ["国轩高科股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文仅披露历史回购审议和股东名单，未披露当前重大不确定性。"}
+      plan_amount_lower_cny: {status: absent, reason: "本股东名册公告未披露回购计划金额下限。"}
+      plan_amount_upper_cny: {status: absent, reason: "本股东名册公告未披露回购计划金额上限。"}
+      price_cap_cny_per_share: {status: absent, reason: "本股东名册公告未披露回购价格上限。"}
+      completed_amount_cny: {status: absent, reason: "正文未披露已经实施的回购金额。"}
+      completed_share_count: {status: absent, reason: "正文未披露已经回购的股份数量。"}
+      completed_share_ratio_pct: {status: absent, reason: "正文未披露已经回购股份占总股本比例。"}
+      purpose: {status: absent, reason: "正文仅引用历史回购方案公告，未在当前文件中披露回购用途。"}

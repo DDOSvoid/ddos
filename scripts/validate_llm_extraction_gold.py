@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from collections import Counter
@@ -31,7 +32,26 @@ def _load_audit(path: Path) -> dict[str, StructuredExtractionAuditItem]:
     return {item.source.audit_item_id: item for item in items}
 
 
-def validate(*, gold_path: Path, audit_path: Path, maximum_quote_length: int) -> dict:
+def _canonical_gold_scalar(value) -> str | None:
+    """Match RawFact's JSON-scalar normalization without exposing model output."""
+    if value is None or isinstance(value, str):
+        return value
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float) and math.isfinite(value):
+        return format(value, ".15g")
+    raise ValueError("gold normalized_value must be a finite JSON scalar")
+
+
+def validate(
+    *,
+    gold_path: Path,
+    audit_path: Path,
+    maximum_quote_length: int,
+    require_normalized_value_match: bool = False,
+) -> dict:
     draft = yaml.safe_load(gold_path.read_text(encoding="utf-8"))
     audit = _load_audit(audit_path)
     documents = draft.get("documents")
@@ -184,13 +204,36 @@ def validate(*, gold_path: Path, audit_path: Path, maximum_quote_length: int) ->
                 f"{item_id}/{field_name}; expected={expected}; actual={actual}; "
                 f"reason={fact.abstention_reason}"
             )
+        if require_normalized_value_match:
+            for field_name in item.requested_fields:
+                gold = fields[field_name]
+                fact = validated_by_name[field_name]
+                if gold["status"] != "supported" or fact.status.value != "supported":
+                    continue
+                expected_normalized = _canonical_gold_scalar(gold.get("normalized_value"))
+                expected_unit = gold.get("unit")
+                if (
+                    fact.normalized_value != expected_normalized
+                    or fact.unit != expected_unit
+                ):
+                    raise ValueError(
+                        "gold normalized value/unit does not match the current "
+                        "validator before lock: "
+                        f"{item_id}/{field_name}; "
+                        f"expected={expected_normalized!r}/{expected_unit!r}; "
+                        f"actual={fact.normalized_value!r}/{fact.unit!r}"
+                    )
 
     if sum(counts.values()) != sum(
         len(audit[item_id].requested_fields) for item_id in ids
     ):
         raise ValueError("field count mismatch")
     return {
-        "contract": "validated-blind-model-selection-gold-v1",
+        "contract": (
+            "validated-blind-model-selection-gold-v2"
+            if require_normalized_value_match
+            else "validated-blind-model-selection-gold-v1"
+        ),
         "documents": len(documents),
         "fields": sum(counts.values()),
         "supported": counts["supported"],
@@ -203,6 +246,7 @@ def validate(*, gold_path: Path, audit_path: Path, maximum_quote_length: int) ->
         "all_supported_facts_pass_candidate_validator": not (
             candidate_validator_rejections or taxonomy_rejections
         ),
+        "normalized_value_unit_match_required": require_normalized_value_match,
         "gold_supported_fields_rejected_by_candidate_validator": candidate_validator_rejections,
         "gold_supported_fields_rejected_by_frozen_taxonomy": taxonomy_rejections,
     }
@@ -213,11 +257,17 @@ def main() -> None:
     parser.add_argument("gold", type=Path)
     parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT)
     parser.add_argument("--maximum-quote-length", type=int, default=40)
+    parser.add_argument(
+        "--require-normalized-value-match",
+        action="store_true",
+        help="reject a gold draft when validator canonicalization changes a supported value or unit",
+    )
     args = parser.parse_args()
     result = validate(
         gold_path=args.gold.resolve(),
         audit_path=args.audit.resolve(),
         maximum_quote_length=args.maximum_quote_length,
+        require_normalized_value_match=args.require_normalized_value_match,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
 

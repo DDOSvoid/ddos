@@ -1,0 +1,32 @@
+{
+  "contract": "metadata-only-prompt-development-selection-v1",
+  "selected_at": "2026-08-25T01:32:28.0733400Z",
+  "prompt_version": "structured-extraction-prompt-v22",
+  "prompt_sha256": "1a22485010737b85bab27f631fcf7e19919306eb7cd0b551b32643a1e3188eea",
+  "validator_contract_version": "evidence-validator-v18",
+  "dataset_role": "train",
+  "evaluation_role": "prompt_development",
+  "source_period": "2023-H1",
+  "selection_method": "targeted metadata-only development selection for v22 failure classes",
+  "selected_source_bodies_read_for_selection": false,
+  "selected_candidate_outputs_seen": false,
+  "selected_candidate_requests_sent": 0,
+  "market_targets_read": false,
+  "future_data_read_for_selection": false,
+  "selection_reason": "Two 2023-H1 samples each from share_pledge, external_investment, private_placement, forecast_express, and major_contract categories; selected using source metadata only to exercise v21 table, role, and evidence-boundary feedback.",
+  "selected_document_count": 10,
+  "selected_field_count": 108,
+  "selected_distinct_sub_categories": 5,
+  "items": [
+    {"audit_item_id": "94781483486942a20e7b635ca79a57211387d72f6064339de69a89e7c0156bcd", "sub_category": "external_investment"},
+    {"audit_item_id": "69a4ac55a34d7c6a6f8f8271dd09a6281dc9ce395d44be2fdb4a64a39e31c163", "sub_category": "forecast_express"},
+    {"audit_item_id": "8a38fefc8d93ecb066c9e86240af4db8cb6114d9e7ba9529df7fce6a963feb45", "sub_category": "major_contract"},
+    {"audit_item_id": "5eda6c6ccca3c286185e59caafb368393ac0b41dd8ce5dd18f469b502dbf2f05", "sub_category": "private_placement"},
+    {"audit_item_id": "4aca0e730f729cd0afa0fa6df8ca7508680b3cd55fff0c2471589d5590383fcc", "sub_category": "share_pledge"},
+    {"audit_item_id": "7755e079064d2b07391b612358a941090f9b9f55d30ff3afdb1816bd9bfcdbdf", "sub_category": "external_investment"},
+    {"audit_item_id": "f0b1e02a8d21bdefc52c778c84a5a4209ff680d7b754bd51474833185bf3f666", "sub_category": "forecast_express"},
+    {"audit_item_id": "c6258c0af06b6ce7888d1fa7828e0a67e447fb804480b18fcecc8af7e73f37b1", "sub_category": "major_contract"},
+    {"audit_item_id": "53eaf86974c2a9e7967e6c911378ed457ab271f21eb2d44f7dbe0ad5ecce15aa", "sub_category": "private_placement"},
+    {"audit_item_id": "11c65fdb1accd7ff02aa88ce1a322a3ad0832b27c44d53a40b51a231e4d022f2", "sub_category": "share_pledge"}
+  ]
+}

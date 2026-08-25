@@ -193,6 +193,58 @@ def build_daily_sequence(
     )
 
 
+def build_daily_sequence_panel(
+    *,
+    stock_bars: pd.DataFrame,
+    benchmark_bars: pd.DataFrame,
+    contract: TimeseriesModelContract,
+    development: CausalDevelopmentContract,
+) -> pd.DataFrame:
+    """Precompute direct per-session inputs once for all events of one stock."""
+    stock = _prepare_bars(stock_bars, label="stock")
+    benchmark = _prepare_bars(benchmark_bars, label="benchmark")
+    merged = benchmark.merge(
+        stock,
+        on="trade_date",
+        how="left",
+        suffixes=("_benchmark", "_stock"),
+        validate="one_to_one",
+    )
+    merged["stock_return_1d"] = _one_day_return(
+        merged["close_price_stock"], merged["pre_close_stock"]
+    )
+    merged["benchmark_return_1d"] = _one_day_return(
+        merged["close_price_benchmark"], merged["pre_close_benchmark"]
+    )
+    merged["excess_return_1d"] = (
+        merged["stock_return_1d"] - merged["benchmark_return_1d"]
+    )
+    merged["stock_range_1d"] = (
+        merged["high_price_stock"] - merged["low_price_stock"]
+    ) / merged["pre_close_stock"].where(merged["pre_close_stock"] > 0)
+    merged["stock_gap_1d"] = (
+        merged["open_price_stock"]
+        / merged["pre_close_stock"].where(merged["pre_close_stock"] > 0)
+        - 1.0
+    )
+    merged["stock_log_volume"] = _safe_log1p(merged["volume_stock"])
+    merged["stock_log_amount"] = _safe_log1p(merged["amount_stock"])
+    merged["stock_tradable_mask"] = merged["close_price_stock"].notna().astype(float)
+    merged["stock_volume_mask"] = merged["volume_stock"].notna().astype(float)
+    merged["stock_amount_mask"] = merged["amount_stock"].notna().astype(float)
+    merged["bar_available_at"] = [
+        daily_bar_available_at(
+            trade_day,
+            contract=contract,
+            development=development,
+        )
+        for trade_day in merged["trade_date"]
+    ]
+    return merged.loc[
+        :, ["trade_date", "bar_available_at", *SEQUENCE_FEATURE_COLUMNS]
+    ].copy()
+
+
 def _compounded_return(values: pd.Series) -> float:
     clean = values.dropna()
     if clean.empty:

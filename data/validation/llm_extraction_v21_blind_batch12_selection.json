@@ -1,0 +1,88 @@
+{
+  "contract": "metadata-only-blind-model-selection-selection-v1",
+  "selected_at": "2026-08-24T09:12:12.2570880Z",
+  "prompt_version": "structured-extraction-prompt-v21",
+  "prompt_sha256": "189dc8f3b38596e247ffb2f515a9061c007325d8dfd22367dbda37c949b769f0",
+  "validator_contract_version": "evidence-validator-v17",
+  "dataset_role": "train",
+  "evaluation_role": "model_selection_validation",
+  "source_period": "2023 only",
+  "selection_algorithm": "Exclude every audit_item_id present in any saved LLM candidate or model-selection gold artifact. For each remaining sub_category, retain the item with the smallest SHA256(prompt_sha256 + ':' + audit_item_id), then take the ten smallest category-winner hashes.",
+  "selection_used_source_metadata_only": true,
+  "selected_source_bodies_read": false,
+  "selected_candidate_outputs_seen": false,
+  "selected_candidate_requests_sent": 0,
+  "market_targets_read": false,
+  "future_data_read_for_selection": false,
+  "scanned_artifact_file_count": 73,
+  "used_audit_item_id_count": 130,
+  "used_model_selection_item_count": 80,
+  "eligible_unrequested_item_count": 20,
+  "eligible_distinct_sub_categories": 10,
+  "selected_document_count": 10,
+  "selected_field_count": 111,
+  "selected_distinct_sub_categories": 10,
+  "items": [
+    {
+      "audit_item_id": "4663b1cec185447439e60cf05a8c2a9030b9ec1ad6a6a1113e07b101def2213b",
+      "sub_category": "fundraising_usage",
+      "field_count": 11,
+      "rank_sha256": "0603a6ee483ae3b4258e80584672ea8cca89550a9b6ff8624176d9e5a66bcfc6"
+    },
+    {
+      "audit_item_id": "607dab45d1571110674e62621937ca67143f8d4171fac7b7fdcf5704bf6a4675",
+      "sub_category": "strategic_cooperation",
+      "field_count": 11,
+      "rank_sha256": "0b86f366ed1e399eb295e715ce3b2c410aebadfc80abe29d33b17bbce08b2b8f"
+    },
+    {
+      "audit_item_id": "38bc080dc4f097c59b9707d18eeaac3bd71d197490839be04555807fabc875ab",
+      "sub_category": "guarantee",
+      "field_count": 12,
+      "rank_sha256": "1bf78c4d49d9a47460376dae9aa63ea1dee1b458d4bda749b0d7dcb0b15c3ea3"
+    },
+    {
+      "audit_item_id": "8569692b943d5b0b2ff2a00cd1c96f2b52ec0afe1c7a98a50932f41d26067ceb",
+      "sub_category": "asset_impairment",
+      "field_count": 10,
+      "rank_sha256": "3551a96b8255fc1bbb08cf8145c330fa3a90df371110f928ac220ad901adf5f3"
+    },
+    {
+      "audit_item_id": "39a6c408c0fed4d14e382d27a57ef3078ee5cbb0270226b0f7a5c496f94e1845",
+      "sub_category": "convertible_bond",
+      "field_count": 11,
+      "rank_sha256": "44520969afa653d850741138a497522cd50470e49b07d84fc86d0c477d727ce6"
+    },
+    {
+      "audit_item_id": "57297c95f3d1cfd27d5b0b9d423bea5f23d8140ab48c0b5f1c05c9c08b57ffa6",
+      "sub_category": "earnings_h1",
+      "field_count": 11,
+      "rank_sha256": "61743e4d967d4014233501c19257a0def0621c4ed2f0593c70c101b76c14e428"
+    },
+    {
+      "audit_item_id": "2cbe65eba16fed44830ab14db0273e77995f997c07ae029686a65b808f172346",
+      "sub_category": "regulatory_action",
+      "field_count": 11,
+      "rank_sha256": "67c4dfc7bb5dbdcdde4cfa386b90103828c1286985dc355a107178612adc14b2"
+    },
+    {
+      "audit_item_id": "f92b8764892999216a52c040ba346003cf51bc4d5716b28c1c06abf97b5e0475",
+      "sub_category": "related_transaction",
+      "field_count": 11,
+      "rank_sha256": "6d1afc290ea3603e9cb206cacc040910e7b74f9c71c1d12bd0714f72ac4d7eda"
+    },
+    {
+      "audit_item_id": "716121463befc9741caf9776578df206d1e11c0e5c2773072ce47472897920a8",
+      "sub_category": "share_pledge",
+      "field_count": 12,
+      "rank_sha256": "f0e93dd6cad2971f6eafa1add9c84ed260bcc0411a6153e775c823fdba29377f"
+    },
+    {
+      "audit_item_id": "f5b1c6b06337598d0e4f8d66d19865bb614da4e9c714516da446618ab3e7bc47",
+      "sub_category": "treasury_management",
+      "field_count": 11,
+      "rank_sha256": "ff9ada145647f566eceea847e6f7151465dedf31aa3cbd0325eef6f3f04f8daa"
+    }
+  ],
+  "next_gate": "Read and annotate only these ten 2023 source bodies, validate every supported quote against the frozen v21 validator, and freeze model_selection_gold_v21_batch12.lock.json before any v21 model-selection request."
+}

@@ -1,0 +1,92 @@
+contract: llm-extraction-frozen-candidate-v2
+frozen_at: "2026-08-24T07:28:24.6570267Z"
+status: awaiting_fresh_blind_gold_annotation_and_lock
+
+data_boundary:
+  dataset_role: train
+  prompt_development_period: "2023-H1"
+  fresh_model_selection_period: "2023 only"
+  extraction_holdout_period: "2024 only"
+  extraction_holdout_status: disqualified_for_v19_prompt_lineage
+  official_test_period: "2025-01-01 through 2025-08-19"
+  quarantine_period: "2025-08-20 through 2025-12-31"
+  forward_validation_period: "2026 onward"
+  official_test_read_count: 0
+  future_data_allowed_in_model_requests: false
+  market_targets_allowed_in_model_requests: false
+  causal_incident_file: data/validation/llm_extraction_v19_causal_incident_20260824.json
+  causal_incident_sha256: b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d
+
+candidate:
+  model: deepseek-v4-flash
+  thinking: disabled
+  temperature: 0.0
+  max_tokens: 8192
+  prompt_version: structured-extraction-prompt-v19
+  prompt_sha256: 13981a36fc793992528cf9073eec0d47fb235bec57fd3ec4bf877d553f367e1e
+  prompt_appendix_sha256: 89ec1642b60d32e2056ed09f44efbfd9443581658894eda9499bc7c5f390f576
+  validator_contract_version: evidence-validator-v14
+  schema_version: announcement-structured-evidence-v2
+  schema_sha256: 42e81c83518ca286789a41573b873610ffab2384b352e39c177d6a8dd42130f3
+  audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+
+implementation_sha256:
+  src/prediction/llm_extraction.py: 3b7325506cea2311fcf03d9a66ca693b905a4c6f4bb568abd232e8bd120f3238
+  src/ml/llm_client.py: 8cc7f5725360de5fd97400f6c315c38fff9670f521d34aa7481096e62ffe3304
+  scripts/run_llm_extraction_candidates.py: 1fcb51b6bfc0d31bffb31d48acbafa3f284bf3a7e3a23c0fd60d5dc9a3793c78
+  scripts/validate_llm_extraction_gold.py: 89c4d0ec969de10cab60a3137dcffff929cfb06af0656c38637c6a09c1adebb8
+  tests/test_llm_extraction.py: 01246735da09c416ee008398f35311ad832205e7439e2aec35bc50dc31bb0a3d
+  tests/test_llm_candidate_runner.py: df60ae6d8f6ec8c52a04b753e5933083fa95acf8c0932ed1323eea38e3c0049c
+
+development_validation:
+  output: data/llm_extraction/deepseek-v4-flash_13981a36fc79_evidence-validator-v14.jsonl
+  output_sha256: 15f62f4e4aa945a237a65557a64015926827207617acdeaca74b60e1c51ba6f8
+  review: data/validation/llm_extraction_v19_development_review_10.json
+  review_sha256: 472f4d22a3f4fea092efb151ac1b5d849912d959c1ce41adf743ed32705b1aa7
+  documents: 10
+  fields: 107
+  supported: 71
+  absent: 29
+  ambiguous: 7
+  local_rejected_fields: 4
+  normalized_values_with_layout_linebreaks: 0
+  new_api_requests_for_final_prompt_hash: 10
+  new_api_requests_after_validator_v12: 0
+  conversation_history_included: false
+  memory_included: false
+  human_review_included_in_prompt: false
+  market_targets_queried: false
+  deepseek_future_data_exposure: false
+  accuracy_estimate_reported: false
+  full_test_result: "362 passed, 2 skipped"
+
+fresh_blind_gold_batch_10:
+  role: model_selection_validation
+  selection_method: metadata_only_unrequested_2023_items
+  source_bodies_semantically_read_before_candidate_freeze: 0
+  candidate_requests_sent_before_gold_freeze: 0
+  target_documents: 10
+  target_fields: 106
+  distinct_sub_categories: 10
+  audit_item_ids:
+    - 65a84884918386c99cfb46f4ac22cd3dba16c4951885490041af9383cdb44d2a
+    - 39644cb7a07eb70db444bd67ddab815b9e60fdeb13b777423443285aa7220458
+    - df74a30ca178ce168d672904cb5f586615fa2b991e448d0b781bc95661cc2e84
+    - a4e662d66e1b4edc8596a902cdb299a5524ac9eb18c9c210d733f036ac549990
+    - af3731cfb6600fb31dcecd48b67afbddf142f2c7263373b7924b74983017fe38
+    - 1f4083f9b617bf9c7719d1ae622484f0110dd0d6d7379c1149497900ab78fd11
+    - b96c8d89509c7f7bda582f89efb6378ae4fd49d6a9019e2ee27a7c76d85bb278
+    - 0e73d2530a1d888e8a136ca4e4d7c709d071eddf315f03855dbc70d68f80cb49
+    - e534015a60165af3125e49c127bd2733e5f99accd5cd23e9f528afb9646988a3
+    - f764992aed52566f293911d47f8d6a7ba07e0449db1fa488ab6c1864351fe813
+
+gates:
+  gold_draft_file: data/human_validation/model_selection_gold_v19_batch10_draft.yaml
+  gold_lock_file: data/human_validation/model_selection_gold_v19_batch10.lock.json
+  old_v18_gold_lock_reuse_allowed: false
+  gold_must_be_frozen_before_candidate_generation: true
+  extraction_holdout_locked: true
+  extraction_holdout_eligible_for_v19_score: false
+  official_test_locked: true
+  forward_validation_locked: true
+  prompt_or_validator_tuning_after_fresh_gold_lock: false

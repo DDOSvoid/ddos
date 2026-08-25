@@ -1,0 +1,209 @@
+{
+  "contract": "llm-extraction-model-selection-review-v2",
+  "reviewed_at": "2026-08-24T09:26:29.9823526Z",
+  "independent_gold_frozen_before_candidate_requests": true,
+  "candidate_outputs_seen_before_gold_freeze": false,
+  "prompt_tuned_after_candidate_read": false,
+  "validator_tuned_after_candidate_read": false,
+  "gold_annotation_method": "codex-assisted-source-only-review",
+  "dual_human_review_completed": false,
+  "future_data_read": true,
+  "future_data_read_during_gold_annotation": false,
+  "future_data_used_for_gold_labels": false,
+  "future_data_used_for_scoring": false,
+  "deepseek_future_data_exposure": false,
+  "market_targets_read": false,
+  "official_test_read_count": 0,
+  "causal_incident": {
+    "path": "data/validation/llm_extraction_v19_causal_incident_20260824.json",
+    "sha256": "b14cebf62782b21b1f4a828f12072d457fb139f0a9d9daf2689c560cf0c33b8d",
+    "operator_context_exposed_to_2024_snippets": true,
+    "model_exposed_to_2024_content": false,
+    "market_target_exposure": false,
+    "consequence": "The 2024 extraction holdout remains permanently ineligible for v21 as a direct v19 prompt descendant. It was not used in this score."
+  },
+  "model": "deepseek-v4-flash",
+  "thinking": "disabled",
+  "prompt_version": "structured-extraction-prompt-v21",
+  "prompt_sha256": "189dc8f3b38596e247ffb2f515a9061c007325d8dfd22367dbda37c949b769f0",
+  "validator_contract_version": "evidence-validator-v17",
+  "pre_annotation_freeze_sha256": "71200ccdd75f27161cfd6b139cf9c42693f70c60fbca2b70897150e2582026a0",
+  "selection_sha256": "e899daa3716fbbbec2b3d3ec6a1df981918f28a9bdbdb72779deb8027a43c5a3",
+  "gold_draft_sha256": "deea2c5187b3b7e69c7e99ffd545d421b77bf4d735b1e0398a81d1b8ec773e44",
+  "gold_lock_sha256": "768fa468af44a7fb9514d31ef9f0f07c7a5159fdbfc8d40302deff8fb4742a9b",
+  "candidate_path": "data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17_blind-batch12.jsonl",
+  "candidate_sha256": "6f38b3861d0991f8782dbf40f5300844b0acd302f21db919266900670db5d846",
+  "candidate_file_contains_prompt_development_records": false,
+  "model_selection_records_selected_by_locked_ids": 10,
+  "documents": 10,
+  "fields": 111,
+  "gold_counts": {
+    "supported": 78,
+    "absent": 29,
+    "ambiguous": 4
+  },
+  "candidate_counts": {
+    "supported": 74,
+    "absent": 26,
+    "ambiguous": 11
+  },
+  "request_execution": {
+    "completed_document_rate": 1.0,
+    "successful_candidate_documents": 10,
+    "api_attempts": 11,
+    "successful_api_attempts": 10,
+    "api_attempt_validation_success_rate": 0.9090909091,
+    "format_failure_attempts": 1,
+    "retry_count": 1,
+    "retry_policy": "No prompt, validator, gold, or request-content change; nine completed documents were skipped and only the failed document was retried.",
+    "first_attempt_failure_path": "data/llm_extraction/deepseek-v4-flash_189dc8f3b385_evidence-validator-v17_blind-batch12.failures-attempt1.jsonl",
+    "first_attempt_failure_sha256": "4716d25baef80296caa33089327986930d7581e2346475af259117a704b3ae46",
+    "first_attempt_failure_type": "ValidationError",
+    "first_attempt_failure_reason": "An abstained fact contained forbidden value fields; the raw response was preserved and not scored.",
+    "final_validator_accepted_document_rate": 1.0
+  },
+  "local_field_rejections": 5,
+  "normalized_values_with_layout_linebreaks": 0,
+  "usage": {
+    "successful_candidates": {
+      "prompt_tokens": 118490,
+      "completion_tokens": 11692,
+      "total_tokens": 130182
+    },
+    "discarded_format_failure": {
+      "prompt_tokens": 9411,
+      "completion_tokens": 1130,
+      "total_tokens": 10541
+    },
+    "all_api_attempts": {
+      "prompt_tokens": 127901,
+      "completion_tokens": 12822,
+      "total_tokens": 140723
+    }
+  },
+  "metrics": {
+    "status_exact_accuracy": 0.9189189189,
+    "support_vs_abstain_accuracy": 0.9459459459,
+    "strict_field_accuracy": 0.6396396396,
+    "post_lock_human_semantic_field_accuracy": 0.9369369369,
+    "supported_semantic_precision": 0.9729729730,
+    "supported_semantic_recall": 0.9230769231,
+    "abstention_precision": 0.8648648649,
+    "abstention_recall": 0.9696969697,
+    "numeric_date_boolean_exact_accuracy": 0.8800000000
+  },
+  "metric_counts": {
+    "status_exact": {"correct": 102, "total": 111},
+    "support_vs_abstain": {"correct": 105, "total": 111},
+    "strict_field": {"correct": 71, "total": 111},
+    "post_lock_semantic": {"correct": 104, "total": 111},
+    "supported_precision": {"correct_candidate_supported": 72, "candidate_supported": 74},
+    "supported_recall": {"correct_gold_supported": 72, "gold_supported": 78},
+    "abstention_precision": {"correct_candidate_abstentions": 32, "candidate_abstentions": 37},
+    "abstention_recall": {"correct_gold_abstentions": 32, "gold_abstentions": 33},
+    "numeric_date_boolean_exact": {"correct": 22, "total": 25}
+  },
+  "semantic_adjudication": {
+    "strictly_correct_fields": 71,
+    "semantically_equivalent_non_exact_fields": 33,
+    "incorrect_fields": 7,
+    "equivalent": [
+      "4663b1cec185:event_stage",
+      "4663b1cec185:event_date",
+      "607dab45d157:event_stage",
+      "607dab45d157:uncertainty",
+      "607dab45d157:cooperation_scope",
+      "607dab45d157:partner_type",
+      "607dab45d157:binding_status",
+      "38bc080dc4f0:event_stage",
+      "38bc080dc4f0:uncertainty",
+      "38bc080dc4f0:guarantee_type",
+      "8569692b943d:event_stage",
+      "8569692b943d:uncertainty",
+      "8569692b943d:profit_effect_cny",
+      "8569692b943d:impairment_reason",
+      "39a6c408c0fe:event_stage",
+      "39a6c408c0fe:event_date",
+      "39a6c408c0fe:uncertainty",
+      "39a6c408c0fe:use_of_proceeds",
+      "39a6c408c0fe:credit_rating",
+      "57297c95f3d1:event_stage",
+      "57297c95f3d1:event_date",
+      "2cbe65eba16f:event_stage",
+      "2cbe65eba16f:authority",
+      "2cbe65eba16f:issue_summary",
+      "2cbe65eba16f:remedy_requirement",
+      "f92b87648929:event_stage",
+      "f92b87648929:relationship",
+      "f92b87648929:transaction_type",
+      "f92b87648929:pricing_basis",
+      "716121463bef:event_stage",
+      "f5b1c6b06337:event_stage",
+      "f5b1c6b06337:product_type",
+      "f5b1c6b06337:funding_source"
+    ],
+    "incorrect": [
+      {
+        "field": "38bc080dc4f0:guarantee_term",
+        "reason": "The model proposed the disclosed EPC acceptance-certificate plus 24-month term, but its submitted evidence quote was not exact and the frozen validator safely converted it to ambiguous."
+      },
+      {
+        "field": "39a6c408c0fe:counterparty",
+        "reason": "The model treated the authoring sponsor as a transaction counterparty even though the current external-adviser recommendation is not a bilateral transaction."
+      },
+      {
+        "field": "57297c95f3d1:non_gaap_profit_cny",
+        "reason": "The model proposed the table value with a non-exact PDF-layout quote; the frozen validator safely converted the field to ambiguous."
+      },
+      {
+        "field": "f92b87648929:related_party",
+        "reason": "The model returned only China Minmetals and omitted its controlled enterprises, although the estimated transactions cover the whole disclosed related-party group."
+      },
+      {
+        "field": "f92b87648929:approval_status",
+        "reason": "The model proposed the board-approved and shareholder-pending status with a non-exact quote; the frozen validator safely converted it to ambiguous."
+      },
+      {
+        "field": "716121463bef:counterparty",
+        "reason": "The model treated the release as having no counterparty even though the single disclosed pledgee, China Merchants Securities, is the unique counterparty under the frozen share-pledge taxonomy."
+      },
+      {
+        "field": "716121463bef:pledged_share_count",
+        "reason": "The model proposed 5,880,000 shares without self-contained share-unit evidence; the frozen validator safely converted it to ambiguous."
+      }
+    ]
+  },
+  "locked_gold_annotation_audit": {
+    "defect_found_after_lock": true,
+    "field": "8569692b943d:profit_effect_cny",
+    "locked_value": "-30663037.05",
+    "canonical_validator_value": "30663037.05",
+    "explanation": "The frozen v17 validator and earlier gold convention normalize an asset-impairment profit effect as a positive magnitude when the source says profit is reduced. The lock cannot be edited after candidate inspection, so the locked exact metric retains the sign mismatch while human semantic adjudication treats the candidate as correct.",
+    "numeric_exact_sensitivity_if_canonicalized": {"correct": 23, "total": 25, "accuracy": 0.92},
+    "decision_robust_to_defect": true,
+    "follow_up": "A successor gold validator must compare post-validation normalized values, not only statuses, before lock."
+  },
+  "frozen_validator_audit": {
+    "gold_supported_fields_rejected_before_candidate_requests": 0,
+    "changed_after_candidate_review": false,
+    "note": "All 78 supported gold fields passed the frozen evidence validator and taxonomy before candidate requests. No prompt or validator behavior was changed after candidate review."
+  },
+  "gate": {
+    "requirements": {
+      "post_lock_human_semantic_field_accuracy_min": 0.9,
+      "supported_semantic_precision_min": 0.9,
+      "abstention_recall_min": 0.9,
+      "numeric_date_boolean_exact_accuracy_min": 0.95
+    },
+    "decision": "FAIL",
+    "passed_requirements": [
+      "post_lock_human_semantic_field_accuracy_min",
+      "supported_semantic_precision_min",
+      "abstention_recall_min"
+    ],
+    "failed_requirements": [
+      "numeric_date_boolean_exact_accuracy_min"
+    ],
+    "consequence": "Do not promote v21 to downstream prediction features. Batch 12 is consumed. Do not open or score the disqualified 2024 holdout; any successor must be frozen as a new version and use a fresh eligible validation contract."
+  }
+}

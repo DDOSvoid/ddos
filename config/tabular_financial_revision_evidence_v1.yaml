@@ -1,0 +1,32 @@
+contract: tabular-financial-revision-evidence-v1
+dataset_role: train
+official_test_allowed: false
+source_contract: tabular-point-in-time-sources-v1
+selection_seed: financial-revision-evidence-20260824
+sample_per_endpoint: 4
+announcement_date_start: 2023-01-01
+announcement_date_end: 2024-12-31
+revision_group_fields:
+  - ts_code
+  - end_date
+  - report_type
+  - comp_type
+  - end_type
+derived_metric_fields:
+  cashflow:
+    - free_cashflow
+excluded_announcement_ids:
+  AN202412121641283020: pdf_unextractable_after_cdp_probe
+evidence:
+  metadata_source: data/ddos.db
+  content_source: eastmoney_static_pdf_after_cdp_probe
+  require_valid_pdf: true
+  archive_pdf: true
+  changed_metric_match_required: true
+  minimum_verified_revision_groups: 8
+  minimum_verified_groups_per_endpoint: 2
+  provider_revision_documentation:
+    - https://tushare.pro/document/1?doc_id=122
+    - https://tushare.pro/document/2?doc_id=33
+    - https://tushare.pro/document/2?doc_id=36
+    - https://tushare.pro/document/2?doc_id=44

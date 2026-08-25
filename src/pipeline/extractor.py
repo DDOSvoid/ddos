@@ -158,6 +158,7 @@ class ExtractionStep:
                         model=self.model,
                         max_tokens=config.models.extraction.max_tokens,
                         temperature=config.models.extraction.temperature,
+                        thinking=config.models.extraction.thinking,
                         retries=2,
                     )
 

@@ -1,0 +1,163 @@
+contract: blind-model-selection-gold-draft-v1
+created_at: "2026-08-24T15:35:00+08:00"
+reviewer: codex-assisted-source-only
+candidate_outputs_seen: false
+model_requests_sent: false
+dataset_role: train
+evaluation_role: model_selection_validation
+eligible_for_model_selection_score: true
+future_data_read: false
+market_targets_read: false
+prompt_version: structured-extraction-prompt-v19
+prompt_sha256: 13981a36fc793992528cf9073eec0d47fb235bec57fd3ec4bf877d553f367e1e
+validator_contract_version: evidence-validator-v14
+audit_sha256: 1895cf8b4ba9462eac638eaacc8eed3331a7ec1ae748084831f751aba5e4ec9a
+target_documents: 10
+completed_documents: 10
+
+documents:
+  - audit_item_id: 65a84884918386c99cfb46f4ac22cd3dba16c4951885490041af9383cdb44d2a
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "员工持股计划已完成证券账户开立，尚未以非交易过户方式受让回购股份", unit: TEXT, evidence_quotes: ["完成证券账户的开立工作", "尚未以非交易过户方式受让公司回购专用证券账户所持有的公司 A 股普通股股票"]}
+      event_date: {status: supported, normalized_value: "2023-01-17", unit: DATE, evidence_quotes: ["2023 年 1 月 17 日"]}
+      counterparty: {status: absent, reason: "证券账户开立和待实施非交易过户不构成已确定的双边交易，正文未披露交易对手。"}
+      subject_name: {status: supported, normalized_value: "中山大洋电机股份有限公司", unit: TEXT, evidence_quotes: ["中山大洋电机股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文仅披露尚未完成股份受让并提示关注进展，未披露结果、数量或实施能否完成的重大不确定性。"}
+      incentive_share_count: {status: absent, reason: "本进展公告未披露员工持股计划拟受让或已受让的股份数量。"}
+      incentive_share_ratio_pct: {status: absent, reason: "本进展公告未披露员工持股计划股份占总股本比例。"}
+      grant_price_cny_per_share: {status: absent, reason: "本进展公告未披露受让或授予价格。"}
+      performance_targets: {status: absent, reason: "本进展公告未披露业绩考核目标。"}
+      recipient_count: {status: absent, reason: "本进展公告未披露员工持股计划参与人数。"}
+      vesting_schedule: {status: absent, reason: "本进展公告未披露归属、解锁或分期安排。"}
+
+  - audit_item_id: 39644cb7a07eb70db444bd67ddab815b9e60fdeb13b777423443285aa7220458
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "股东通过竞价方式累计增持390000股、达到总股本1%", unit: TEXT, evidence_quotes: ["2、本次权益变动情况", "390,000            1%"]}
+      event_date: {status: ambiguous, reason: "本次增持覆盖2022-12-22至2023-01-30的期间，没有唯一动作日期。"}
+      counterparty: {status: absent, reason: "竞价增持未披露唯一卖方，不存在可识别的双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "珠海雷特科技股份有限公司", unit: TEXT, evidence_quotes: ["珠海雷特科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文确认增持已发生且与原计划承诺一致，未披露重大不确定性。"}
+      holder_name: {status: supported, normalized_value: "珠海雷特投资有限公司", unit: TEXT, evidence_quotes: ["珠海雷特投资有限公司"]}
+      planned_share_lower: {status: absent, reason: "正文披露实际增持390000股，但未披露本次计划股数下限。"}
+      planned_share_upper: {status: absent, reason: "正文披露实际增持390000股，但未披露本次计划股数上限。"}
+      planned_amount_lower_cny: {status: absent, reason: "正文未披露增持计划金额下限。"}
+      planned_amount_upper_cny: {status: absent, reason: "正文未披露增持计划金额上限。"}
+      progress: {status: supported, normalized_value: "2022-12-22至2023-01-30通过竞价增持390000股，增持比例1%", unit: TEXT, evidence_quotes: ["持股变动时间    2022 年 12 月 22 日到 2023 年 1 月 30 日", "竞价方式          390,000            1%"]}
+
+  - audit_item_id: df74a30ca178ce168d672904cb5f586615fa2b991e448d0b781bc95661cc2e84
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "独立董事同意聘任总经理、财务总监并指定董事代行董事会秘书职责", unit: TEXT, evidence_quotes: ["我们作为公司的独立董事同意聘任孙晓乐先生为总经理；刘爱花女士为财务总监。", "同意指定董事孙晓乐先生代行董事会秘书职责"]}
+      event_date: {status: ambiguous, reason: "正文只在独立意见签署页列示日期，未将其标注为聘任或意见出具动作日期。"}
+      counterparty: {status: absent, reason: "独立董事意见和公司高管聘任不构成双边交易事项。"}
+      subject_name: {status: supported, normalized_value: "大金重工股份有限公司", unit: TEXT, evidence_quotes: ["大金重工股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文确认独立董事同意相关聘任，未披露聘任结果存在重大不确定性。"}
+      executive_name: {status: ambiguous, reason: "当前意见同时涉及孙晓乐和刘爱花两名高管，单值字段不能选择其中一人。"}
+      position: {status: ambiguous, reason: "当前事项同时涉及总经理、财务总监和代行董事会秘书多个职位。"}
+      change_type: {status: supported, normalized_value: "聘任高级管理人员并指定代行董事会秘书", unit: TEXT, evidence_quotes: ["同意聘任孙晓乐先生为总经理；刘爱花女士为财务总监", "同意指定董事孙晓乐先生代行董事会秘书职责"]}
+      reason: {status: absent, reason: "正文评价任职资格和聘任程序，但未披露本次聘任或指定代行的具体原因。"}
+      successor: {status: ambiguous, reason: "孙晓乐和刘爱花分别被聘任不同职位，无法形成唯一继任者。"}
+
+  - audit_item_id: a4e662d66e1b4edc8596a902cdb299a5524ac9eb18c9c210d733f036ac549990
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会和监事会审议通过申请不超过32亿元综合授信额度，尚需股东大会审议", unit: TEXT, evidence_quotes: ["审议通过了《关于公司申请综合授信额度的议案》", "本事项尚需提交公司股东大会审议"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["2023 年 1 月 11 日"]}
+      counterparty: {status: ambiguous, reason: "正文仅披露银行等金融机构类别，尚无唯一确定的授信机构。"}
+      subject_name: {status: supported, normalized_value: "无锡帝科电子材料股份有限公司", unit: TEXT, evidence_quotes: ["无锡帝科电子材料股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "授信品种和额度以银行实际审批结果为准，具体使用金额取决于实际经营需求", unit: TEXT, evidence_quotes: ["授信业务品种和授信额度以银行实际审批结果为准", "具体使用金额由公司根据实际经营需求而定"]}
+      financial_institution: {status: ambiguous, reason: "申请对象为银行等多类金融机构，未确定唯一机构。"}
+      credit_amount_cny: {status: supported, normalized_value: "3200000000", unit: CNY, evidence_quotes: ["不超过人民币 32 亿元"]}
+      financing_type: {status: supported, normalized_value: "本外币借款、银行承兑汇票、信用证、保函、贸易融资、保理融资、远期结售汇", unit: TEXT, evidence_quotes: ["本外币借款、银行承兑汇票、信用证、保函、贸易融资、保理融资、远期结售汇等业务"]}
+      term: {status: supported, normalized_value: "12", unit: MONTHS, evidence_quotes: ["自审议本议案的股东大会决议通过之日起十二个月"]}
+      interest_rate_pct: {status: absent, reason: "正文未披露综合授信利率。"}
+      collateral: {status: absent, reason: "正文仅授权未来办理抵质押等文件，未披露当前已确定的抵押物或质押物。"}
+
+  - audit_item_id: af3731cfb6600fb31dcecd48b67afbddf142f2c7263373b7924b74983017fe38
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司及子公司收到发明专利和实用新型专利证书", unit: TEXT, evidence_quotes: ["近日收到国家知识 产权局颁发的发明专利及实用新型专利证书"]}
+      event_date: {status: ambiguous, reason: "正文仅称近日收到，表格中的多个授权公告日不同，公告落款日不能替代唯一收证日期。"}
+      counterparty: {status: absent, reason: "国家知识产权局为行政授权机关，不是双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "广州鹏辉能源科技股份有限公司", unit: TEXT, evidence_quotes: ["广州鹏辉能源科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "正文明确当前经营业绩暂不受重大影响，未披露专利取得事项的重大不确定性。"}
+      property_name: {status: ambiguous, reason: "公告同时披露多项独立发明和实用新型专利，无法形成唯一专利名称。"}
+      property_type: {status: ambiguous, reason: "公告同时包含发明专利和实用新型专利两种类型。"}
+      authorization_date: {status: ambiguous, reason: "不同专利的授权公告日不同，无法形成唯一授权日期。"}
+      application_area: {status: ambiguous, reason: "多项专利分别用于补锂、动力电池、锂电池分选、电芯模组和电池盖板等不同应用。"}
+      expected_business_effect: {status: supported, normalized_value: "目前经营业绩暂不会受到重大影响，有利于完善知识产权保护体系并增强核心竞争力", unit: TEXT, evidence_quotes: ["上述专利的取得和应用对公司目前的经营业绩暂不会产生重大影响", "有利于公司进一步完善知识产权保护体系，增强公司核心竞争力"]}
+
+  - audit_item_id: 1f4083f9b617bf9c7719d1ae622484f0110dd0d6d7379c1149497900ab78fd11
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "预留授予限制性股票第一个解除限售期条件成就并办理解除限售上市流通", unit: TEXT, evidence_quotes: ["第一个解除限售期解除限售条件已经成就", "办理解除限售相关事宜", "本次限制性股票的上市流通日为 2023 年 1 月 20 日"]}
+      event_date: {status: supported, normalized_value: "2023-01-12", unit: DATE, evidence_quotes: ["2023 年 1 月 12 日"]}
+      counterparty: {status: absent, reason: "限制性股票解除限售不构成双边交易，正文未披露交易对手。"}
+      subject_name: {status: supported, normalized_value: "河南通达电缆股份有限公司", unit: TEXT, evidence_quotes: ["河南通达电缆股份有限公司"]}
+      uncertainty: {status: absent, reason: "解除限售条件已经成就且上市流通日明确，正文未披露重大不确定性。"}
+      unlock_share_count: {status: supported, normalized_value: "991100", unit: SHARES, evidence_quotes: ["可解锁的限制性股票数量为\r\n99.11 万股"]}
+      unlock_share_ratio_pct: {status: supported, normalized_value: "0.1875", unit: PCT, evidence_quotes: ["占公司目前总股本的比例为 0.1875%"]}
+      listing_date: {status: supported, normalized_value: "2023-01-20", unit: DATE, evidence_quotes: ["本次限制性股票的上市流通日为 2023 年 1 月 20 日"]}
+      holder_count: {status: supported, normalized_value: "1", unit: COUNT, evidence_quotes: ["本次符合解除限售条件的激励对象共计 1 人"]}
+
+  - audit_item_id: b96c8d89509c7f7bda582f89efb6378ae4fd49d6a9019e2ee27a7c76d85bb278
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "董事会审议通过取消收购四川开炭40%股权", unit: TEXT, evidence_quotes: ["公司决定取消收购四川开炭 40%股权", "审议通过了《关于\n取消收购四川省开炭新材料科技有限公司 40%股权的议案》"]}
+      event_date: {status: supported, normalized_value: "2023-01-13", unit: DATE, evidence_quotes: ["2023 年 1 月 13 日"]}
+      counterparty: {status: supported, normalized_value: "四川华盛达新材料科技有限公司", unit: TEXT, evidence_quotes: ["四川华盛达新材料科技有限公司"]}
+      subject_name: {status: supported, normalized_value: "河南易成新能源股份有限公司", unit: TEXT, evidence_quotes: ["河南易成新能源股份有限公司"]}
+      uncertainty: {status: absent, reason: "交易双方未签协议、未交割且互不承担违约责任，正文明确对财务和经营不构成影响。"}
+      transaction_asset: {status: supported, normalized_value: "四川开炭40%股权", unit: TEXT, evidence_quotes: ["四川开炭 40%股权"]}
+      consideration_cny: {status: supported, normalized_value: "220000000", unit: CNY, evidence_quotes: ["拟以 2.2 亿元收购"]}
+      ownership_ratio_pct: {status: supported, normalized_value: "40", unit: PCT, evidence_quotes: ["四川开炭 40%股权"]}
+      payment_method: {status: absent, reason: "正文披露原拟收购金额但未披露付款方式。"}
+      transaction_stage: {status: supported, normalized_value: "取消收购，未签股权转让协议且未完成资产交割", unit: TEXT, evidence_quotes: ["公司决定取消收购四川开炭 40%股权", "交易双方未签署《股权转让协议》", "未完成资产交割"]}
+      valuation_cny: {status: absent, reason: "正文未披露标的股权估值或评估价值。"}
+
+  - audit_item_id: 0e73d2530a1d888e8a136ca4e4d7c709d071eddf315f03855dbc70d68f80cb49
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "公司董事收到广东证监局行政处罚决定，被警告并罚款100万元", unit: TEXT, evidence_quotes: ["广东证监局决定对王成先生给予警告，并处以 100 万元罚款"]}
+      event_date: {status: supported, normalized_value: "2023-01-19", unit: DATE, evidence_quotes: ["2023 年 1 月 19 日"]}
+      counterparty: {status: absent, reason: "广东证监局为行政执法机关，不是双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "王成", unit: TEXT, evidence_quotes: ["王成先生"]}
+      uncertainty: {status: absent, reason: "行政处罚决定已经作出，正文未披露处罚结果存在重大不确定性。"}
+      authority: {status: supported, normalized_value: "广东证监局", unit: TEXT, evidence_quotes: ["广东证监局"]}
+      penalty_reason: {status: supported, normalized_value: "原任职公司在收购项目中未按规定履行报告公告义务及发出收购要约义务", unit: TEXT, evidence_quotes: ["未按规定履行报告、公告义务", "未按规定履行发出收购要约义务"]}
+      fine_amount_cny: {status: supported, normalized_value: "1000000", unit: CNY, evidence_quotes: ["处以 100 万元罚款"]}
+      remedy_requirement: {status: absent, reason: "处罚决定披露警告和罚款，但未披露责令整改或其他补救要求。"}
+      operational_effect: {status: supported, normalized_value: "被处罚主体并非本公司且事项与公司无关，不影响公司生产经营和规范运作", unit: TEXT, evidence_quotes: ["被处罚主体并非本公司", "该事项不会对本公司生产经营、规范运作等造成影响"]}
+
+  - audit_item_id: e534015a60165af3125e49c127bd2733e5f99accd5cd23e9f528afb9646988a3
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "发行人会同保荐人、律师和会计师回复深交所审核问询", unit: TEXT, evidence_quotes: ["就问询函列载的问题逐条进行了认真讨论、核查和落实", "现回复如下，请予审核"]}
+      event_date: {status: ambiguous, reason: "本回复签章页日期为空，正文没有披露本次回复或修订稿的当前出具日期。"}
+      counterparty: {status: absent, reason: "深圳证券交易所为审核机关，不是当前发行交易的双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "张家港海锅新能源装备股份有限公司", unit: TEXT, evidence_quotes: ["张家港海锅新能源装备股份有限公司"]}
+      uncertainty: {status: supported, normalized_value: "存在原材料价格、经营现金流、项目效益、下游景气、产能消化及发行审核注册失败等风险", unit: TEXT, evidence_quotes: ["原材料价格变动对公司的毛利率和盈利水平影响较大", "公司存在经营活动现金流周转的风险", "募投项目实际经济效益也可能存在不达预期的风险", "可能会对公司风电装备锻件业务造成不利影响", "本次募投项目可能面临产能消化风险", "本次发行存在发行失败的风险"]}
+      placement_amount_cny: {status: supported, normalized_value: "500000000", unit: CNY, evidence_quotes: ["募集资金总额不超过 50,000.00 万元（含本数）"]}
+      placement_share_count: {status: absent, reason: "本问询回复未重述本次发行股票数量。"}
+      placement_price_cny_per_share: {status: absent, reason: "本问询回复未重述本次发行价格。"}
+      purpose: {status: supported, normalized_value: "年产10万吨风电齿轮箱锻件自动化专用线项目及补充流动资金", unit: TEXT, evidence_quotes: ["年产 10 万吨风电齿轮箱锻件自动化专用线项目", "补充流动资金"]}
+      subscribers: {status: absent, reason: "本问询回复未披露最终发行对象或可识别的认购方。"}
+      lockup_period: {status: absent, reason: "本问询回复未重述发行对象限售期。"}
+      approval_status: {status: supported, normalized_value: "发行申请已获深交所受理，尚需深交所审核及中国证监会注册", unit: TEXT, evidence_quotes: ["发行人本次向特定对象发行股票申请于 2022 年 10 月 11 日获深圳证券交易", "本次发行股票尚需满足多项条件方可完成", "深交所对本次发行的审核及中国证监会对本次发行的注册"]}
+
+  - audit_item_id: f764992aed52566f293911d47f8d6a7ba07e0449db1fa488ab6c1864351fe813
+    review_status: complete
+    fields:
+      event_stage: {status: supported, normalized_value: "股东收到上海监管局出具警示函的监督管理措施决定", unit: TEXT, evidence_quotes: ["我局决定对你企业采取出具警示函的监督管理措施"]}
+      event_date: {status: supported, normalized_value: "2023-01-11", unit: DATE, evidence_quotes: ["2023 年 1 月 11 日"]}
+      counterparty: {status: absent, reason: "上海监管局为行政监管机关，不是双边交易对手。"}
+      subject_name: {status: supported, normalized_value: "上海派能能源科技股份有限公司", unit: TEXT, evidence_quotes: ["上海派能能源科技股份有限公司"]}
+      uncertainty: {status: absent, reason: "警示函措施已经作出，正文仅说明法定复议诉讼权利，未披露当前结果存在重大不确定性。"}
+      authority: {status: supported, normalized_value: "上海监管局", unit: TEXT, evidence_quotes: ["上海监管局"]}
+      action_type: {status: supported, normalized_value: "出具警示函", unit: TEXT, evidence_quotes: ["采取出具警示函的监督管理措施"]}
+      subject: {status: supported, normalized_value: "北京融通高科资本管理中心（有限合伙）", unit: TEXT, evidence_quotes: ["北京融通高科资本管理中心（有限合伙）"]}
+      issue_summary: {status: supported, normalized_value: "减持导致合计持股比例累计减少5.08%，但未在累计变动达到5%时停止交易", unit: TEXT, evidence_quotes: ["持股比例累计减少 5.08%", "未在持股比例累计变动达到 5％时按规定停止交易"]}
+      reply_deadline: {status: absent, reason: "决定书未要求回复，也未披露回复期限；复议和诉讼期限不属于回复期限。"}
+      remedy_requirement: {status: absent, reason: "监管决定披露警示函措施，但未列明责令改正等具体补救要求。"}

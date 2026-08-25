@@ -1,0 +1,84 @@
+{
+  "contract": "metadata-only-prompt-development-selection-v1",
+  "selected_at": "2026-08-24T08:57:49.1992168Z",
+  "prompt_version": "structured-extraction-prompt-v21",
+  "prompt_sha256": "f255bd2a9d21223b4fa19d395ea3beb8ad1b0870f687510a39ab7a6c14f96f91",
+  "validator_contract_version": "evidence-validator-v17",
+  "dataset_role": "train",
+  "evaluation_role": "prompt_development",
+  "source_period": "2023-H1",
+  "selection_algorithm": "Exclude every audit_item_id present in any saved LLM candidate. For each remaining sub_category, retain the item with the smallest SHA256(prompt_sha256 + ':' + audit_item_id), then take the ten smallest category-winner hashes.",
+  "selection_used_source_metadata_only": true,
+  "selected_source_bodies_read_for_selection": false,
+  "selected_candidate_outputs_seen": false,
+  "selected_candidate_requests_sent": 0,
+  "market_targets_read": false,
+  "future_data_read_for_selection": false,
+  "eligible_unrequested_item_count": 70,
+  "eligible_distinct_sub_categories": 40,
+  "selected_document_count": 10,
+  "selected_field_count": 97,
+  "selected_distinct_sub_categories": 10,
+  "items": [
+    {
+      "audit_item_id": "c5753b78ce4d25ead1f0bc0d66134aa8b0d408291160bb8ffde20bc218ce95d0",
+      "sub_category": "operating_data",
+      "field_count": 11,
+      "rank_sha256": "0500dd7008613342bde08c4125f8b79c0a2252bdb87f89c7731fefa8b0806be3"
+    },
+    {
+      "audit_item_id": "59e66e8bc71bdb3624a203cb58cb2536acb1fcdbc053db4a768ac965859dd7f5",
+      "sub_category": "asset_impairment",
+      "field_count": 10,
+      "rank_sha256": "0b25aa6cd2810ace63c1111f88012be39953e4c091c818ca31940dab555f7df3"
+    },
+    {
+      "audit_item_id": "1e83d0ef22f2e8771dd923f3ca88cb648768f9467bd45e62e8ca3bee009d761a",
+      "sub_category": "bid_win",
+      "field_count": 9,
+      "rank_sha256": "0b69509296b48ca47669a613a118f87f0cdd99a2b4d7623323433377a2061a78"
+    },
+    {
+      "audit_item_id": "4e94362dab7a1ab45fe39b279c1748888eddf0e45004a784f4fe6af74e511b4a",
+      "sub_category": "accounting_change",
+      "field_count": 11,
+      "rank_sha256": "12f0d34f3857cf63d9726dcc769367e73e0c1cc0c6f3c70dde86bbf3cbf44281"
+    },
+    {
+      "audit_item_id": "8ce433b252ee36dad42081cdd60871f60af16865efe6a421f6e0ff19bb7ac397",
+      "sub_category": "executive_change",
+      "field_count": 10,
+      "rank_sha256": "171bb50f19abbe2676024c58f8e1c583382cf727908d67d753a4f3a254ca11ae"
+    },
+    {
+      "audit_item_id": "c6258c0af06b6ce7888d1fa7828e0a67e447fb804480b18fcecc8af7e73f37b1",
+      "sub_category": "major_contract",
+      "field_count": 9,
+      "rank_sha256": "17b7c205ebed5589ffb4d6b5aeac40bd154a5ad7005c549636b7c342d47b45c9"
+    },
+    {
+      "audit_item_id": "93dceef9a36f98530d02de73d8022a591c4348e15c64035d3a019d649c9e2054",
+      "sub_category": "st_delisting_risk",
+      "field_count": 9,
+      "rank_sha256": "1992cff28bcb8bf5244db9d9e2abdfd0c8ca7290842bce5cb87718f42ca9ce35"
+    },
+    {
+      "audit_item_id": "8dc3cd81362713434b0e84bdd30abbf68a1ea1a31a1fbf2e0483fda1772c4e4d",
+      "sub_category": "abnormal_volatility",
+      "field_count": 9,
+      "rank_sha256": "1c0bcfc73ccaf435af8ee633d29d56296604d6853b3ff9b6228bd6c7a3efb708"
+    },
+    {
+      "audit_item_id": "d4038d08ca06218b8fb535edc98c5d8f8bf10d2146462463b88ffd86567f7641",
+      "sub_category": "project_investment",
+      "field_count": 10,
+      "rank_sha256": "1ec07eea34a5251cff622d7ebc60cbce0c6a134adee1c4699e40e809fb11f6ce"
+    },
+    {
+      "audit_item_id": "5b77e97fc5e1d19111228286ed96cb1d4bd0d9ff551b9810cc1904fed4c428c5",
+      "sub_category": "lockup_expiry",
+      "field_count": 9,
+      "rank_sha256": "215b6e33c2559dcc32e672bbcf17e6303d3e0219b55c07f123083b23e4e2c15e"
+    }
+  ]
+}

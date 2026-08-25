@@ -1,0 +1,159 @@
+contract: causal-tabular-feature-catalog-v2
+dataset_contract: causal-tabular-train-dataset-v2
+base_tabular_contract: causal-tabular-model-v1
+split_contract: causal-impact-split-v2
+development_contract: causal-multimodel-development-v1
+dataset_role: train
+official_test_allowed: false
+
+primary_risk:
+  target: future_absolute_excess_return
+  horizons_sessions: [1, 3, 5]
+  output: predicted_absolute_excess_return
+  baseline: fold_train_median
+
+auxiliary_risk:
+  - target: future_realized_volatility
+    horizons_sessions: [3, 5]
+  - target: future_downside_return
+    horizons_sessions: [1, 3, 5]
+
+unified_output:
+  schema: tabular-component-oof-v2
+  required_fields:
+    - sample_id
+    - company_day_id
+    - stock_code
+    - published_date
+    - prediction_as_of
+    - horizon_sessions
+    - fold
+    - candidate
+    - calibrated_bullish_probability
+    - predicted_excess_return
+    - predicted_absolute_excess_return
+    - component_available
+    - refusal_reason
+    - model_version
+    - feature_schema_sha256
+    - data_as_of
+    - evidence_sha256
+
+blocked_feature_groups:
+  structured_announcement_facts: blocked_until_extraction_gate_passes
+  point_in_time_fundamentals: blocked_until_disclosure_time_and_revision_provenance_exist
+  company_industry_context: blocked_until_historical_effective_dates_are_audited
+
+feature_groups:
+  prediction_context:
+    source: prediction_context
+    available_at_column: event_features_available_at_utc
+    observation_date_column: null
+    missing_policy: forbidden
+    features:
+      horizon_sessions: {unit: sessions, transformation: identity}
+
+  announcement_context:
+    source: announcement
+    available_at_column: event_features_available_at_utc
+    observation_date_column: null
+    missing_policy: forbidden
+    features:
+      announcement_count: {unit: count, transformation: identity}
+      unique_major_category_count: {unit: count, transformation: identity}
+      unique_sub_category_count: {unit: count, transformation: identity}
+      title_character_count: {unit: characters, transformation: identity}
+      title_numeric_token_count: {unit: count, transformation: identity}
+      title_percent_token_count: {unit: count, transformation: identity}
+      title_currency_token_count: {unit: count, transformation: identity}
+      primary_major_category: {unit: category, transformation: identity}
+      primary_sub_category: {unit: category, transformation: identity}
+      event_count_a: {unit: count, transformation: identity}
+      event_count_b: {unit: count, transformation: identity}
+      event_count_c: {unit: count, transformation: identity}
+      event_count_d: {unit: count, transformation: identity}
+      event_count_e: {unit: count, transformation: identity}
+      event_count_f: {unit: count, transformation: identity}
+      event_count_g: {unit: count, transformation: identity}
+
+  lagged_daily_market:
+    source: market_daily
+    available_at_column: market_features_available_at_utc
+    observation_date_column: market_observation_date
+    missing_policy: preserve_null_fold_train_only
+    features:
+      market_daily_return_1d: {unit: ratio, transformation: identity}
+      market_overnight_gap_1d: {unit: ratio, transformation: identity}
+      market_high_low_range_1d: {unit: ratio, transformation: identity}
+      market_momentum_3d: {unit: ratio, transformation: identity}
+      market_momentum_5d: {unit: ratio, transformation: identity}
+      market_momentum_10d: {unit: ratio, transformation: identity}
+      market_momentum_20d: {unit: ratio, transformation: identity}
+      market_momentum_60d: {unit: ratio, transformation: identity}
+      market_realized_volatility_5d: {unit: ratio, transformation: identity}
+      market_realized_volatility_10d: {unit: ratio, transformation: identity}
+      market_realized_volatility_20d: {unit: ratio, transformation: identity}
+      market_realized_volatility_60d: {unit: ratio, transformation: identity}
+      market_downside_volatility_5d: {unit: ratio, transformation: identity}
+      market_downside_volatility_10d: {unit: ratio, transformation: identity}
+      market_downside_volatility_20d: {unit: ratio, transformation: identity}
+      market_downside_volatility_60d: {unit: ratio, transformation: identity}
+      market_max_drawdown_20d: {unit: ratio, transformation: identity}
+      market_max_drawdown_60d: {unit: ratio, transformation: identity}
+      market_amount_ratio_5d_20d: {unit: ratio, transformation: identity}
+      market_volume_ratio_5d_20d: {unit: ratio, transformation: identity}
+      market_average_range_5d: {unit: ratio, transformation: identity}
+      market_average_range_20d: {unit: ratio, transformation: identity}
+      benchmark_momentum_5d: {unit: ratio, transformation: identity}
+      benchmark_momentum_20d: {unit: ratio, transformation: identity}
+      benchmark_momentum_60d: {unit: ratio, transformation: identity}
+      benchmark_volatility_5d: {unit: ratio, transformation: identity}
+      benchmark_volatility_20d: {unit: ratio, transformation: identity}
+      benchmark_volatility_60d: {unit: ratio, transformation: identity}
+      excess_momentum_5d: {unit: ratio, transformation: identity}
+      excess_momentum_20d: {unit: ratio, transformation: identity}
+      excess_momentum_60d: {unit: ratio, transformation: identity}
+
+  lagged_intraday_aggregates:
+    source: market_intraday_aggregate
+    available_at_column: intraday_features_available_at_utc
+    observation_date_column: intraday_observation_date
+    missing_policy: preserve_null_fold_train_only
+    features:
+      intraday_open_to_close_return: {unit: ratio, transformation: identity}
+      intraday_realized_volatility: {unit: ratio, transformation: identity}
+      intraday_downside_volatility: {unit: ratio, transformation: identity}
+      intraday_high_low_range: {unit: ratio, transformation: identity}
+      intraday_close_location: {unit: ratio, transformation: identity}
+      intraday_opening_30m_return: {unit: ratio, transformation: identity}
+      intraday_last_30m_return: {unit: ratio, transformation: identity}
+      intraday_last_60m_return: {unit: ratio, transformation: identity}
+      intraday_opening_30m_amount_share: {unit: ratio, transformation: identity}
+      intraday_last_30m_amount_share: {unit: ratio, transformation: identity}
+      intraday_last_30m_volume_share: {unit: ratio, transformation: identity}
+      intraday_amount_hhi: {unit: ratio, transformation: identity}
+      intraday_volume_hhi: {unit: ratio, transformation: identity}
+      intraday_max_abs_15m_return: {unit: ratio, transformation: identity}
+      intraday_amihud_15m: {unit: inverse_cny, transformation: identity}
+
+  valuation_liquidity:
+    source: tushare_daily_basic
+    available_at_column: daily_basic_features_available_at_utc
+    observation_date_column: daily_basic_observation_date
+    missing_policy: preserve_null_fold_train_only
+    features:
+      daily_basic_turnover_rate: {unit: ratio, transformation: divide_by_100}
+      daily_basic_free_float_turnover_rate: {unit: ratio, transformation: divide_by_100}
+      daily_basic_volume_ratio: {unit: ratio, transformation: identity}
+      daily_basic_pe: {unit: multiple, transformation: identity}
+      daily_basic_pe_ttm: {unit: multiple, transformation: identity}
+      daily_basic_pb: {unit: multiple, transformation: identity}
+      daily_basic_ps: {unit: multiple, transformation: identity}
+      daily_basic_ps_ttm: {unit: multiple, transformation: identity}
+      daily_basic_dividend_yield: {unit: ratio, transformation: divide_by_100}
+      daily_basic_dividend_yield_ttm: {unit: ratio, transformation: divide_by_100}
+      daily_basic_log_total_market_value: {unit: log_cny_10k, transformation: log1p}
+      daily_basic_log_circulating_market_value: {unit: log_cny_10k, transformation: log1p}
+      daily_basic_float_share_ratio: {unit: ratio, transformation: float_share_over_total_share}
+      daily_basic_free_share_ratio: {unit: ratio, transformation: free_share_over_total_share}
+      daily_basic_circulating_market_value_ratio: {unit: ratio, transformation: circ_mv_over_total_mv}
