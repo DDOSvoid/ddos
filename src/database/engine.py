@@ -142,6 +142,16 @@ def _run_lightweight_migrations(engine: "Engine") -> None:
     for column, ddl in target_columns.items():
         _ensure_column(engine, "announcement_market_targets", column, ddl)
 
+    company_columns = {
+        "listing_date": "DATE",
+        "delisting_date": "DATE",
+        "list_status": "VARCHAR(2)",
+        "universe_source": "VARCHAR(50)",
+        "universe_as_of": "DATETIME",
+    }
+    for column, ddl in company_columns.items():
+        _ensure_column(engine, "companies", column, ddl)
+
     # 历史结果只补充审计元数据，不改动原分类类别和置信度。
     from sqlalchemy import text
 

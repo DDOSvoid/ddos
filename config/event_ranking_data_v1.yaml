@@ -1,0 +1,60 @@
+contract: causal-event-ranking-data-download-v1
+development_contract: causal-expert-ranking-development-v2
+status: active_download
+
+universe:
+  mode: all_a_share_stocks_with_eligible_announcements
+  include_list_status: [L, D, P]
+  survivorship_bias_allowed: false
+  pilot_codes_are_smoke_only: true
+
+dates:
+  market_prehistory_start: "2022-09-01"
+  train_start: "2023-01-01"
+  train_end: "2024-12-31"
+  official_test_start: "2025-01-01"
+  official_test_end: "2025-08-19"
+  quarantine_start: "2025-08-20"
+  quarantine_end: "2025-12-31"
+  forward_validation_start: "2026-01-01"
+
+download_order:
+  - stock_universe
+  - announcement_metadata
+  - announcement_content_and_pdf
+  - stock_and_benchmark_daily_prices
+  - market_targets_train_only
+  - daily_basic_train_only
+  - point_in_time_company_industry_and_financials_train_only
+
+sources:
+  stock_universe:
+    provider: tushare
+    credential_env: TUSHARE_TOKEN
+    required: true
+  announcements:
+    provider: eastmoney_public_api
+    credential_required: false
+  daily_prices:
+    provider: tushare
+    credential_env: TUSHARE_TOKEN
+    required: true
+  benchmark:
+    provider: tushare
+    code: 000300.SH
+    credential_env: TUSHARE_TOKEN
+    required: true
+
+sealed_data_policy:
+  train_features_and_labels_download_allowed: true
+  official_test_features_download_allowed: false
+  official_test_labels_download_allowed: false
+  quarantine_download_allowed: false
+  forward_validation_features_download_allowed: false
+
+artifacts:
+  state_directory: data/backfills/event_ranking_v1
+  manifest: data/backfills/event_ranking_v1/download_manifest.json
+  raw_files_are_append_only: true
+  hashes_required: true
+  resumable_state_required: true

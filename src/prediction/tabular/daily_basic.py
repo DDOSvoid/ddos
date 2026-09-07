@@ -50,9 +50,7 @@ def _sha256_file(path: Path) -> str:
 def _save_json_atomic(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
     temporary.replace(path)
 
 
@@ -100,9 +98,7 @@ def normalize_daily_basic_frame(
     normalized["trade_date"] = pd.to_datetime(
         normalized["trade_date"], format="%Y%m%d", errors="raise"
     )
-    normalized = normalized.sort_values("trade_date", kind="mergesort").reset_index(
-        drop=True
-    )
+    normalized = normalized.sort_values("trade_date", kind="mergesort").reset_index(drop=True)
     if normalized["trade_date"].duplicated().any():
         raise ValueError("daily_basic response contains duplicate trade dates")
     trade_dates = normalized["trade_date"].dt.date
@@ -177,11 +173,7 @@ def download_daily_basic_train(
         "fields": list(DAILY_BASIC_FIELDS),
         "availability_rule": "trade_date 18:00 Asia/Shanghai",
     }
-    state = (
-        json.loads(state_path.read_text(encoding="utf-8"))
-        if state_path.exists()
-        else {}
-    )
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
     if state.get("selection") not in (None, selection):
         raise ValueError("daily_basic state selection does not match this run")
     completed = dict(state.get("completed", {}))
@@ -254,4 +246,7 @@ def download_daily_basic_train(
             f"completed={len(completed)}; failures={len(failures)}",
             flush=True,
         )
+    if not failures and len(completed) == len(selected_codes):
+        state.setdefault("finished_at_utc", datetime.now(UTC).isoformat())
+        _save_json_atomic(state_path, state)
     return state

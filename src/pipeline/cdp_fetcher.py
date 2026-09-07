@@ -5,9 +5,9 @@
 
 实现原理:
   - 用 Playwright 启动系统 Chrome（channel="chrome"，不下载浏览器）
-  - 固定停留在东财公告页 `data.eastmoney.com/notices/` 建立同源上下文
-  - 列表与正文都通过 `page.evaluate(fetch)` 在**浏览器内部**请求 API
-    （真实 UA / cookie / origin / TLS 指纹），拿到与 HTTP 版完全一致的结构化 JSON
+  - 用 DoH 取得正文域名的真实公网 IP，绕过本机透明代理的 Fake-IP
+  - 列表与正文通过 Chrome 页面导航请求 API，避开跨域 fetch 的 CORS 限制
+  - 读取 Chrome 收到的 JSON 响应，产出与 HTTP 版一致的结构化数据
 
 用法:
     client = CdpEastmoneyClient()
@@ -17,29 +17,54 @@
 """
 
 import atexit
+import ipaddress
 import time
-from typing import Optional
+from pathlib import Path
 from urllib.parse import urlencode
 
+import requests
 from loguru import logger
 
 from src.config import config
 
 # 正文 API（与 EastmoneyClient.fetch_announcement_content 一致）
 _CONTENT_URL = "https://np-cnotice-stock.eastmoney.com/api/content/ann"
-# 固定停留页：用于建立 data.eastmoney.com 同源上下文，浏览器内 fetch 才不跨域
+_CONTENT_HOST = "np-cnotice-stock.eastmoney.com"
+_DNS_OVER_HTTPS_URLS = (
+    "https://cloudflare-dns.com/dns-query",
+    "https://dns.alidns.com/resolve",
+    "https://dns.google/resolve",
+)
+# 启动页：用于建立正常的东方财富浏览器上下文。
 _HOME_URL = "https://data.eastmoney.com/notices/"
 
-# 浏览器内 fetch 的 JS 片段：请求 URL 并解析 JSON。
-# 注意: 不能带 credentials: "include" —— 跨域 fetch 时服务端若不返回
-# Access-Control-Allow-Credentials 会直接 Failed to fetch（CORS 拦截）。
-_FETCH_JSON_JS = """
-async (url) => {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error("HTTP " + r.status);
-  return await r.json();
-}
-"""
+
+def _resolve_public_ipv4(host: str, *, timeout_seconds: int = 10) -> str:
+    """Resolve a public IPv4 through redundant DoH, bypassing fake-IP DNS."""
+    session = requests.Session()
+    session.trust_env = False
+    errors: list[str] = []
+    for endpoint in _DNS_OVER_HTTPS_URLS:
+        try:
+            response = session.get(
+                endpoint,
+                params={"name": host, "type": "A"},
+                headers={"Accept": "application/dns-json"},
+                timeout=timeout_seconds,
+            )
+            response.raise_for_status()
+            for answer in response.json().get("Answer") or []:
+                if int(answer.get("type") or 0) != 1:
+                    continue
+                candidate = ipaddress.ip_address(str(answer.get("data") or ""))
+                if candidate.version == 4 and candidate.is_global:
+                    return str(candidate)
+            errors.append(f"{endpoint}: no public IPv4")
+        except (requests.RequestException, TypeError, ValueError) as error:
+            errors.append(f"{endpoint}: {type(error).__name__}: {error}")
+            logger.warning(f"CDP DoH endpoint failed for {host}: {endpoint}: {error}")
+    detail = "; ".join(errors)
+    raise RuntimeError(f"all DoH endpoints failed for {host}: {detail}")
 
 
 class CdpEastmoneyClient:
@@ -48,15 +73,56 @@ class CdpEastmoneyClient:
     浏览器**懒启动**：首次网络调用时才拉起 Chrome，`close()` 负责回收。
     """
 
-    def __init__(self, headless: bool = True, timeout_ms: int = 30000) -> None:
+    def __init__(
+        self,
+        headless: bool = True,
+        timeout_ms: int = 30000,
+        *,
+        rate_limit_per_minute: int | None = None,
+        bypass_system_proxy: bool = True,
+        content_max_retries: int = 4,
+        content_retry_backoff_seconds: float = 10.0,
+        page_cache_root: Path | None = None,
+    ) -> None:
         self.base_url = config.eastmoney.base_url
         self.headless = headless
         self.timeout_ms = timeout_ms
-        self._min_interval = 60.0 / max(1, config.eastmoney.rate_limit_per_minute)
+        requests_per_minute = (
+            config.eastmoney.rate_limit_per_minute
+            if rate_limit_per_minute is None
+            else rate_limit_per_minute
+        )
+        self._min_interval = 60.0 / max(1, requests_per_minute)
+        self.bypass_system_proxy = bypass_system_proxy
+        self._content_max_retries = max(1, content_max_retries)
+        self._content_retry_backoff_seconds = max(
+            0.0, content_retry_backoff_seconds
+        )
         self._last_call: float = 0.0
         self._playwright = None
         self._browser = None
-        self._page: Optional[object] = None
+        self._page: object | None = None
+        self._content_host_ip: str | None = None
+        self.page_cache_root = page_cache_root
+
+    def _ensure_direct_host_mapping(self) -> None:
+        if not self.bypass_system_proxy or self._content_host_ip is not None:
+            return
+        self._content_host_ip = _resolve_public_ipv4(_CONTENT_HOST)
+        logger.info(f"CDP direct DNS: {_CONTENT_HOST} -> {self._content_host_ip}")
+
+    def _launch_options(self) -> dict:
+        options = {"headless": self.headless}
+        if self.bypass_system_proxy:
+            # This browser is dedicated to Eastmoney. Avoid inheriting the
+            # Windows WinINET proxy, which can independently drop API tunnels.
+            options["args"] = ["--no-proxy-server"]
+            if self._content_host_ip:
+                options["args"].append(
+                    "--host-resolver-rules="
+                    f"MAP {_CONTENT_HOST} {self._content_host_ip}"
+                )
+        return options
 
     # ── 浏览器生命周期（懒启动） ──────────────────────────────
 
@@ -67,15 +133,17 @@ class CdpEastmoneyClient:
         # 延迟导入：非 CDP 场景（http 后端 / 单元测试）不强制要求安装 playwright
         from playwright.sync_api import sync_playwright
 
+        self._ensure_direct_host_mapping()
         self._playwright = sync_playwright().start()
+        launch_options = self._launch_options()
         try:
             self._browser = self._playwright.chromium.launch(
-                channel="chrome", headless=self.headless,
+                channel="chrome", **launch_options,
             )
         except Exception as e:
             # 系统 Chrome 不可用（版本过旧等）时回退到 Playwright 自带 chromium
             logger.warning(f"CDP 用系统 Chrome 启动失败({e})，回退 Playwright chromium")
-            self._browser = self._playwright.chromium.launch(headless=self.headless)
+            self._browser = self._playwright.chromium.launch(**launch_options)
 
         self._page = self._browser.new_page()
         self._page.goto(_HOME_URL, timeout=self.timeout_ms, wait_until="domcontentloaded")
@@ -86,12 +154,16 @@ class CdpEastmoneyClient:
 
     def close(self) -> None:
         """关闭浏览器，释放资源（幂等）。"""
-        for obj in (self._browser, self._playwright):
-            try:
-                if obj is not None:
-                    obj.close()
-            except Exception:
-                pass
+        try:
+            if self._browser is not None:
+                self._browser.close()
+        except Exception:
+            pass
+        try:
+            if self._playwright is not None:
+                self._playwright.stop()
+        except Exception:
+            pass
         self._playwright = self._browser = self._page = None
 
     def __enter__(self) -> "CdpEastmoneyClient":
@@ -109,16 +181,38 @@ class CdpEastmoneyClient:
         self._last_call = time.time()
 
     def _fetch_json(self, url: str) -> dict:
-        """在页面上下文内用浏览器 fetch 请求 API 并解析 JSON。"""
+        """Navigate Chrome to an API URL and parse its JSON response."""
         page = self._ensure_page()
         try:
             self._rate_limit()
-            return page.evaluate(_FETCH_JSON_JS, url)
+            response = page.goto(
+                url,
+                timeout=self.timeout_ms,
+                wait_until="domcontentloaded",
+            )
+            if response is None:
+                raise RuntimeError("CDP navigation returned no response")
+            if not response.ok:
+                raise RuntimeError(f"HTTP {response.status}")
+            return response.json()
         except Exception as e:
             logger.warning(f"CDP fetch 失败: {url}: {e}")
             raise
 
     # ── 与 EastmoneyClient 同构的公开接口 ────────────────────
+
+    def fetch_binary(
+        self, url: str, *, timeout_ms: int = 90000
+    ) -> tuple[bytes, str | None]:
+        """Fetch an attachment through the CDP client's direct network context."""
+        page = self._ensure_page()
+        self._rate_limit()
+        response = page.request.get(
+            url,
+            timeout=timeout_ms,
+            fail_on_status_code=True,
+        )
+        return response.body(), response.headers.get("content-type")
 
     def fetch_announcements(
         self,
@@ -184,6 +278,8 @@ class CdpEastmoneyClient:
 
         pages = []
         expected_pages = 1
+        page_cache = None
+        cache_hits = 0
         try:
             for page_index in range(1, 501):
                 query = {
@@ -192,7 +288,33 @@ class CdpEastmoneyClient:
                     "page_index": page_index,
                 }
                 url = f"{_CONTENT_URL}?{urlencode(query)}"
-                payload = self._fetch_json(url)
+                payload = None
+                if page_cache is not None and page_index > 1:
+                    cached = page_cache.read(page_index)
+                    if cached is not None:
+                        pages.append(cached)
+                        cache_hits += 1
+                        if page_index >= expected_pages:
+                            break
+                        continue
+                for attempt in range(1, self._content_max_retries + 1):
+                    try:
+                        payload = self._fetch_json(url)
+                        break
+                    except Exception as error:
+                        if attempt >= self._content_max_retries:
+                            raise
+                        delay = self._content_retry_backoff_seconds * attempt
+                        error_text = str(error)
+                        if "HTTP 429" in error_text or "HTTP 567" in error_text:
+                            delay = max(delay, 120.0)
+                        logger.warning(
+                            f"Retrying CDP announcement content {art_code} page "
+                            f"{page_index} after {delay:.1f}s"
+                        )
+                        self.close()
+                        time.sleep(delay)
+                assert payload is not None
                 data = payload.get("data") or {}
                 if not data:
                     break
@@ -201,8 +323,16 @@ class CdpEastmoneyClient:
                     expected_pages = expected_content_pages(data)
                     if expected_pages > 500:
                         raise ValueError("unreasonable content page count")
+                    if self.page_cache_root is not None:
+                        from src.pipeline.content_page_cache import ContentPageCache
+
+                        page_cache = ContentPageCache(self.page_cache_root, art_code, data)
+                if page_cache is not None:
+                    page_cache.write(page_index, data)
                 if page_index >= expected_pages:
                     break
-        except Exception:
-            pass
+        except Exception as error:
+            logger.warning(f"CDP content API error for {art_code}: {error}")
+        if cache_hits:
+            logger.info(f"CDP content checkpoint {art_code}: reused {cache_hits} pages")
         return assemble_content_pages(pages, expected_pages=expected_pages)

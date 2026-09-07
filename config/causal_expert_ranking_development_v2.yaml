@@ -1,0 +1,70 @@
+contract: causal-expert-ranking-development-v2
+parent_contract: causal-multimodel-development-v1
+parent_contract_path: config/causal_model_development.yaml
+parent_contract_sha256: 0c56996149f50868128081101259c0fc933ecaa12e996c0e449aa9cc15d236f5
+split_contract: causal-impact-split-v2
+status: active_research
+
+inherited_without_change:
+  - timezone_and_daily_preopen_decision_point
+  - point_in_time_feature_rules
+  - expanding_window_date_folds
+  - sealed_official_test
+  - quarantine_and_forward_validation_boundaries
+  - append_only_prediction_evidence
+
+product_scope:
+  universe: all_a_share_stocks_with_eligible_preopen_announcements
+  no_announcement_stocks_in_v1: false
+  output_granularity: one_stock_prediction_date_horizon
+  horizons_sessions: [1, 3, 5]
+  primary_decision: daily_cross_sectional_ranking
+  individual_stock_output_is_ranked_candidate_detail: true
+
+expert_contract:
+  names: [text, tabular, timeseries]
+  role: specialist_signal_provider
+  required_hard_gates:
+    - point_in_time_integrity
+    - source_and_version_provenance
+    - explicit_availability_and_abstention
+    - deterministic_company_day_identity
+  standalone_direction_return_and_risk_pass_required: false
+  standalone_heads_role: diagnostic_only
+  value_gate: incremental_oof_gain_in_fusion_drop_one_ablation
+  invalid_or_leaky_expert_may_enter_fusion: false
+
+fusion_contract:
+  role: sole_production_prediction_and_ranking_owner
+  fit_inputs: prior_component_oof_predictions_only
+  first_baseline: equal_weight
+  first_trainable_model: nonnegative_static_stack
+  first_ranking_model: lightgbm_lambdarank
+  dynamic_gate_status: blocked_until_static_fusion_increment_passes
+  missing_expert_policy: explicit_mask_and_reweight_available_only
+
+ranking_contract:
+  query_group: eligible_entry_date
+  target: future_excess_return
+  utility: expected_excess_return_minus_risk_penalty_minus_cost
+  primary_metrics:
+    - daily_spearman_rank_ic
+    - top_k_mean_excess_return
+    - top_k_spread_over_remainder
+    - cost_adjusted_top_k_return
+    - precision_at_k
+    - turnover
+    - coverage
+  top_k: [5, 10, 20]
+  point_prediction_metrics_are_supporting_only: true
+
+release_policy:
+  expert_integrity_gates_must_all_pass: true
+  fusion_must_beat_best_single_component: true
+  fusion_must_beat_equal_weight: true
+  top_k_cost_adjusted_return_must_be_positive: true
+  top_k_spread_must_be_positive: true
+  official_test_read_before_freeze: false
+  strict_oos_2026_contract: config/strict_oos_2026_v1.yaml
+  strict_oos_2026_outcomes_read_before_prediction_lock: false
+  strict_oos_2026_is_one_time_evaluation: true

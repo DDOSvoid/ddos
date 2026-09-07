@@ -1,0 +1,81 @@
+contract: causal-electrical-equipment-ranking-pilot-v1
+parent_data_contract: causal-event-ranking-data-download-v1
+development_contract: causal-expert-ranking-development-v2
+status: active_research_pilot
+
+purpose:
+  decision: >-
+    Test whether three causal expert signals and a static fusion ranker have
+    enough incremental value to justify the all-A-share acquisition.
+  claim_limit: electrical_equipment_sector_feasibility_only
+  all_a_share_generalization_allowed: false
+
+universe:
+  industry_source: companies.industry
+  industry_value: "电气设备"
+  selection_semantics: current_vendor_industry_snapshot_research_pilot_only
+  survivorship_free_industry_claim_allowed: false
+  include_only_auto_accepted_core_events: true
+
+dates:
+  market_prehistory_start: "2022-09-01"
+  train_start: "2023-01-01"
+  train_end: "2024-12-31"
+  official_test_start: "2025-01-01"
+  forward_validation_start: "2026-01-01"
+
+cross_section_sample:
+  unit: eligible_announcement_date
+  quarters: 8
+  dates_per_quarter: 12
+  minimum_companies_per_date: 20
+  date_selection: deterministic_even_spacing_without_outcomes
+  include_all_eligible_companies_on_selected_dates: true
+  include_all_core_documents_for_selected_company_days: true
+  expected_selected_dates: 96
+
+pdf_audit:
+  per_quarter_subcategory: 1
+  maximum_pdfs: 200
+
+download_order:
+  - sampled_announcement_bodies
+  - sampled_pdf_audit
+  - sector_stock_and_benchmark_daily_prices
+  - sampled_train_labels
+  - sector_daily_basic
+  - sector_point_in_time_company_industry_and_financials
+
+validation:
+  identity: company_day_horizon
+  horizons_sessions: [1, 3, 5]
+  random_split_allowed: false
+  expanding_time_folds_required: true
+  component_oof_only: true
+  first_fusion_models:
+    - equal_weight_available
+    - chronological_nonnegative_static_stack
+  pass_requires:
+    - fusion_beats_best_single_expert
+    - fusion_beats_equal_weight
+    - positive_cost_adjusted_top_k_return
+    - positive_top_k_spread
+    - stable_direction_across_time_folds
+
+sealed_data_policy:
+  official_test_features_allowed: false
+  official_test_labels_allowed: false
+  quarantine_allowed: false
+  forward_validation_features_allowed: false
+  forward_validation_labels_allowed: false
+  strict_oos_contract: config/strict_oos_2026_v1.yaml
+
+artifacts:
+  root: data/backfills/event_ranking_pilot_electrical_v1
+  validation_root: data/validation/event_ranking_pilot_electrical_v1
+  universe: data/backfills/event_ranking_pilot_electrical_v1/train_universe.json
+  body_plan: data/backfills/event_ranking_pilot_electrical_v1/body_plan.json
+  pdf_plan: data/backfills/event_ranking_pilot_electrical_v1/pdf_plan.json
+  manifest: data/backfills/event_ranking_pilot_electrical_v1/manifest.json
+  raw_files_are_append_only: true
+  resumable_state_required: true

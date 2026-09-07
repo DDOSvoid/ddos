@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import UTC, date, datetime, timedelta
@@ -19,7 +20,7 @@ from src.database.models import Company
 from src.database.repository import AnnouncementRepository, CompanyRepository
 from src.pipeline.fetcher import EastmoneyClient, Fetcher
 
-CONTRACT = "historical-announcement-backfill-v1"
+CONTRACT = "historical-announcement-backfill-v2"
 
 
 def month_ranges(start: date, end: date) -> list[tuple[date, date]]:
@@ -47,16 +48,34 @@ def _write_state(path: Path, state: dict) -> None:
     temporary.replace(path)
 
 
-def _load_state(path: Path, start: date, end: date) -> dict:
+def _load_state(
+    path: Path,
+    start: date,
+    end: date,
+    *,
+    universe_sha256: str,
+    company_count: int,
+    batch_size: int,
+    max_pages: int,
+    limit_companies: int,
+) -> dict:
     if path.exists():
         with open(path, encoding="utf-8") as file:
             state = json.load(file)
         if state.get("contract") != CONTRACT:
             raise ValueError(f"unknown state contract: {state.get('contract')}")
-        if state.get("start_date") != start.isoformat() or state.get(
-            "end_date"
-        ) != end.isoformat():
+        if state.get("start_date") != start.isoformat() or state.get("end_date") != end.isoformat():
             raise ValueError("state date range does not match command")
+        expected = {
+            "universe_sha256": universe_sha256,
+            "company_count": company_count,
+            "batch_size": batch_size,
+            "max_pages": max_pages,
+            "limit_companies": limit_companies,
+        }
+        for key, value in expected.items():
+            if state.get(key) != value:
+                raise ValueError(f"state {key} does not match current download")
         return state
     return {
         "contract": CONTRACT,
@@ -64,6 +83,11 @@ def _load_state(path: Path, start: date, end: date) -> dict:
         "end_date": end.isoformat(),
         "created_at": datetime.now(UTC).isoformat(),
         "metadata_only": True,
+        "universe_sha256": universe_sha256,
+        "company_count": company_count,
+        "batch_size": batch_size,
+        "max_pages": max_pages,
+        "limit_companies": limit_companies,
         "completed_segments": {},
         "totals": {
             "api_items": 0,
@@ -128,17 +152,27 @@ def backfill(
     config.eastmoney.rate_limit_per_minute = rate_limit
     client = EastmoneyClient()
     engine = get_engine()
-    state = _load_state(state_path, start, end)
-    completed = state["completed_segments"]
 
     with Session(engine) as session:
         companies = CompanyRepository.get_tracked(session)
         companies.sort(key=lambda item: item.stock_code)
         if limit_companies > 0:
             companies = companies[:limit_companies]
-        company_by_short_code = {
-            company.stock_code.split(".")[0]: company for company in companies
-        }
+        universe_sha256 = hashlib.sha256(
+            "\n".join(company.stock_code for company in companies).encode("utf-8")
+        ).hexdigest()
+        state = _load_state(
+            state_path,
+            start,
+            end,
+            universe_sha256=universe_sha256,
+            company_count=len(companies),
+            batch_size=batch_size,
+            max_pages=max_pages,
+            limit_companies=limit_companies,
+        )
+        completed = state["completed_segments"]
+        company_by_short_code = {company.stock_code.split(".")[0]: company for company in companies}
 
         batches = [
             companies[offset : offset + batch_size]
@@ -151,8 +185,7 @@ def backfill(
             for batch_index, batch in enumerate(batches):
                 segment_number += 1
                 segment_key = (
-                    f"{period_start.isoformat()}_{period_end.isoformat()}_"
-                    f"batch-{batch_index:03d}"
+                    f"{period_start.isoformat()}_{period_end.isoformat()}_batch-{batch_index:03d}"
                 )
                 if segment_key in completed:
                     continue
@@ -162,6 +195,8 @@ def backfill(
                     start_date=period_start.isoformat(),
                     end_date=period_end.isoformat(),
                     max_pages=max_pages,
+                    raise_on_error=True,
+                    max_attempts=4,
                 )
                 records, unmatched = _records_from_items(items, company_by_short_code)
                 new_count = AnnouncementRepository.bulk_upsert(session, records)

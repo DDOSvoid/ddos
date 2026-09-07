@@ -1,0 +1,92 @@
+contract: causal-event-driven-expert-fusion-ranking-v1
+development_contract: causal-expert-ranking-development-v2
+split_contract: causal-impact-split-v2
+status: research_only
+
+scope:
+  universe: event_driven_company_days
+  description: >-
+    Rank A-share stocks with at least one eligible announcement available at
+    the daily pre-open decision point. Stocks without an eligible announcement
+    are outside v1.
+  decision_point: daily_preopen
+  local_time: "08:30:00"
+  identity: stock_code_prediction_as_of_horizon
+  horizons_sessions: [1, 3, 5]
+
+experts:
+  required_names: [text, tabular, timeseries]
+  required_outputs:
+    - expert_signal
+    - quality_score
+    - available
+    - abstain_reason
+    - data_as_of
+    - evidence_sha256
+  optional_diagnostic_outputs:
+    - bullish_probability
+    - expected_excess_return
+    - risk_scale
+  standalone_full_prediction_gate_required: false
+  integrity_gate_required: true
+  incremental_value_rule: drop_one_expert_oof_ablation
+
+fusion:
+  input_prediction_type: component_out_of_fold_only
+  join_policy: union_with_explicit_availability_masks
+  minimum_available_experts: 1
+  primary_target: future_excess_return
+  auxiliary_targets:
+    - bullish_direction
+    - future_absolute_excess_return
+  baseline_models:
+    - equal_weight_available_diagnostic_returns
+    - chronological_nonnegative_static_stack
+  ranking_candidate: lightgbm_lambdarank
+  dynamic_gating_allowed: false
+  outputs:
+    - bullish_probability
+    - expected_excess_return
+    - risk_scale
+    - rank_score
+    - component_contributions
+    - available_experts
+    - abstain_reason
+
+ranking:
+  group_by: eligible_entry_date
+  descending: true
+  score_formula: expected_excess_return_minus_risk_and_cost
+  risk_aversion: 0.50
+  round_trip_cost_bps: 20
+  top_k: [5, 10, 20]
+  required_metrics:
+    - daily_spearman_rank_ic
+    - precision_at_k
+    - top_k_mean_excess_return
+    - top_k_spread_over_remainder
+    - cost_adjusted_top_k_return
+    - turnover
+    - coverage
+  production_requires_positive_top_k_spread: true
+  production_requires_positive_cost_adjusted_top_k_return: true
+
+validation:
+  random_split_allowed: false
+  meta_model_fit_uses_prior_component_oof_only: true
+  development_dataset_role: train
+  development_end: "2024-12-31"
+  development_labels_require_explicit_role: true
+  official_test_allowed_before_freeze: false
+  quarantine_allowed: false
+  forward_validation_training_allowed: false
+  strict_oos_contract: config/strict_oos_2026_v1.yaml
+  strict_oos_start: "2026-01-01"
+  strict_oos_features_allowed_before_system_freeze: false
+  strict_oos_outcomes_allowed_before_prediction_lock: false
+
+storage:
+  expert_signals_append_only: true
+  fused_predictions_append_only: true
+  prediction_granularity: company_day_horizon
+  legacy_announcement_prediction_is_production_ranking: false

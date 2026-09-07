@@ -33,6 +33,7 @@ from src.utils.text_utils import clean_chinese_text
 @dataclass
 class RawAnnouncement:
     """原始公告数据（中间格式）。"""
+
     announcement_id: str
     stock_code: str
     title: str
@@ -85,8 +86,10 @@ class TushareClient:
                 return pd.DataFrame()
             except Exception as e:
                 if attempt < max_retries - 1:
-                    wait = 2 ** attempt
-                    logger.warning(f"Tushare {func_name} attempt {attempt + 1} failed: {e}, retry in {wait}s")
+                    wait = 2**attempt
+                    logger.warning(
+                        f"Tushare {func_name} attempt {attempt + 1} failed: {e}, retry in {wait}s"
+                    )
                     time.sleep(wait)
                 else:
                     logger.error(f"Tushare {func_name} failed after {max_retries} attempts: {e}")
@@ -95,7 +98,8 @@ class TushareClient:
 
     def get_stock_basic(self, exchange: str = "") -> "pd.DataFrame":
         """获取全部 A 股基础信息。"""
-        return self._call("stock_basic",
+        return self._call(
+            "stock_basic",
             exchange=exchange,
             list_status="L",
             fields="ts_code,symbol,name,area,industry,list_date",
@@ -111,7 +115,8 @@ class TushareClient:
 
         返回: ts_code, ann_date, end_date, pre_date, actual_date, modify_date
         """
-        return self._call("disclosure",
+        return self._call(
+            "disclosure",
             ts_code=ts_code,
             start_date=start_date,
             end_date=end_date,
@@ -206,20 +211,20 @@ class EastmoneyClient:
     ):
         self.base_url = config.eastmoney.base_url
         self.session = requests.Session()
-        self.session.headers.update({
-            "User-Agent": config.eastmoney.user_agent,
-            "Accept": "application/json, text/plain, */*",
-            "Referer": "https://data.eastmoney.com/",
-        })
+        self.session.headers.update(
+            {
+                "User-Agent": config.eastmoney.user_agent,
+                "Accept": "application/json, text/plain, */*",
+                "Referer": "https://data.eastmoney.com/",
+            }
+        )
         rate_limit = rate_limit_per_minute or config.eastmoney.rate_limit_per_minute
         if rate_limit <= 0:
             raise ValueError("rate_limit_per_minute must be positive")
         self._min_interval = 60.0 / rate_limit
         self._last_call: float = 0.0
         self._content_max_retries = max(int(content_max_retries), 1)
-        self._content_retry_backoff_seconds = max(
-            float(content_retry_backoff_seconds), 0.0
-        )
+        self._content_retry_backoff_seconds = max(float(content_retry_backoff_seconds), 0.0)
 
     def _rate_limit(self) -> None:
         elapsed = time.time() - self._last_call
@@ -235,6 +240,8 @@ class EastmoneyClient:
         page_size: int = 50,
         page_index: int = 1,
         ann_type: str = "A",
+        raise_on_error: bool = False,
+        max_attempts: int = 1,
     ) -> dict:
         """获取公告列表。
 
@@ -261,14 +268,33 @@ class EastmoneyClient:
         if end_date:
             params["end_time"] = end_date
 
-        self._rate_limit()
-        try:
-            resp = self.session.get(self.base_url, params=params, timeout=30)
-            resp.raise_for_status()
-            return resp.json()
-        except Exception as e:
-            logger.error(f"Eastmoney API error: {e}")
-            return {"data": {"list": []}}
+        attempts = max(int(max_attempts), 1)
+        for attempt in range(1, attempts + 1):
+            self._rate_limit()
+            try:
+                resp = self.session.get(self.base_url, params=params, timeout=30)
+                resp.raise_for_status()
+                return resp.json()
+            except Exception as error:
+                if attempt < attempts:
+                    wait = min(2**attempt, 30)
+                    logger.warning(
+                        "Eastmoney announcement page {}/{} failed on attempt {}/{}: {}; "
+                        "retrying in {}s",
+                        page_index,
+                        stock_code,
+                        attempt,
+                        attempts,
+                        error,
+                        wait,
+                    )
+                    time.sleep(wait)
+                    continue
+                logger.error(f"Eastmoney API error: {error}")
+                if raise_on_error:
+                    raise
+                return {"data": {"list": []}}
+        raise AssertionError("unreachable Eastmoney retry state")
 
     def fetch_all_announcements(
         self,
@@ -276,6 +302,8 @@ class EastmoneyClient:
         start_date: str = "",
         end_date: str = "",
         max_pages: int = 20,
+        raise_on_error: bool = False,
+        max_attempts: int = 1,
     ) -> list[dict]:
         """分页获取全部公告。
 
@@ -289,6 +317,8 @@ class EastmoneyClient:
                 start_date=start_date,
                 end_date=end_date,
                 page_index=page,
+                raise_on_error=raise_on_error,
+                max_attempts=max_attempts,
             )
             data = result.get("data", {})
             items = data.get("list", []) if isinstance(data, dict) else []
@@ -358,8 +388,7 @@ class EastmoneyClient:
                     expected_pages = expected_content_pages(data)
                     if expected_pages > 500:
                         raise ValueError(
-                            f"unreasonable content page count for {art_code}: "
-                            f"{expected_pages}"
+                            f"unreasonable content page count for {art_code}: {expected_pages}"
                         )
                 if page_index >= expected_pages:
                     break
@@ -408,6 +437,7 @@ class Fetcher:
         # 按配置选择公告抓取后端: http=requests / cdp=Playwright 驱动 Chrome
         if config.pipeline.fetch_backend == "cdp":
             from src.pipeline.cdp_fetcher import CdpEastmoneyClient
+
             self.em = CdpEastmoneyClient()
         else:
             self.em = EastmoneyClient()
@@ -438,7 +468,9 @@ class Fetcher:
             # fetch_max_stocks: 0=全部，>0 则只取前 N 只（配置驱动，替代硬编码 10）
             max_stocks = config.pipeline.fetch_max_stocks
             codes = tracked_codes[:max_stocks] if max_stocks > 0 else tracked_codes
-            logger.info(f"Processing {len(codes)} tracked companies (fetch_max_stocks={max_stocks or 'all'})")
+            logger.info(
+                f"Processing {len(codes)} tracked companies (fetch_max_stocks={max_stocks or 'all'})"
+            )
 
             # 2. 从东方财富获取公告（边抓边存：每家公司完成后立即提交，
             #    暂停/中断时已抓部分不丢，重启幂等续跑）
@@ -477,13 +509,11 @@ class Fetcher:
                         if config.pipeline.fetch_full_text and art_code:
                             content = self.em.fetch_announcement_content(art_code)
                             if content.get("_content_complete", True):
-                                raw.full_text = (
-                                    clean_chinese_text(content.get("notice_content", ""))
-                                    or item.get("notice_content", "")
-                                )
-                                raw.pdf_url = (
-                                    content.get("attach_url_web")
-                                    or content.get("attach_url")
+                                raw.full_text = clean_chinese_text(
+                                    content.get("notice_content", "")
+                                ) or item.get("notice_content", "")
+                                raw.pdf_url = content.get("attach_url_web") or content.get(
+                                    "attach_url"
                                 )
                             else:
                                 logger.warning(
@@ -499,16 +529,18 @@ class Fetcher:
                         company_id = company_id_map.get(raw.stock_code)
                         if company_id is None:
                             continue
-                        stock_records.append({
-                            "company_id": company_id,
-                            "announcement_id": raw.announcement_id,
-                            "title": raw.title,
-                            "full_text": raw.full_text,
-                            "pdf_url": raw.pdf_url,
-                            "published_date": raw.published_date or target_date,
-                            "source_url": raw.source_url,
-                            "processing_status": "fetched",
-                        })
+                        stock_records.append(
+                            {
+                                "company_id": company_id,
+                                "announcement_id": raw.announcement_id,
+                                "title": raw.title,
+                                "full_text": raw.full_text,
+                                "pdf_url": raw.pdf_url,
+                                "published_date": raw.published_date or target_date,
+                                "source_url": raw.source_url,
+                                "processing_status": "fetched",
+                            }
+                        )
                     # 边抓边存：每家公司立即入库并提交
                     if stock_records:
                         count += AnnouncementRepository.bulk_upsert(session, stock_records)

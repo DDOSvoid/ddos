@@ -8,9 +8,12 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from src.config import config
-from src.ml.classifier_wrapper import ClassificationResult
+
+if TYPE_CHECKING:
+    from src.ml.classifier_wrapper import ClassificationResult
 
 
 @dataclass(frozen=True)
@@ -554,9 +557,7 @@ class ClassificationDecisionEngine:
             "audit_report",
             "valuation_report",
         }
-        relevance = (
-            "supporting_document" if document_type in supporting_types else match.relevance
-        )
+        relevance = "supporting_document" if document_type in supporting_types else match.relevance
         return ClassificationDecision(
             major_category=match.major_category,
             sub_category=match.sub_category,
@@ -589,9 +590,7 @@ class ClassificationDecisionEngine:
                 and document_type not in supporting_types
             )
             relevance = (
-                "supporting_document"
-                if document_type in supporting_types
-                else match.relevance
+                "supporting_document" if document_type in supporting_types else match.relevance
             )
             return ClassificationDecision(
                 major_category=match.major_category,

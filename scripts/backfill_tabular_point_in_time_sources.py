@@ -32,16 +32,19 @@ def main() -> None:
         default="all",
     )
     parser.add_argument("--output-root", type=Path, default=root)
+    parser.add_argument(
+        "--universe-state",
+        type=Path,
+        default=(PROJECT_ROOT / "data" / "backfills" / "event_ranking_v1" / "train_universe.json"),
+    )
     parser.add_argument("--minimum-interval-seconds", type=float, default=0.32)
     args = parser.parse_args()
     contract = load_point_in_time_source_contract()
     split = load_prediction_split_contract()
     development = load_causal_development_contract(split=split)
     tabular = load_tabular_model_contract(split=split)
-    codes = load_train_universe(contract.universe_path)
-    client = TusharePointInTimeClient(
-        minimum_interval_seconds=args.minimum_interval_seconds
-    )
+    codes = load_train_universe(args.universe_state)
+    client = TusharePointInTimeClient(minimum_interval_seconds=args.minimum_interval_seconds)
     result = {}
     if args.group in ("company_industry", "all"):
         state = download_company_industry_sources(

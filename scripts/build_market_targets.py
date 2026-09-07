@@ -50,12 +50,14 @@ def build_targets(
     benchmark_code: str,
     horizons: tuple[int, ...],
     output: Path,
+    announcement_ids: frozenset[str] | None = None,
+    announcement_plan_sha256: str | None = None,
 ) -> dict:
     init_db()
     split = load_prediction_split_contract()
     engine = get_engine()
     with Session(engine) as session:
-        announcement_rows = (
+        announcement_query = (
             session.query(
                 Announcement.id,
                 Announcement.announcement_id,
@@ -63,26 +65,42 @@ def build_targets(
                 Company.stock_code,
             )
             .join(Company, Company.id == Announcement.company_id)
-            .order_by(Announcement.published_date, Announcement.id)
+            .filter(
+                Announcement.published_date >= split.train.start,
+                Announcement.published_date <= split.train.end,
+            )
+        )
+        if announcement_ids is not None:
+            if not announcement_ids:
+                raise ValueError("announcement plan is empty")
+            announcement_query = announcement_query.filter(
+                Announcement.announcement_id.in_(announcement_ids)
+            )
+        announcement_rows = announcement_query.order_by(
+            Announcement.published_date, Announcement.id
+        ).all()
+        if announcement_ids is not None and len(announcement_rows) != len(announcement_ids):
+            raise ValueError(
+                "announcement plan does not resolve one unique train row per external ID"
+            )
+        price_rows = (
+            session.query(DailyPrice)
+            .filter(DailyPrice.trade_date <= split.train.end)
+            .order_by(DailyPrice.instrument_code, DailyPrice.trade_date)
             .all()
         )
-        price_rows = session.query(DailyPrice).order_by(
-            DailyPrice.instrument_code, DailyPrice.trade_date
-        ).all()
 
     prices: dict[str, list[DailyPrice]] = defaultdict(list)
     for row in price_rows:
         prices[row.instrument_code].append(row)
-    price_dates = {
-        code: [row.trade_date for row in rows]
-        for code, rows in prices.items()
-    }
+    price_dates = {code: [row.trade_date for row in rows] for code, rows in prices.items()}
     benchmark = {row.trade_date: row for row in prices.get(benchmark_code, [])}
     if not benchmark:
         raise ValueError(f"benchmark prices missing: {benchmark_code}")
 
     target_rows = []
     pending = Counter()
+    excluded = Counter()
     role_counts: dict[str, Counter] = defaultdict(Counter)
     for announcement_id, external_id, published_date, stock_code in announcement_rows:
         stock_prices = prices.get(stock_code, [])
@@ -105,6 +123,9 @@ def build_targets(
             actual_direction = 1 if excess_return > 0 else -1 if excess_return < 0 else 0
             outcome_available_at = _available_at(exit_bar.trade_date)
             dataset_role = split.role_for(published_date, outcome_available_at)
+            if dataset_role != "train":
+                excluded[dataset_role] += 1
+                continue
             evidence = {
                 "announcement_id": external_id,
                 "stock_code": stock_code,
@@ -179,30 +200,33 @@ def build_targets(
         "exit_rule": "horizon-th stock trading session close",
         "target_rule": "stock return minus benchmark return; sign gives actual direction",
         "warning": "retrospective training targets, not historical predictions or accuracy",
+        "dataset_role": "train",
+        "official_test_queried": False,
+        "forward_validation_queried": False,
+        "announcement_selection": (
+            {
+                "mode": "explicit_train_only_plan",
+                "announcement_ids": len(announcement_ids),
+                "announcement_plan_sha256": announcement_plan_sha256,
+            }
+            if announcement_ids is not None
+            else {"mode": "all_train_announcements"}
+        ),
         "announcements": len(announcement_rows),
         "targets": len(target_rows),
         "by_horizon": {
             str(horizon): {
-                "matured": sum(
-                    counts[horizon] for counts in role_counts.values()
-                ),
+                "matured": sum(counts[horizon] for counts in role_counts.values()),
                 "pending": pending[horizon],
             }
             for horizon in horizons
         },
         "by_dataset_role": {
-            role: {
-                str(horizon): counts[horizon]
-                for horizon in horizons
-            }
+            role: {str(horizon): counts[horizon] for horizon in horizons}
             for role, counts in sorted(role_counts.items())
         },
-        "sealed_labels": [
-            "test",
-            "test_outcome_after_cutoff",
-            "quarantine",
-            "forward_validation",
-        ],
+        "excluded_after_role_check": dict(sorted(excluded.items())),
+        "sealed_labels": ["test", "quarantine", "forward_validation"],
         "label_visibility": (
             "report exposes row counts only; direction labels remain sealed until "
             "the pre-registered one-time evaluation"
@@ -224,14 +248,36 @@ def main() -> None:
         type=Path,
         default=Path("data/validation/market_targets_report.json"),
     )
+    parser.add_argument(
+        "--announcement-plan",
+        type=Path,
+        help="Optional train-only plan; limits target creation to its announcement_ids",
+    )
     args = parser.parse_args()
     horizons = tuple(sorted({int(value) for value in args.horizons.split(",")}))
     if not horizons or not set(horizons) <= {1, 3, 5}:
         raise ValueError("horizons must contain only 1, 3, 5")
+    announcement_ids = None
+    announcement_plan_sha256 = None
+    if args.announcement_plan:
+        plan_path = args.announcement_plan.resolve()
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        if plan.get("dataset_role") != "train":
+            parser.error("announcement plan must be train only")
+        if plan.get("official_test_queried") is not False:
+            parser.error("announcement plan must prove official_test_queried=false")
+        if plan.get("market_targets_queried") is not False:
+            parser.error("announcement plan must prove market_targets_queried=false")
+        if plan.get("forward_validation_queried") is not False:
+            parser.error("announcement plan must prove forward_validation_queried=false")
+        announcement_ids = frozenset(str(value) for value in plan["announcement_ids"])
+        announcement_plan_sha256 = hashlib.sha256(plan_path.read_bytes()).hexdigest()
     build_targets(
         benchmark_code=args.benchmark,
         horizons=horizons,
         output=args.output,
+        announcement_ids=announcement_ids,
+        announcement_plan_sha256=announcement_plan_sha256,
     )
 
 

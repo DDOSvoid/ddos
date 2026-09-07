@@ -1,0 +1,45 @@
+contract: strict-stock-ranking-oos-2026-v1
+status: sealed_before_system_freeze
+architecture_family: causal-event-driven-expert-fusion-ranking-v1
+
+window:
+  start: "2026-01-01"
+  end: "2026-12-31"
+
+development_boundary:
+  dataset_role: train
+  start: "2023-01-01"
+  end: "2024-12-31"
+  expert_oof_after_end_allowed: false
+  fusion_fit_after_end_allowed: false
+  ranking_evaluation_after_end_allowed: false
+
+pre_freeze_seal:
+  feature_rows_2026_allowed: false
+  realized_stock_returns_2026_allowed: false
+  market_direction_labels_2026_allowed: false
+  ranking_metrics_2026_allowed: false
+  aggregate_outcome_counts_2026_allowed: false
+
+post_freeze_protocol:
+  causal_feature_replay_allowed: true
+  models_and_fusion_must_be_content_hash_frozen_first: true
+  predictions_must_be_append_only_and_locked_before_outcome_access: true
+  outcome_access_allowed_before_all_predictions_locked: false
+  evaluation_count: 1
+  tuning_or_retraining_from_2026_results_allowed: false
+
+claim_scope:
+  allowed: strict_outcome_holdout_for_new_expert_fusion_architecture
+  repository_wide_never_touched_2026_claim_allowed: false
+  qualification: >-
+    Legacy files created before this architecture include 2026 announcement-only
+    classification audits and a market-target report exposing forward-validation
+    row counts. No 2026 stock-return values or ranking metrics are present in the
+    current database, and the new expert-fusion family must not read them before
+    its prediction ledger is frozen.
+
+legacy_evidence:
+  - data/validation/oot_20260820/predictions_locked.jsonl
+  - data/backfills/market_targets_split_v2_sealed.json
+

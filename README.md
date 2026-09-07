@@ -28,6 +28,27 @@ Disclosure-Driven Opportunity Scanner — A 股上市公司公告自动化分析
   Reporter ─── 每日 Markdown 报告（高影响事件可选 DeepSeek 深度分析）
 ```
 
+### 预测与选股研究架构
+
+规则评分日报仍可独立运行，但新的选股目标采用公司日级三专家融合：文本专家、表格专家和时序专家只提交带质量/拒判/证据的专业信号，融合模型统一输出 1/3/5 日预期超额收益、风险和每日股票排名。第一版只排列每日开盘前已有合格公告的 A 股，不覆盖无公告股票。
+
+机器合同和当前状态见 `docs/EXPERT_FUSION_RANKING_V1.md`。融合研究不会改变现有 `fetch,preprocess,classify,extract,score,report` 日报管线，正式模型通过 OOF、排序和官方测试门槛后才接入生产阶段。
+
+数据下载从无幸存者偏差的 `L/D/P` 股票池开始：
+
+```powershell
+# 建议使用项目虚拟环境
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+
+# TUSHARE_TOKEN 只写本地 .env 后运行正式股票池下载
+.venv\Scripts\python scripts/seed_database.py
+
+# 没有凭证时可先验证 11 只股票的公开公告下载链路
+.venv\Scripts\python scripts/seed_tracked_universe.py
+.venv\Scripts\python scripts/check_event_ranking_data.py --write-manifest
+```
+
 ## 快速开始
 
 ### 1. 环境准备
@@ -186,6 +207,9 @@ python scripts/calibrate_temperature.py --data data/labeled/combined.jsonl --mod
 > `--export` 默认从**全部状态**导出（管线跑完后公告状态已推进到 `reported`，旧的只导 `preprocessed` 会导出 0 条）；`--status preprocessed` 可指定只导某状态。合并阶段会拦截不在 `event_types.yaml` 里的类别值，避免错别字悄悄给模型加一个新类。
 
 ## 公告正文富化
+
+个股排序训练数据的顺序下载、断点状态和恢复方式见
+[`docs/EVENT_RANKING_DATA_QUEUE.md`](docs/EVENT_RANKING_DATA_QUEUE.md)。
 
 东方财富**列表接口**只返回元数据（标题/日期），正文为空。管线默认调用**内容接口**按 `art_code` 拉取正文与 PDF 链接，落库 `full_text` / `pdf_url`。
 

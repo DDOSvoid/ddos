@@ -3,9 +3,10 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-from src.config import config
+import requests
 
 import src.pipeline.fetcher as fetcher_mod
+from src.config import config
 
 
 def _make_client(page_mock=None):
@@ -16,6 +17,66 @@ def _make_client(page_mock=None):
     client._min_interval = 0.0  # 关掉速率限制，避免测试 sleep
     client._page = page_mock if page_mock is not None else MagicMock()
     return client
+
+
+def _response(payload):
+    response = MagicMock()
+    response.ok = True
+    response.json.return_value = payload
+    return response
+
+
+def test_cdp_launch_bypasses_system_proxy_by_default():
+    from src.pipeline.cdp_fetcher import CdpEastmoneyClient
+
+    client = CdpEastmoneyClient(content_max_retries=1)
+    assert client._launch_options()["args"] == ["--no-proxy-server"]
+
+
+def test_cdp_launch_can_inherit_system_proxy_explicitly():
+    from src.pipeline.cdp_fetcher import CdpEastmoneyClient
+
+    client = CdpEastmoneyClient(bypass_system_proxy=False)
+    assert "args" not in client._launch_options()
+
+
+def test_cdp_launch_pins_content_host_to_public_dns(monkeypatch):
+    import src.pipeline.cdp_fetcher as cdp_module
+
+    monkeypatch.setattr(
+        cdp_module, "_resolve_public_ipv4", lambda host: "43.159.109.234"
+    )
+    client = cdp_module.CdpEastmoneyClient()
+    client._ensure_direct_host_mapping()
+
+    assert client._launch_options()["args"] == [
+        "--no-proxy-server",
+        "--host-resolver-rules=MAP np-cnotice-stock.eastmoney.com 43.159.109.234",
+    ]
+
+
+def test_public_dns_falls_back_to_next_doh_endpoint(monkeypatch):
+    import src.pipeline.cdp_fetcher as cdp_module
+
+    session = MagicMock()
+    session.get.side_effect = [
+        requests.exceptions.SSLError("first endpoint unavailable"),
+        MagicMock(
+            raise_for_status=MagicMock(),
+            json=MagicMock(
+                return_value={"Answer": [{"type": 1, "data": "43.159.109.234"}]}
+            ),
+        ),
+    ]
+    monkeypatch.setattr(cdp_module.requests, "Session", lambda: session)
+
+    assert cdp_module._resolve_public_ipv4("np-cnotice-stock.eastmoney.com") == (
+        "43.159.109.234"
+    )
+    assert session.trust_env is False
+    assert [call.args[0] for call in session.get.call_args_list] == list(
+        cdp_module._DNS_OVER_HTTPS_URLS[:2]
+    )
 
 
 def _sample_list_json(page_index=1, total_hits=3):
@@ -41,7 +102,7 @@ class TestCdpFetchAnnouncements:
 
     def test_fetch_announcements_parses(self):
         page = MagicMock()
-        page.evaluate.return_value = _sample_list_json()
+        page.goto.return_value = _response(_sample_list_json())
         client = _make_client(page)
         result = client.fetch_announcements(
             stock_code="000009.SZ", start_date="2026-08-01", end_date="2026-08-12"
@@ -52,17 +113,19 @@ class TestCdpFetchAnnouncements:
     def test_fetch_announcements_strips_exchange_suffix(self):
         # stock_code 带 .SZ 后缀时应剥掉，构造 stock_list=000009
         page = MagicMock()
-        page.evaluate.return_value = _sample_list_json()
+        page.goto.return_value = _response(_sample_list_json())
         client = _make_client(page)
         client.fetch_announcements(stock_code="000009.SZ")
-        url = page.evaluate.call_args[0][1]
+        url = page.goto.call_args[0][0]
         assert "stock_list=000009" in url
 
     def test_fetch_all_pagination_total_hits(self):
         # 第1页 total_hits=100 → 需翻页；共翻 2 页后结束
-        pages = iter([_sample_list_json(1, 100), _sample_list_json(2, 100)])
+        pages = iter(
+            [_response(_sample_list_json(1, 100)), _response(_sample_list_json(2, 100))]
+        )
         page = MagicMock()
-        page.evaluate.side_effect = lambda js, url: next(pages)
+        page.goto.side_effect = lambda *args, **kwargs: next(pages)
         client = _make_client(page)
         items = client.fetch_all_announcements(stock_code="000009", max_pages=5)
         assert len(items) == 4  # 2 页 × 2 条
@@ -70,14 +133,14 @@ class TestCdpFetchAnnouncements:
     def test_fetch_all_single_page(self):
         # total_hits=2 → 单页即可，不应再翻页
         page = MagicMock()
-        page.evaluate.return_value = _sample_list_json(1, 2)
+        page.goto.return_value = _response(_sample_list_json(1, 2))
         client = _make_client(page)
         items = client.fetch_all_announcements(stock_code="000009", max_pages=5)
         assert len(items) == 2
 
     def test_fetch_error_returns_empty_structures(self):
         page = MagicMock()
-        page.evaluate.side_effect = RuntimeError("Failed to fetch")
+        page.goto.side_effect = RuntimeError("network down")
         client = _make_client(page)
         assert client.fetch_all_announcements(stock_code="000009") == []
         assert client.fetch_announcements(stock_code="000009") == {"data": {"list": []}}
@@ -88,9 +151,14 @@ class TestCdpFetchContent:
 
     def test_fetch_content(self):
         page = MagicMock()
-        page.evaluate.return_value = {
-            "data": {"notice_content": "公告正文", "attach_url_web": "https://pdf.x"}
-        }
+        page.goto.return_value = _response(
+            {
+                "data": {
+                    "notice_content": "公告正文",
+                    "attach_url_web": "https://pdf.x",
+                }
+            }
+        )
         client = _make_client(page)
         content = client.fetch_announcement_content("AN123")
         assert content["notice_content"] == "公告正文"
@@ -124,9 +192,30 @@ class TestCdpFetchContent:
 
     def test_fetch_content_error_returns_empty(self):
         page = MagicMock()
-        page.evaluate.side_effect = RuntimeError("network down")
+        page.goto.side_effect = RuntimeError("network down")
         client = _make_client(page)
         assert client.fetch_announcement_content("AN123") == {}
+
+    def test_fetch_content_uses_long_cooldown_for_http_567(self, monkeypatch):
+        import src.pipeline.cdp_fetcher as cdp_module
+
+        sleeps = []
+        monkeypatch.setattr(cdp_module.time, "sleep", sleeps.append)
+        client = cdp_module.CdpEastmoneyClient(
+            content_max_retries=2,
+            content_retry_backoff_seconds=1,
+        )
+        client._fetch_json = MagicMock(
+            side_effect=[
+                RuntimeError("HTTP 567"),
+                {"data": {"art_code": "AN123", "notice_content": "body"}},
+            ]
+        )
+
+        content = client.fetch_announcement_content("AN123")
+
+        assert content["notice_content"] == "body"
+        assert sleeps == [120.0]
 
 
 class TestFetcherBackendSelection:

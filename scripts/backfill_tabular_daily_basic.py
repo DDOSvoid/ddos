@@ -23,17 +23,13 @@ from src.prediction.tabular.daily_basic import (
 
 def main() -> None:
     root = PROJECT_ROOT / "data" / "tabular" / "daily_basic"
-    intraday_state = (
-        PROJECT_ROOT
-        / "data"
-        / "tabular"
-        / "intraday_15m"
-        / "state.amazingdata.json"
+    train_universe = (
+        PROJECT_ROOT / "data" / "backfills" / "event_ranking_v1" / "train_universe.json"
     )
     parser = argparse.ArgumentParser(description="Backfill train-only daily_basic data")
     parser.add_argument("--start-date", type=date.fromisoformat, default=date(2023, 1, 1))
     parser.add_argument("--end-date", type=date.fromisoformat, default=date(2024, 12, 31))
-    parser.add_argument("--universe-state", type=Path, default=intraday_state)
+    parser.add_argument("--universe-state", type=Path, default=train_universe)
     parser.add_argument("--output-root", type=Path, default=root)
     parser.add_argument("--state", type=Path, default=root / "state.json")
     parser.add_argument("--minimum-interval-seconds", type=float, default=0.15)
@@ -45,9 +41,7 @@ def main() -> None:
         end=args.end_date,
         output_root=args.output_root,
         state_path=args.state,
-        client=TushareDailyBasicClient(
-            minimum_interval_seconds=args.minimum_interval_seconds
-        ),
+        client=TushareDailyBasicClient(minimum_interval_seconds=args.minimum_interval_seconds),
         split=split,
         tabular=load_tabular_model_contract(split=split),
     )

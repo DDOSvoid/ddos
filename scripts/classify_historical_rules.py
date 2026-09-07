@@ -10,6 +10,7 @@ from collections import Counter
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -116,6 +117,35 @@ def classify_historical(
                 f"classified={total}; accepted={accepted}; abstained={abstained}",
                 flush=True,
             )
+
+    with Session(engine) as session:
+        summary_rows = (
+            session.query(
+                Classification.classification_source,
+                Classification.sub_category,
+                func.count(Classification.id),
+            )
+            .join(Announcement, Announcement.id == Classification.announcement_id)
+            .filter(
+                Announcement.published_date >= start,
+                Announcement.published_date <= end,
+            )
+            .group_by(
+                Classification.classification_source,
+                Classification.sub_category,
+            )
+            .all()
+        )
+    total = sum(int(count) for _, _, count in summary_rows)
+    abstained = sum(
+        int(count)
+        for source, _, count in summary_rows
+        if source == "abstained"
+    )
+    accepted = total - abstained
+    category_counts = Counter()
+    for _, sub_category, count in summary_rows:
+        category_counts[str(sub_category)] += int(count)
 
     report = {
         "contract": CONTRACT,

@@ -45,6 +45,13 @@ class Company(Base):
     stock_name: Mapped[str] = mapped_column(String(100), nullable=False, comment="股票名称")
     exchange: Mapped[str] = mapped_column(String(10), nullable=False, comment="交易所 SSE/SZSE")
     industry: Mapped[str | None] = mapped_column(String(50), comment="行业分类（申万一级）")
+    listing_date: Mapped[date | None] = mapped_column(Date, comment="上市日期")
+    delisting_date: Mapped[date | None] = mapped_column(Date, comment="退市日期")
+    list_status: Mapped[str | None] = mapped_column(
+        String(2), comment="Tushare L/D/P；仅表示股票池快照状态"
+    )
+    universe_source: Mapped[str | None] = mapped_column(String(50))
+    universe_as_of: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     market_cap: Mapped[int | None] = mapped_column(Integer, comment="总市值（万元）")
     total_shares: Mapped[int | None] = mapped_column(Integer, comment="总股本（万股）")
     annual_revenue: Mapped[int | None] = mapped_column(Integer, comment="最近财年营收（万元）")
@@ -416,7 +423,11 @@ class AnnouncementMarketTarget(Base):
 
 
 class ImpactPrediction(Base):
-    """Immutable prediction made with information available at ``as_of`` only."""
+    """Legacy immutable announcement-level prediction.
+
+    Production ranking v1 uses :class:`FusedStockPrediction`, whose identity is
+    one company-day-horizon rather than one announcement.
+    """
 
     __tablename__ = "impact_predictions"
 
@@ -490,6 +501,166 @@ def _prevent_prediction_update(mapper, connection, target) -> None:
 @event.listens_for(ImpactPrediction, "before_delete")
 def _prevent_prediction_delete(mapper, connection, target) -> None:
     raise ValueError("impact predictions are an append-only audit ledger")
+
+
+class ExpertSignalRecord(Base):
+    """Append-only specialist signal for one company-day and horizon."""
+
+    __tablename__ = "expert_signal_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    signal_id: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    sample_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    company_day_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    stock_code: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    published_date: Mapped[date] = mapped_column(Date, nullable=False)
+    prediction_as_of: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+    eligible_entry_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+    horizon_sessions: Mapped[int] = mapped_column(Integer, nullable=False)
+    expert_name: Mapped[str] = mapped_column(String(20), nullable=False)
+    expert_version: Mapped[str] = mapped_column(String(80), nullable=False)
+    expert_signal: Mapped[float | None] = mapped_column(Float)
+    quality_score: Mapped[float] = mapped_column(Float, nullable=False)
+    available: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    abstain_reason: Mapped[str | None] = mapped_column(Text)
+    bullish_probability: Mapped[float | None] = mapped_column(Float)
+    expected_excess_return: Mapped[float | None] = mapped_column(Float)
+    risk_scale: Mapped[float | None] = mapped_column(Float)
+    data_as_of: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    evidence_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    payload_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "sample_id",
+            "expert_name",
+            "expert_version",
+            name="uq_expert_signal_sample_expert_version",
+        ),
+        CheckConstraint(
+            "horizon_sessions IN (1, 3, 5)", name="ck_expert_signal_horizon"
+        ),
+        CheckConstraint(
+            "expert_name IN ('text', 'tabular', 'timeseries')",
+            name="ck_expert_signal_name",
+        ),
+        CheckConstraint(
+            "quality_score >= 0 AND quality_score <= 1",
+            name="ck_expert_signal_quality",
+        ),
+        CheckConstraint(
+            "risk_scale IS NULL OR risk_scale >= 0", name="ck_expert_signal_risk"
+        ),
+    )
+
+
+@event.listens_for(ExpertSignalRecord, "before_update")
+def _prevent_expert_signal_update(mapper, connection, target) -> None:
+    raise ValueError("expert signals are immutable; append a new expert version")
+
+
+@event.listens_for(ExpertSignalRecord, "before_delete")
+def _prevent_expert_signal_delete(mapper, connection, target) -> None:
+    raise ValueError("expert signals are an append-only audit ledger")
+
+
+class FusedStockPrediction(Base):
+    """Final company-day prediction used for cross-sectional stock ranking."""
+
+    __tablename__ = "fused_stock_predictions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    prediction_id: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    sample_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    company_day_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    stock_code: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    published_date: Mapped[date] = mapped_column(Date, nullable=False)
+    prediction_as_of: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+    eligible_entry_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+    horizon_sessions: Mapped[int] = mapped_column(Integer, nullable=False)
+    bullish_probability: Mapped[float | None] = mapped_column(Float)
+    expected_excess_return: Mapped[float | None] = mapped_column(Float)
+    risk_scale: Mapped[float | None] = mapped_column(Float)
+    rank_score: Mapped[float | None] = mapped_column(Float)
+    daily_rank: Mapped[int | None] = mapped_column(Integer)
+    rank_percentile: Mapped[float | None] = mapped_column(Float)
+    eligible: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    abstain_reason: Mapped[str | None] = mapped_column(Text)
+    available_expert_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    fusion_version: Mapped[str] = mapped_column(String(80), nullable=False)
+    component_contributions: Mapped[str] = mapped_column(Text, nullable=False)
+    input_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    payload_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "sample_id",
+            "fusion_version",
+            name="uq_fused_stock_prediction_sample_version",
+        ),
+        CheckConstraint(
+            "horizon_sessions IN (1, 3, 5)", name="ck_fused_prediction_horizon"
+        ),
+        CheckConstraint(
+            "bullish_probability IS NULL OR "
+            "(bullish_probability >= 0 AND bullish_probability <= 1)",
+            name="ck_fused_prediction_probability",
+        ),
+        CheckConstraint(
+            "risk_scale IS NULL OR risk_scale >= 0", name="ck_fused_prediction_risk"
+        ),
+        CheckConstraint(
+            "rank_percentile IS NULL OR "
+            "(rank_percentile >= 0 AND rank_percentile <= 1)",
+            name="ck_fused_prediction_percentile",
+        ),
+        CheckConstraint(
+            "available_expert_count >= 0 AND available_expert_count <= 3",
+            name="ck_fused_prediction_expert_count",
+        ),
+    )
+
+
+@event.listens_for(FusedStockPrediction, "before_update")
+def _prevent_fused_prediction_update(mapper, connection, target) -> None:
+    raise ValueError("fused stock predictions are immutable; append a new fusion version")
+
+
+@event.listens_for(FusedStockPrediction, "before_delete")
+def _prevent_fused_prediction_delete(mapper, connection, target) -> None:
+    raise ValueError("fused stock predictions are an append-only audit ledger")
+
+
+class FusedPredictionOutcome(Base):
+    """Matured market result for a final company-day prediction."""
+
+    __tablename__ = "fused_prediction_outcomes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    prediction_id: Mapped[int] = mapped_column(
+        ForeignKey("fused_stock_predictions.id"), unique=True, nullable=False
+    )
+    entry_date: Mapped[date] = mapped_column(Date, nullable=False)
+    exit_date: Mapped[date] = mapped_column(Date, nullable=False)
+    stock_return: Mapped[float] = mapped_column(Float, nullable=False)
+    benchmark_return: Mapped[float] = mapped_column(Float, nullable=False)
+    excess_return: Mapped[float] = mapped_column(Float, nullable=False)
+    prices_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    evaluated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    __table_args__ = (
+        CheckConstraint("exit_date >= entry_date", name="ck_fused_outcome_date_order"),
+    )
 
 
 class PredictionOutcome(Base):
